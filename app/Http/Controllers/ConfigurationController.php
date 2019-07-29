@@ -52,7 +52,7 @@ class ConfigurationController extends Controller
     public function config_list_view(){
         $route = \Route::current();
         $codice_id = $route->parameter('codiceid');
-        $projects = Project::all();
+        $projects = Project::orderBy('name','asc')->get();
         
         return view('configuration_list',['projects'=>$projects,'codice_id'=>$codice_id]);
     }

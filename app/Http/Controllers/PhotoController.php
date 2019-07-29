@@ -33,7 +33,7 @@ class PhotoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $projects = Project::all();
+        $projects = Project::orderBy('name','asc')->get();
         $codice = Part::orderBy('name','asc')->get();
         $route = \Route::current();
         $codice_id = $route->parameter('codiceid');

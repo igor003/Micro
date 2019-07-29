@@ -69,7 +69,7 @@ class RaportController extends Controller
 		 // 	$cnt++;
 		 // }
 			$difference = array_diff_key($parts_with_micro,$parts_names);
-		return view('raport_list',['parts_micro'=>$parts_with_micro,'parts'=>$count_parts, 'parts_efectuated'=>$parts_names, 'difference'=>$difference]);
+		return view('raport_list',['parts_micro'=>$parts_with_micro,'parts'=>$count_parts, 'parts_efectuated'=>$parts_names, 'difference'=>$difference, 'data_raport'=>$request->data_raport]);
 
     }
 }

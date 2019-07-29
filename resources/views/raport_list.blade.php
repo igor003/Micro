@@ -25,11 +25,12 @@
                 </table>
             </div>
             <div class="col-xs-3">
+                <p class="bg-success text-center">Data : {{$data_raport}}</p>
                 <p class="bg-info text-center">Total parts : {{$parts}}</p>
                 <p class="bg-info text-center">Parts with microsection : {{count($parts_micro)}}</p>
                 <p class="bg-info text-center">Microsections efectuated : {{count($parts_efectuated)}}</p>
             </div>
-                <div class="col-xs-3">
+            <div class="col-xs-3">
                 <table id="raport_list" class="table table-hover table-bordered">
                     <thead>
                     <tr>

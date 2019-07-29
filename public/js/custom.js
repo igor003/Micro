@@ -177,13 +177,6 @@ function generate_html_configuration(data,admin){
             '<td class="text-center">' + data.nr_strand + '</td>' +
             '<td class="text-center">' + data.height + '</td>' +
             '<td class="text-center">' + data.width + '</td>';
-            // '<td class="text-center">'+
-            //     '<form method="POST" action="photo_list">'+
-            //     '<input type="hidden" name="config_id" value="'+data.id+'">'+
-            //     '<div></div>'+
-            //     '<button type="submit"><img height="30px" width = "40px" src="/img/micro.jpg" alt="" /></button>'+
-            //     '</form>'+
-            // '</td>';
         if(admin === true){
             result +='<td class="text-center">' +
             '<a href="configuration_list/update_view/' + data.id + '"> <div class="update"><img height="30px" width = "30px" src="/img/update.png" alt=""></div></a>' +
@@ -435,6 +428,7 @@ function get_configuration_list(){
         },
         dataType: 'json',
         success: function (data) {
+
             var count_conf = data.conf.length;
             $('#table_configuration').empty();
             var i = 0;
@@ -572,11 +566,7 @@ function get_photo_list(cur_page){
                         $(this).addClass('active');
                         get_photo_list($(this).text());
                     });
-                // }else{
-                //     $('#pagin').empty();
-                // }
             }else{//если есть фильтры 
-
                 var pages_with_filter = Math.ceil(data.total_photo_with_filter.length/per_page);
           
                 $('#pagin').append('<li class="page-item1 prev"><a href="#" class="page-link" >Previous</a></li>'); 
@@ -662,9 +652,7 @@ $(function(){
          controlType: 'slider',
          addSliderAccess: true,
          sliderAccessArgs: { touchonly: false },
-         // dateFormat: "yy-mm-dd",
-         // autoSize: true,
-         // buttonText: "Choose",
+         
          beforeShow: function(){
              $(".ui-datepicker").css('font-size', 12)
          }
@@ -683,7 +671,4 @@ $(document).ready(function (){
     $('#datepicker_photo_to').change(function() {
         get_photo_list();
     });
-    // $('#datepicker_photo_from').change(function() {
-    //     get_photo_list();
-    // });
 });

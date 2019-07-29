@@ -44,7 +44,7 @@
 
                 @foreach($projects as $project)
                     <input class="form-check-input" type="checkbox" value="{{$project->id}}" id="project">
-                    <label class=" project_label form-check-label" for="Project">
+                    <label class=" project_label form-check-label " for="Project">
                        <small>{{$project->name}}</small>
                     </label>
                     <br>
