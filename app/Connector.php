@@ -20,20 +20,4 @@ class Connector extends Model
     public function scopeSearch($query, $seraching){
         return $query->where('name', 'like', '%'.$seraching.'%');
     }
-    // public function codice(){
-    //     return $this->belongsTo('App\Part','part_id');
-    // }
-    // public function scopeSearch($query,$req){
-    //     return $query::with(['codice'=> function ($query) use($req) {
-    //         $query->where('name','like','%'.$req.'%');
-    //     }]);
-    // }
-    // public function scopeFilter($query, $req){
-    //     return $query::with(['codice.project'=> function ($query) use($req) {
-    //         $query->whereIn('project_id',$req);
-    //     }]);
-    // }
-    // public function photos(){
-    //     return $this->belongsTo('App\Photo');
-    // }
 }

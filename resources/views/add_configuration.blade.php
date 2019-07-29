@@ -54,8 +54,13 @@
                 </div>
                 <div class="col-xs-3">
                     <div class="form-group">
-                        <label for="sez_comp">Sez Components</label>
-                        <input type="text" name="sez_components" class="form-control" id="sez_comp" aria-describedby="emailHelp" placeholder="Enter sez components">
+                        <label for="sez_comp">Section Components</label>
+                        <input type="text" name="sez_components" class="form-control" id="sez_comp" aria-describedby="emailHelp" placeholder="Enter section components">
+
+                    </div>
+                     <div class="form-group">
+                        <label for="sez_comp">Total Section</label>
+                        <input type="text" name="total_sez" class="form-control" id="total_sez" aria-describedby="emailHelp" placeholder="Enter total section">
 
                     </div>
                     <div class="form-group">

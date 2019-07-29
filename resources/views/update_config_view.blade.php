@@ -63,6 +63,11 @@
 
                     </div>
                     <div class="form-group">
+                        <label for="sez_comp">Total section</label>
+                        <input type="text" value="{{$config[0]->total_sez}}"  name="total_sez" class="form-control" id="total_sez" aria-describedby="emailHelp" placeholder="Enter total section">
+
+                    </div>
+                    <div class="form-group">
                         <label for="strands">Amount of strands</label>
                         <input type="text" value="{{$config[0]->nr_strand}}" name="amount_strands" class="form-control" id="strands" aria-describedby="emailHelp" placeholder="Enter amount of strands">
 

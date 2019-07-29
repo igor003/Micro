@@ -51,10 +51,10 @@
                             Splice /<br>Terminal
                         </td>
                         <td class="text-center">
-                            Components sez
+                            Components section
                         </td>
                         <td class="text-center">
-                            Total sez
+                            Total section
                         </td>
                         <td class="text-center">
                             Number of strands

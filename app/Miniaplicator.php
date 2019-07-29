@@ -20,9 +20,6 @@ class Miniaplicator extends Model
         return $query->whereHas('connector', function ($query) use($req) {
         $query->where('id',$req);
         });
-    // }
-    // public function photos(){
-    //     return $this->belongsTo('App\Photo');
      }
 
     public function scopeSearch($query, $seraching){

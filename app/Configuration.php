@@ -8,12 +8,15 @@ class Configuration extends Model
 {
     protected $table = 'part_configuration';
     protected $fillable = [
-        'part_id','components','connecting_element','sez_components','total_sez','nr_strand','height','width'
+        'part_id','components','connecting_element','connector_id','sez_components','total_sez','nr_strand','height','width'
     ];
     public $timestamps = false;
 
     public function codice(){
         return $this->belongsTo('App\Part','part_id');
+    }
+    public function codice(){
+        return $this->belongsTo('App\Connector','connector_id');
     }
     public function scopeSearch($query,$req){
         return $query::with(['codice'=> function ($query) use($req) {

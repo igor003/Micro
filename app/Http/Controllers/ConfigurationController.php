@@ -45,6 +45,7 @@ class ConfigurationController extends Controller
         $configuration->nr_strand=$request->amount_strands;
         $configuration->height=$request->height;
         $configuration->width = $request->width;
+        $configuration->total_sez = $request->total_sez;
         $configuration->save();
         return redirect('/home');
     }
@@ -138,7 +139,7 @@ class ConfigurationController extends Controller
         $config->nr_strand=$request->amount_strands;
         $config->height=$request->height;
         $config->width = $request->width;
-//        $config->save();
+        $config->total_sez = $request->total_sez;
         if($config->save() != true){
             $request->session()->flash('error_update', 'Error in update');
             return redirect(route('conf_list_view'));
