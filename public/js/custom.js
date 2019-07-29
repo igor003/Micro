@@ -58,6 +58,7 @@ $($('#codice_conf').on('change', function() {
 
 function get_codice_by_project_conf_update(){
     var selected = $('#project_conf').val();
+   
     $.ajax({
         url:'/codice_list/filter',
         type: 'POST',
@@ -66,11 +67,18 @@ function get_codice_by_project_conf_update(){
         },
         dataType: 'json',
         success: function(data) {
+            var cur_id = $('#codice_conf_update').val();
             $('#codice_conf_update').empty();
+           
             var i = 0;
             while(i < data.length){
-                $('#codice_conf_update').append("<option value="+data[i].id+">"+ data[i].name+"</option>");
-                i++;
+                if(data[i].id == cur_id){
+                    $('#codice_conf_update').append("<option selected='selected' value="+data[i].id+">"+ data[i].name+"</option>");
+                    i++;
+                }else{
+                    $('#codice_conf_update').append("<option value="+data[i].id+">"+ data[i].name+"</option>");
+                    i++;
+                }
             }
         },
         error: function (error) {
