@@ -1,0 +1,41 @@
+body{
+    line-height:3.6;
+
+    font-family:Calibri;
+}
+.errors{
+    font-size: 0.8em;
+    text-align: left;
+    height: 70px;
+}
+
+div#ui-datepicker-div{
+    line-height:1.6;
+}
+.alert{
+    height:30px;
+    line-height:30px;
+    padding:0px 0px 0px 10px;
+    margin-bottom:5px;
+}
+
+.body{
+     font-family:Calibri;
+}
+.nav_pagination{
+    position: fixed;
+    top: 90%;
+}
+label{
+    margin-bottom:0px;
+    line-height: 1.2;
+}
+.pages{
+    display: inline-block;
+    position: fixed;
+    top: 93%;
+    right:30%;
+}
+.project_label{
+ font-size: 10px;
+}
