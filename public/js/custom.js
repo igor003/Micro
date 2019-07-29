@@ -123,7 +123,7 @@ function generate_html_connectors(data,entity,admin){
             // if(admin === true){
                 result += 
                 '<td class="text-center">' +
-                '<a href="'+entity+'_list/update_view/'+data.id+'"> <div><img height="40px" width = "40px" src="/img/specific.png" alt=""></div></a>'+
+                '<a href="'+entity+'_list/update_view/'+data.id+'"> <div><img height="50px" width = "50px" src="/img/specific.png" alt=""></div></a>'+
                 '</td>' +
                 '<td class="text-center">' +
                 '<a href="'+entity+'_list/update_view/'+data.id+'"> <div><img height="40px" width = "40px" src="/img/update.png" alt=""></div></a>'+
