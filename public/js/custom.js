@@ -145,7 +145,6 @@ function generate_html_connectors(data,entity,admin){
 }
 
 function generate_machines_html(data,entity,admin){
-        console.log(data);
         var result = '<tr>' +
             '<td class="text-center">'+data.number+'</td>';
             if(admin === true){
@@ -179,7 +178,7 @@ function generate_html_configuration(data,admin){
         var result = '<tr>' +
             '<td class="text-center"><a href="configuration/upload_view/'+data.id+'">'+ data.codice.name +'</a></td>' +
             '<td class="text-center">' + data.components + '</td>' +
-            '<td class="text-center">' + data.connecting_element + '</td>' +
+            '<td class="text-center">' + data.connector.name + '</td>' +
             '<td class="text-center">' + data.sez_components + '</td>' +
             '<td class="text-center">' + data.total_sez + '</td>' +
             '<td class="text-center">' + data.nr_strand + '</td>' +
@@ -352,7 +351,6 @@ function get_connector_list(){
         },
         dataType: 'json',
         success: function (data) {
-            console.log(data)
             $('#table_connector').empty();
             var i = 0;
             while(i< data.connectors.length){

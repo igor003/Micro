@@ -45,9 +45,21 @@
                     <input type="text" name="components" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter components">
 
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="exampleInputEmail1">Terminal/Splice</label>
                     <input type="text" name="terminal" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter type of terminal/splice">
+
+                </div> -->
+                <div class="form-group">
+                    <label for="codice_conf">Terminal/Splice</label>
+                    <select name="connector" class="form-control" id="codice_conf_add">
+                        <option  value="" selected></option>
+                        @foreach($connectors as $connector)
+                            <option value="{{$connector->id}}">
+                                {{$connector->name}}
+                            </option>
+                        @endforeach
+                    </select>
 
                 </div>
 

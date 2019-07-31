@@ -88,8 +88,7 @@ date_default_timezone_set("Europe/Chisinau");
                     </ul>
                     @if(Auth::user())
                         @if(Auth::user()->status == 'admin')
-                             @endif
-                    @endif
+                             
                             <ul class="nav navbar-nav navbar-center vertical-center">
                                 <div class="dropdown">
                                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -130,11 +129,16 @@ date_default_timezone_set("Europe/Chisinau");
                                     </ul>
                                 </div>
                             </ul>
-                   
+                   @endif
+                    @endif
                     <ul class="nav navbar-nav navbar-center vertical-center">
-                        <li>
-                            <a href="{{route('projects_list_view')}}">Project</a>
-                        </li>
+                         @if(Auth::user())
+                            @if(Auth::user()->status == 'admin')   
+                                <li>
+                                    <a href="{{route('projects_list_view')}}">Project</a>
+                                </li>
+                           @endif
+                        @endif
                         <li>
                             <a href="{{route('codice_list_view')}}">Codice</a>
                         </li>
@@ -144,10 +148,8 @@ date_default_timezone_set("Europe/Chisinau");
                         <li>
                             <a href="{{route('photo_list_view')}}">Photo list</a>
                         </li>
-                       <!--  @if(Auth::user())
-                            @if(Auth::user()->status == 'admin') -->
-                                <!--      @endif
-                        @endif -->
+                        @if(Auth::user())
+                            @if(Auth::user()->status == 'admin')   
                                 <li>
                                     <a href="{{route('mini_list_view')}}">Miniaplicators</a>
                                 </li>
@@ -157,7 +159,8 @@ date_default_timezone_set("Europe/Chisinau");
                                 <li>
                                     <a href="{{route('machine_list_view')}}">Machines</a>
                                 </li>
-                   
+                            @endif
+                        @endif
                         <li>
                             <a href="{{route('raport_view')}}">Report efficiency</a>
                         </li>

@@ -111,15 +111,18 @@ class PhotoController extends Controller
     }
 
     public function raport(Request $request){
-      $photos = Photo::select('*');
-
+      $photoss = Photo::select('*');
+      if(!is_null($request->part)){
+        $photoss->codice($request->part);
+        
+      }
       if($request->date_from && $request->date_to){
-        $photos->raport($request->date_from,$request->date_to);
+        $photoss->raport($request->date_from,$request->date_to);
       }
   
-        $raport = $photos->get();
+        $raport = $photoss->get();
       
-      exit();
+     
       // Создаем объект класса PHPExcel
       $xls = new PHPExcel();
 // Устанавливаем индекс активного листа

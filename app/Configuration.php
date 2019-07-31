@@ -15,7 +15,7 @@ class Configuration extends Model
     public function codice(){
         return $this->belongsTo('App\Part','part_id');
     }
-    public function codice(){
+    public function connector(){
         return $this->belongsTo('App\Connector','connector_id');
     }
     public function scopeSearch($query,$req){

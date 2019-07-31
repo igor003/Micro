@@ -7,6 +7,7 @@ use App\Http\Requests\ConfigurationRequest;
 use App\Photo;
 use App\Project;
 use App\Part;
+use App\Connector;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -32,15 +33,16 @@ class ConfigurationController extends Controller
         }
         $projects = Project::all();
         $codice = Part::all();
+        $connectors = Connector::all();
 
-        return view('add_configuration',['projects'=>$projects,'codice'=>$codice]);
+        return view('add_configuration',['projects'=>$projects,'codice'=>$codice,'connectors'=>$connectors]);
     }
 
     public function insert(ConfigurationRequest $request){
         $configuration = new Configuration;
         $configuration->part_id = $request->codice_configuration;
         $configuration->components=$request->components;
-        $configuration->connecting_element=$request->terminal;
+        $configuration->connector_id=$request->connector;
         $configuration->sez_components=$request->sez_components;
         $configuration->nr_strand=$request->amount_strands;
         $configuration->height=$request->height;
@@ -67,18 +69,18 @@ class ConfigurationController extends Controller
         if($request->search != ''){
             $conf = Configuration::whereHas('codice',function ($query) use($request) {
                 $query->where('name','like','%'.$request->search.'%');
-            })->with('codice')->get();
+            })->with('codice')->with('connector')->get();
             return  array('conf'=>$conf,'admin'=>$admin);
         }
         else if($request->filter != ''){
             $conf = Configuration::whereHas('codice',function ($query) use($request) {
                 $query->whereIn('project_id',$request->filter);
-            })->with('codice')->get();
+            })->with('codice')->with('connector')->get();
             return array('conf'=>$conf,'admin'=>$admin);
         }
         $conf = Configuration::with(array('codice' => function($query){
             $query->orderBy('name','ASC');
-        }))->get();
+        }))->with('connector')->get();
           // $conf = Configuration::with('codice')->get()->sortByDesc('codice.name');
         // $conf = Configuration::whereHas('codice',function ($query) use($request) {
         //         $query->orderBy('name', 'asc');
