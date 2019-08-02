@@ -56,6 +56,7 @@ class ConfigurationController extends Controller
         $route = \Route::current();
         $codice_id = $route->parameter('codiceid');
         $projects = Project::orderBy('name','asc')->get();
+        $conneector = Connector::all();
         
         return view('configuration_list',['projects'=>$projects,'codice_id'=>$codice_id]);
     }
@@ -130,13 +131,15 @@ class ConfigurationController extends Controller
         $cur_config = Configuration::with('codice.project')->where('id','=',$id)->get();
         $projects = Project::all();
         $codice = Part::all();
-        return view('update_config_view',['config'=>$cur_config,'projects'=>$projects,'codice'=>$codice]);
+        $connectors = Connector::all();
+        
+        return view('update_config_view',['connectors'=>$connectors,'config'=>$cur_config,'projects'=>$projects,'codice'=>$codice]);
     }
     public function update(Request $request){
         $config = Configuration::find($request->id);
         $config->part_id = $request->codice_configuration;
         $config->components=$request->components;
-        $config->connecting_element=$request->terminal;
+        $config->connector_id=$request->connector;
         $config->sez_components=$request->sez_components;
         $config->nr_strand=$request->amount_strands;
         $config->height=$request->height;

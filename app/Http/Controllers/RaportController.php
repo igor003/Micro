@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use PHPExcel;
 use PHPExcel_IOFactory;
 use App\Photo;
+use App\Raport;
 class RaportController extends Controller
 {
 	public function get_compare_view(){
@@ -71,5 +72,27 @@ class RaportController extends Controller
 			$difference = array_diff_key($parts_with_micro,$parts_names);
 		return view('raport_list',['parts_micro'=>$parts_with_micro,'parts'=>$count_parts, 'parts_efectuated'=>$parts_names, 'difference'=>$difference, 'data_raport'=>$request->data_raport]);
 
+    }
+
+	public function create_report(Request $request){
+	
+		$report = new Raport;
+        $report->total_micr = $request->total_micr;
+        $report->efectuated_micr = $request->efectuated_micr;
+        $report->total_launch = $request->total_launch;
+        $report->date = $request->date;
+        $report->save();
+        return redirect('/home');
+	}
+
+
+	public function get_all(){
+		$reports = Raport::all();
+		return $reports;
+	} 
+	
+    public function report_list_view(){
+    	$reports = Raport::all();
+ 		return view('raport_list_view',['reports'=>$reports]);
     }
 }

@@ -164,7 +164,9 @@ date_default_timezone_set("Europe/Chisinau");
                         <li>
                             <a href="{{route('raport_view')}}">Report efficiency</a>
                         </li>
-                      
+                        <li>
+                            <a href="{{route('report_list_view')}}">Daily reports</a>
+                        </li>
                      
                     </ul>
                 </div>

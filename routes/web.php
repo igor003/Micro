@@ -59,6 +59,9 @@ Route::group(['middleware' => 'auth'], function () {
 //Raport
     Route::get('/raport_view', 'RaportController@get_compare_view')->name('raport_view');
     Route::post('/generate_raport', 'RaportController@generate_raport')->name('generate_raport');
+    Route::get('/raport_list_view', 'RaportController@report_list_view')->name('report_list_view');
+    Route::post('/add_report','RaportController@create_report')->name('create_report');
+    Route::post('/all_reports', 'RaportController@get_all')->name('get_all_reports');
 //Machines
     Route::get('/add_machine_view', 'MachineController@index')->name('add_machine_view');
     Route::get('/machine_list_view', 'MachineController@machines_list_view')->name('machine_list_view');
