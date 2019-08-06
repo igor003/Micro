@@ -11,13 +11,13 @@
                                 Date
                             </td>
                             <td class="text-center">
-                                Total Lansari
+                                Total Set up
                             </td>
                             <td class="text-center">
-                                Lansari cu micrografia
+                                Set up with microsection
                             </td>
                             <td class="text-center">
-                                Mirografii efectuate
+                                Microsections performed
                             </td>
                             <td class="text-center">
                                 Delete

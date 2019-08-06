@@ -71,13 +71,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/add_connector_view', 'ConnectorController@index')->name('add_connector_view');
     Route::post('/add_connector', 'ConnectorController@create')->name('add_connector');
     Route::post('/connector_list', 'ConnectorController@connector_list')->name('connector_list');
-    Route::get('connector_list_view', 'ConnectorController@connectors_list_view')->name('connector_list_view');
+    Route::get('/connector_list_view', 'ConnectorController@connectors_list_view')->name('connector_list_view');
+    Route::get('/specification_view', 'ConnectorController@upload_specification_view')->name('specification_view');
+    Route::post('/upload_specifications', 'ConnectorController@upload_specifications')->name('upload_specif');
 //Miniaplicators
     Route::get('/add_miniaplicator_view', 'MiniaplicatorController@index')->name('add_miniaplicator_view');
     Route::post('/add_miniaplicator', 'MiniaplicatorController@create')->name('add_miniaplicator');
     Route::get('/miniaplicator_list_view', 'MiniaplicatorController@miniaplicators_list_view')->name('mini_list_view');
     Route::post('/miniaplicator_list', 'MiniaplicatorController@miniaplicator_list')->name('miniaplicator_list');
-    Route::get('miniaplicator_list/delete/{id}', 'MiniaplicatorController@delete')->name('delete_miniaplicator');
+    Route::get('/miniaplicator_list/delete/{id}', 'MiniaplicatorController@delete')->name('delete_miniaplicator');
     
 });
 

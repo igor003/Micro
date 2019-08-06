@@ -64,12 +64,15 @@ class RaportController extends Controller
 		 // $cnt= 0;
 		 // while($cnt<count($parts_names)){
 	 	// 	// $parts_names[$cnt]
-	 	// 	 foreach($parts_with_micro as $part_with_micro ){
-	 		 	
+	 	// 	 foreach($parts_with_micro as $part_with_m
 	 	// 	 }
 		 // 	$cnt++;
 		 // }
-			$difference = array_diff_key($parts_with_micro,$parts_names);
+		 // 
+		
+			$difference = array_diff_key ($parts_with_micro,$parts_names);
+
+			 print_r($difference);
 		return view('raport_list',['parts_micro'=>$parts_with_micro,'parts'=>$count_parts, 'parts_efectuated'=>$parts_names, 'difference'=>$difference, 'data_raport'=>$request->data_raport]);
 
     }

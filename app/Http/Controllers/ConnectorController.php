@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Connector;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Storage;
 
 class ConnectorController extends Controller
 {
@@ -44,6 +44,24 @@ class ConnectorController extends Controller
         }
 
         return array('connectors'=>$connector->orderBy('name','asc')->get(),'admin'=>$admin);
+    }
+
+    public function upload_specification_view()
+    {
+        $connectors = Connector::all();
+        return view('upload_specifications',['connectors'=>$connectors]);
+    }
+
+    public function upload_specifications (Request $request){
+
+        $filename = $request->file('specifications')->getClientOriginalName();
+        $path = $request->file('specifications')->storeAs('specifications\\', $filename);
+        
+        $file_name = "storage/specifications/".basename($filename);
+
+        Connector::where('id',$request->connector)->update(['specification_path'=>$file_name]);
+
+        return redirect(route('connector_list_view'));
     }
   
 }

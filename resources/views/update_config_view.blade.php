@@ -55,9 +55,15 @@
                         <select name="connector" class="form-control" id="codice_conf_update">
                             <option  value="" selected></option>
                             @foreach($connectors as $connector)
-                                <option value="{{$connector->id}}">
-                                    {{$connector->name}}
-                                </option>
+                                @if($connector->id == $config[0]->connector->id)
+                                    <option selected="selected" value="{{$connector->id}}">
+                                        {{$connector->name}}
+                                    </option>
+                                @else
+                                    <option value="{{$connector->id}}">
+                                        {{$connector->name}}
+                                    </option>
+                                @endif
                             @endforeach
                         </select>
                     </div>

@@ -42,7 +42,7 @@
             </div>
             <div class="col-xs-2 text-center ">
                  <div class="input-group mb-3">
-                    <button type="button" class="btn btn-primary">Add specifications</button>
+                   <a href="{{route('specification_view')}}"> <button type="button" class="btn btn-primary">Add specifications</button></a>
                 </div>
             </div>
         </div>

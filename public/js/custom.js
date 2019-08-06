@@ -126,20 +126,27 @@ function generate_html(data,entity,admin){
 }
 
 function generate_html_connectors(data,entity,admin){
+    console.log(data.specification_path);
         var result = '<tr>' +
             '<td class="text-center">'+data.name+'</td>';
-            // if(admin === true){
+            if(data.specification_path){
                 result += 
                 '<td class="text-center">' +
                 '<a href="'+entity+'_list/update_view/'+data.id+'"> <div><img height="50px" width = "50px" src="/img/specific.png" alt=""></div></a>'+
-                '</td>' +
+                '</td>'
+             }else{
+                  result += 
                 '<td class="text-center">' +
+                '<div><img height="50px" width = "100px" src="/img/missing.jpg" alt=""></div>'+
+                '</td>'
+             }
+                result += '<td class="text-center">' +
                 '<a href="'+entity+'_list/update_view/'+data.id+'"> <div><img height="40px" width = "40px" src="/img/update.png" alt=""></div></a>'+
                 '</td>' +
                 '<td class="text-center">' +
                 '<a href="'+entity+'_list/delete/'+data.id+'"> <div><img height="40px" width = "40px" src="/img/delete.png" alt=""></div ></a>'+
-                '</td>' 
-            // }
+                '</td>';
+            
         result += '</tr>';
         return result;     
 }
@@ -477,7 +484,6 @@ function get_reports_list(){
         success: function (data) {
 
             var reports = data.length;
-            console.log(reports);
             $('#table_reports').empty();
             var i = 0;
             while(i< reports){
