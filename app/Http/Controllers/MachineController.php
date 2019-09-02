@@ -40,11 +40,13 @@ class MachineController extends Controller
     public function delete($id){
         $part = Machine::find($id);
         $part->delete();
+
         return redirect('machine_list_view');
     }
 
     public function machines_list_view(){
         $machines = Machine::all();
+
         return view('machines_list',['machines'=>$machines]);
     }
     public function machines_list(Request $request)
@@ -60,6 +62,6 @@ class MachineController extends Controller
         }else{
             $admin = false;
         }
-         return array('machines'=>$machines->get(),'admin'=>$admin);
+        return array('machines'=>$machines->get(),'admin'=>$admin);
     }
 }

@@ -14,6 +14,10 @@ class Part extends Model
         return $this->belongsTo('App\Project');
     }
 
+    public function calibration(){
+        return $this->hasMany('App\MiniCalibration','id','part_id');
+    }
+
     public function configuration(){
         return $this->hasMany('App\Project','part_id','id');
     }

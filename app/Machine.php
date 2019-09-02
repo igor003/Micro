@@ -14,4 +14,7 @@ class Machine extends Model
     public function scopeSearch($query, $seraching){
         return $query->where('number', 'like', '%'.$seraching.'%');
     }
+    public function calibration(){
+        return $this->hasMany('App\MiniCalibration','id','machine_id');
+    }
 }

@@ -80,6 +80,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/miniaplicator_list_view', 'MiniaplicatorController@miniaplicators_list_view')->name('mini_list_view');
     Route::post('/miniaplicator_list', 'MiniaplicatorController@miniaplicator_list')->name('miniaplicator_list');
     Route::get('/miniaplicator_list/delete/{id}', 'MiniaplicatorController@delete')->name('delete_miniaplicator');
+    Route::post('/add_mini_calibration', 'MiniaplicatorController@add_mini_calibration')->name('add_mini_calibration');
+    Route::get('/add_mini_calibaration_view' , 'MiniaplicatorController@add_calibration_view')->name('mini_calibration_view');
+    Route::post('/mini_calibaration_list' , 'MiniaplicatorController@mini_calibration_list')->name('mini_calibration_list');
+    Route::get('/_mini_calibaration_list_view' , 'MiniaplicatorController@mini_calibration_list_view')->name('mini_calibration_list_view');
+   
+   
     
 });
 

@@ -126,6 +126,9 @@ date_default_timezone_set("Europe/Chisinau");
                                                 Add connector
                                             </a>
                                         </li>
+                                        <li>
+                                            <a href="{{route('mini_calibration_view')}}">Add mini calibration</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </ul>
@@ -167,7 +170,10 @@ date_default_timezone_set("Europe/Chisinau");
                         <li>
                             <a href="{{route('report_list_view')}}">Daily reports</a>
                         </li>
-                     
+                        <li>
+                            <a href="{{route('mini_calibration_list_view')}}">Mini Calibration</a>
+                        </li>
+                        
                     </ul>
                 </div>
             </div>

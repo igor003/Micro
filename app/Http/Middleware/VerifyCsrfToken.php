@@ -12,7 +12,7 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        'photo_download',
+        'photo_download', 'add_mini_calibration', 'mini_calibration_list_view'
 
     ];
 }

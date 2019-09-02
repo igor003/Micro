@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Connector;
 use App\Miniaplicator;
+use App\MiniCalibration;
 use App\Http\Requests\ProjectRequest;
-
+use App\Machine;
+use Illuminate\Support\Facades\Auth;
+use App\Part;
 class MiniaplicatorController extends Controller
 {
     /**
@@ -72,5 +75,73 @@ class MiniaplicatorController extends Controller
         
         return $mini->orderBy('name','asc')->get();
     }
+
+
+     public function add_calibration_view (Request $request)
+     {
+        $minis = Miniaplicator::all();
+        $machines = Machine::all();
+        $parts = Part::orderBy('name','asc')->get();
+
+        return view('add_mini_calibration_view',['minis'=>$minis,'machines'=>$machines,'parts'=>$parts]);
+    }
+
+    public function add_mini_calibration(Request $request)
+    {
+        $curent = MiniCalibration::where('part_id',$request->codice)
+                                ->where('miniaplicator_id',$request->mini)
+                                ->where('components',$request->components)
+                                ->where('machine_id',$request->machines)->first();
+        
+        if($curent){
+             return redirect('/mini_calibaration_list_view');
+        }else{
+            $mini_calib = new MiniCalibration;
+            $mini_calib->part_id = $request->codice;
+            $mini_calib->components = $request->components;
+            $mini_calib->machine_id = $request->machines;
+            $mini_calib->miniaplicator_id = $request->mini;
+            $mini_calib->calibration_up = $request->calibr_up;
+            $mini_calib->calibration_down = $request->calibr_down;
+            $mini_calib->save();
+            return redirect('/home');
+        }
+
+        // return redirect('/home');
+    }
+
+    public function mini_calibration_list(Request $request)
+    {
+        if(Auth::user()->status == 'admin'){
+            $admin = true;
+        }else{
+            $admin = false;
+        }
+        $all_mini_calib = MiniCalibration::select('*');
+
+        if ( !is_null($request->search)) {
+      
+           $all_mini_calib->codice($request->search);
+        }
+        if ( !is_null($request->search2)) {
+           
+            $all_mini_calib->machine($request->search2);
+        }
+
+        if( !is_null($request->search3)){
+           
+            $all_mini_calib->mini($request->search3);
+        }
+     
+         $res =  $all_mini_calib->with('codice')->with('minis.connector')->with('machines')->get();
+
+        return  array('all_mini_calib'=>$res,'admin'=>$admin);
+    }
+
+    public function mini_calibration_list_view(Request $request){
+
+    return view('mini_calibration_list');
+    }
+    
 
 }

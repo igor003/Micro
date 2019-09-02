@@ -6,7 +6,7 @@
             <div class="col-lg-offset-8 col-lg-4">
                 <div class="input-group">
                     {{ csrf_field() }}
-                    <input id="search_miniaplicator" type="text" class="form-control" placeholder="Search for...">
+                    <input id="search_miniaplicator" type="text" class="form-control" placeholder="Search codice">
                 </div>
             </div>
         </div>
