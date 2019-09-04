@@ -74,6 +74,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/connector_list_view', 'ConnectorController@connectors_list_view')->name('connector_list_view');
     Route::get('/specification_view', 'ConnectorController@upload_specification_view')->name('specification_view');
     Route::post('/upload_specifications', 'ConnectorController@upload_specifications')->name('upload_specif');
+    Route::post('/download_specification', 'ConnectorController@download_specification')->name('download_specif');
+   
 //Miniaplicators
     Route::get('/add_miniaplicator_view', 'MiniaplicatorController@index')->name('add_miniaplicator_view');
     Route::post('/add_miniaplicator', 'MiniaplicatorController@create')->name('add_miniaplicator');
@@ -83,8 +85,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/add_mini_calibration', 'MiniaplicatorController@add_mini_calibration')->name('add_mini_calibration');
     Route::get('/add_mini_calibaration_view' , 'MiniaplicatorController@add_calibration_view')->name('mini_calibration_view');
     Route::post('/mini_calibaration_list' , 'MiniaplicatorController@mini_calibration_list')->name('mini_calibration_list');
-    Route::get('/_mini_calibaration_list_view' , 'MiniaplicatorController@mini_calibration_list_view')->name('mini_calibration_list_view');
-   
+    Route::get('/mini_calibaration_list_view' , 'MiniaplicatorController@mini_calibration_list_view')->name('mini_calibration_list_view');
+
    
     
 });

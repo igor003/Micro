@@ -8,6 +8,8 @@ use App\Photo;
 use App\Project;
 use App\Part;
 use App\Connector;
+use App\Miniaplicator;
+use App\Machine;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -93,7 +95,9 @@ class ConfigurationController extends Controller
 
     public function  upload_foto_view(Request $request){
         $conf = Configuration::where('id','=',$request->id)->with('codice.project')->get();
-        return view('upload_view',['conf'=>$conf]);
+        $minis = Miniaplicator::all();
+        $machines = Machine::all();
+        return view('upload_view',['conf'=>$conf,'minis'=>$minis, 'machines'=>$machines]);
     }
 
     public function upload_photo(Request $request){
@@ -119,6 +123,8 @@ class ConfigurationController extends Controller
            $foto->foto1 = $image_path[0];
            $foto->foto2 = $image_path[1];
            $foto->foto3 = $image_path[2];
+           $foto->miniaplicator_id = $request->mini;
+           $foto->machine_id = $request->machines;
            $foto->operator = Auth::user()->name;
            $foto->maked_at = $date;
            $foto->save();
@@ -158,7 +164,7 @@ class ConfigurationController extends Controller
     }
 
     public function get_excell(){
-        $conf = Configuration::with('codice')->get();
+        $conf = Configuration::with('codice')->with('connector')->get();
 
         $xls = new PHPExcel();
 // Устанавливаем индекс активного листа
@@ -200,7 +206,7 @@ class ConfigurationController extends Controller
         while($rows< $count_conf+3){
             $sheet->setCellValue('A'.$rows, $conf[$cnt]->codice->name);
             $sheet->setCellValue("B".$rows, $conf[$cnt]->components);
-            $sheet->setCellValue("C".$rows, $conf[$cnt]->connecting_element);
+            $sheet->setCellValue("C".$rows, $conf[$cnt]->connector->name);
             $sheet->setCellValue("D".$rows, $conf[$cnt]->sez_components);
             $sheet->setCellValue("E".$rows, $conf[$cnt]->height);
             $sheet->setCellValue("F".$rows, $conf[$cnt]->width);

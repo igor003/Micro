@@ -8,7 +8,7 @@ class Configuration extends Model
 {
     protected $table = 'part_configuration';
     protected $fillable = [
-        'part_id','components','connecting_element','connector_id','sez_components','total_sez','nr_strand','height','width'
+        'part_id','components','connector_id','sez_components','total_sez','nr_strand','height','width'
     ];
     public $timestamps = false;
 

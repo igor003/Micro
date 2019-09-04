@@ -47,9 +47,13 @@ date_default_timezone_set("Europe/Chisinau");
                     </button>
 
                     <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        MICROGRAFIA
-                    </a>
+                    @if(Auth::user())
+                        @if(Auth::user()->status == 'admin' || Auth::user()->status == 'user' )   
+                            <a class="navbar-brand" href="{{ url('/') }}">
+                                MICROGRAFIA
+                            </a>
+                        @endif
+                    @endif
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
@@ -86,95 +90,113 @@ date_default_timezone_set("Europe/Chisinau");
                             </li>
                         @endguest
                     </ul>
-                    @if(Auth::user())
-                        @if(Auth::user()->status == 'admin')
-                             
-                            <ul class="nav navbar-nav navbar-center vertical-center">
-                                <div class="dropdown">
-                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                        Adding
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                        <li>
-                                            <a href="{{ route('add_project_view') }}">
-                                                Add project
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href ="{{route('add_codice_view')}}" >
-                                                Add codice
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{route('add_configuration')}}">
-                                                Add configuration
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{route('add_miniaplicator_view')}}">
-                                                Add miniaplicator
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{route('add_machine_view')}}">
-                                                Add machine
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{route('add_connector_view')}}">
-                                                Add connector
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{route('mini_calibration_view')}}">Add mini calibration</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </ul>
-                   @endif
-                    @endif
-                    <ul class="nav navbar-nav navbar-center vertical-center">
-                         @if(Auth::user())
-                            @if(Auth::user()->status == 'admin')   
-                                <li>
-                                    <a href="{{route('projects_list_view')}}">Project</a>
-                                </li>
-                           @endif
-                        @endif
-                        <li>
-                            <a href="{{route('codice_list_view')}}">Codice</a>
-                        </li>
-                        <li>
-                            <a href="{{route('conf_list_view')}}">Configuration</a>
-                        </li>
-                        <li>
-                            <a href="{{route('photo_list_view')}}">Photo list</a>
-                        </li>
-                        @if(Auth::user())
-                            @if(Auth::user()->status == 'admin')   
-                                <li>
-                                    <a href="{{route('mini_list_view')}}">Miniaplicators</a>
-                                </li>
-                                <li>
-                                    <a href="{{route('connector_list_view')}}">Connectors</a>
-                                </li>
-                                <li>
-                                    <a href="{{route('machine_list_view')}}">Machines</a>
-                                </li>
+                        @if(Auth::user())     
+                            @if(Auth::user()->status === 'minolog')
+                                <ul class="nav navbar-nav navbar-center vertical-center">
+                                    <li>
+                                        <a href="{{route('mini_calibration_list_view')}}">Mini Calibration</a>
+                                    </li>
+                                </ul>
+                             @endif
+                         @endif
+                        @if(Auth::user())     
+                            @if(Auth::user()->status === 'admin')
+                                 
+                                <ul class="nav navbar-nav navbar-center vertical-center">
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            Adding
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                            <li>
+                                                <a href="{{ route('add_project_view') }}">
+                                                    Add project
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href ="{{route('add_codice_view')}}" >
+                                                    Add codice
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{route('add_configuration')}}">
+                                                    Add configuration
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{route('add_miniaplicator_view')}}">
+                                                    Add miniaplicator
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{route('add_machine_view')}}">
+                                                    Add machine
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{route('add_connector_view')}}">
+                                                    Add connector
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{route('mini_calibration_view')}}">Add mini calibration</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </ul>
                             @endif
-                        @endif
-                        <li>
-                            <a href="{{route('raport_view')}}">Report efficiency</a>
-                        </li>
-                        <li>
-                            <a href="{{route('report_list_view')}}">Daily reports</a>
-                        </li>
-                        <li>
-                            <a href="{{route('mini_calibration_list_view')}}">Mini Calibration</a>
-                        </li>
-                        
-                    </ul>
+                         @endif
+                        <ul class="nav navbar-nav navbar-center vertical-center">
+                             @if(Auth::user())
+                                @if(Auth::user()->status == 'admin')   
+                                    <li>
+                                        <a href="{{route('projects_list_view')}}">Project</a>
+                                    </li>
+                               @endif
+                            @endif
+                            @if(Auth::user())
+                                @if(Auth::user()->status == 'admin' || Auth::user()->status == 'user' )   
+                            <li>
+                                <a href="{{route('codice_list_view')}}">Codice</a>
+                            </li>
+                            <li>
+                                <a href="{{route('conf_list_view')}}">Configuration</a>
+                            </li>
+                            <li>
+                                <a href="{{route('photo_list_view')}}">Photo list</a>
+                            </li>
+                                @endif
+                            @endif
+                            @if(Auth::user())
+                                @if(Auth::user()->status == 'admin')   
+                                    <li>
+                                        <a href="{{route('mini_list_view')}}">Miniaplicators</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{route('connector_list_view')}}">Connectors</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{route('machine_list_view')}}">Machines</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{route('report_list_view')}}">Daily reports</a>
+                                    </li>
+                                @endif
+                            @endif
+                            @if(Auth::user())
+                                @if(Auth::user()->status == 'admin' || Auth::user()->status == 'user' )   
+                            <li>
+                                <a href="{{route('raport_view')}}">Report efficiency</a>
+                            </li>
+                            
+                            <li>
+                                <a href="{{route('mini_calibration_list_view')}}">Mini Calibration</a>
+                            </li>
+                                @endif
+                            @endif
+                        </ul>
+                  
                 </div>
             </div>
         </nav>

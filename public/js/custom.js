@@ -132,7 +132,10 @@ function generate_html_connectors(data,entity,admin){
             if(data.specification_path){
                 result += 
                 '<td class="text-center">' +
-                '<a href="'+entity+'_list/update_view/'+data.id+'"> <div><img height="50px" width = "50px" src="/img/specific.png" alt=""></div></a>'+
+                '<form method="POST" action="/download_specification">'+
+                    ' <input type="hidden" name="path" value="'+data.specification_path+'">'+
+                    '<button type="submit"><img height="50px" width = "50px" src="/img/specific.png" alt=""></button>'+
+                '</form>' +
                 '</td>'
              }else{
                   result += 
@@ -244,7 +247,7 @@ function generate_html_photo(data, admin){
                 '<td class="text-center">' +data.maked_at.substr(0, data.maked_at.length - 8)+' </td>' +
                 '<td class="text-center">' + data.configurations[0].codice.project.name+ '</td>' +
                 '<td class="text-center">'+data.configurations[0].codice.name+'</td>' +
-                '<td class="text-center">' + data.configurations[0].connecting_element+ '</td>' +
+                '<td class="text-center">' + data.configurations[0].connector.name+ '</td>' +
                 '<td class="text-center">' + data.configurations[0].components+ '</td>' +
                 '<td class="text-center">' + data.operator+ '</td>' +
                 '<td class="text-center">'+

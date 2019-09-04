@@ -56,7 +56,8 @@ class PhotoController extends Controller
             $photos->codice($request->codice);
         }
 
-        $photos->with('configurations.codice.project');
+        $photos->with('configurations.codice.project')->with('configurations.connector');
+        // exit( $photos->with('configurations.codice.project')->with('configuration.connector'));
         $total_photo_with_filter =  $photos->with('configurations.codice.project')->get();
         $schip = ($request->cur_page - 1)*$request->per_page;
 

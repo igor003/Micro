@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Photo extends Model
 {
     protected $table = 'foto';
-    protected $fillable = ['configuration_id','foto1','foto2','foto3','maked_at','created_at'];
+    protected $fillable = ['configuration_id','foto1','foto2','foto3','miniaplicator_id','machine_id','maked_at','created_at'];
 
     public function configurations(){
         return $this->hasMany('App\Configuration','id','configuration_id');

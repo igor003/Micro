@@ -25,13 +25,38 @@
             </div>
             <div class="col-xs-9">
                 <form action="{{route('upload')}}" method="post" enctype="multipart/form-data">
-                    <div class="col-md-6">
-                        <input type="file" class="form-control" id="images" name="images[]" onchange="preview_images()"  multiple >
+                    <label for="datepicker_config">Date:</label>
+                    <input type="text" class="form-control" name="maked_at" id="datepicker_config" aria-describedby="emailHelp" placeholder="Enter date">
+                    <label for="mini">Miniaplicator</label>
+                    <select name="mini" class="form-control" id="minis">
+                        <option  value="" selected></option>
+                        @foreach($minis as $mini)
+                            <option value="{{$mini->id}}">
+                                {{$mini->name}}
+                            </option>
+                        @endforeach
+                    </select>
+                    <label for="codice_conf">Machines</label>
+                    <select name="machines" class="form-control" id="machiness">
+                        <option  value="" selected></option>
+                        @foreach($machines as $machine)
+                            <option value="{{$machine->id}}">
+                                {{$machine->number}}
+                            </option>
+                        @endforeach
+                    </select>
+                    <div class="row">
+                        <br>
                     </div>
-                    <div class="col-md-6">
-                        <input type="submit" class="btn btn-primary" name='submit_image' value="Upload Multiple Image"/>
+                     <div class="row">
+                        <label for="images"></label>
+                        <div class="col-md-6">
+                            <input type="file" class="form-control" id="images" name="images[]" onchange="preview_images()"  multiple >
+                        </div>
+                        <div class="col-md-6">
+                            <input type="submit" class="btn btn-primary" name='submit_image' value="Upload Multiple Image"/>
+                        </div>
                     </div>
-                    <p>Date:<input type="text" class="form-control" name="maked_at" id="datepicker_config" aria-describedby="emailHelp" placeholder="Enter date"></p>
                     <input type="hidden" name="id" value="{{$conf[0]->id}}">
                     <input type="hidden" name="project" value="{{$conf[0]->codice->project->name}}">
                     <input type="hidden" name="codice" value="{{$conf[0]->codice->name}}">

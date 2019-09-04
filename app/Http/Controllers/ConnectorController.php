@@ -63,5 +63,16 @@ class ConnectorController extends Controller
 
         return redirect(route('connector_list_view'));
     }
+
+    public function download_specification(Request $request){
+
+        $storagePath  = Storage::disk('specifications')->getDriver()->getAdapter()->getPathPrefix();
+        $headers = [
+            'Content-Type' => 'application.pdf',
+            'Content-dispozition' => 'attachment; filename=result',
+        ];
+
+        return response()->download($storagePath.basename($request->path), basename($request->path), $headers);
+    }
   
 }

@@ -10,28 +10,34 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-10 col-lg-offset-1 col-lg-3 ">
-                <div class="input-group">
+            <div class="col-xs-12 col-lg-4 text-center">
+               
                     {{ csrf_field() }}
+                    <label for="search_calibration  ">Codice:</label>
                     <input id="search_calibration" type="text" class="form-control" placeholder="Search codice">
-                </div>
+               
             </div>
-            <div class=" col-sm-10 col-lg-offset-1 col-lg-3 ">
-                <div class="input-group text-center">
+            <div class=" col-xs-12  col-lg-4 text-center ">
+                
                     {{ csrf_field() }}
+                    <label for="search_machines">Preseta:</label>
                     <input id="search_machines" type="text" class="form-control" placeholder="Search machine">
-                </div>
+              
             </div>
-             <div class="col-lg-offset-1 col-lg-3 col-sm-10">
-                <div class="input-group">
+             <div class="col-xs-12 col-lg-4 text-center ">
+                
                     {{ csrf_field() }}
+                    <label for="search_miniaplicators ">Mini:</label>
                     <input id="search_miniaplicators" type="text" class="form-control" placeholder="Search mini">
-                </div>
+             
             </div>
 
             <br>
         </div>
-       
+       <div class="row">    
+                <br>    
+
+       </div>
        
         <div class="row">
             <div class=" col-md-offset-1 col-md-10">
@@ -41,23 +47,23 @@
                         <td class="text-center">
                             Codice
                         </td>
-                        <td>
+                        <td class="text-center">
                             Components
                         </td>
-                        <td>
+                        <td class="text-center">
                             Connector
                         </td>
-                        <td>
+                        <td class="text-center">
                             Machine
                         </td>
-                        <td>
+                        <td class="text-center">
                             Miniaplicator
                         </td>
                        
-                        <td>
+                        <td class="text-center">
                             Calibration up
                         </td>
-                        <td>
+                        <td class="text-center">
                             Calibration down
                         </td>
                         @if(Auth::user()->status == 'admin')
