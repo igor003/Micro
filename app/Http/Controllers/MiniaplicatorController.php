@@ -88,13 +88,16 @@ class MiniaplicatorController extends Controller
 
     public function add_mini_calibration(Request $request)
     {
+
+        $errors = array();
         $curent = MiniCalibration::where('part_id',$request->codice)
                                 ->where('miniaplicator_id',$request->mini)
                                 ->where('components',$request->components)
                                 ->where('machine_id',$request->machines)->first();
         
         if($curent){
-             return redirect('/mini_calibaration_list_view');
+            $errors[] = 'Tis record already exist!!' ;
+             return view('mini_calibration_list',['errors'=>$errors]);
         }else{
             $mini_calib = new MiniCalibration;
             $mini_calib->part_id = $request->codice;
@@ -104,7 +107,8 @@ class MiniaplicatorController extends Controller
             $mini_calib->calibration_up = $request->calibr_up;
             $mini_calib->calibration_down = $request->calibr_down;
             $mini_calib->save();
-            return redirect('/home');
+        
+            return redirect('/mini_calibaration_list_view');
         }
 
         // return redirect('/home');
@@ -120,16 +124,12 @@ class MiniaplicatorController extends Controller
         $all_mini_calib = MiniCalibration::select('*');
 
         if ( !is_null($request->search)) {
-      
            $all_mini_calib->codice($request->search);
         }
         if ( !is_null($request->search2)) {
-           
             $all_mini_calib->machine($request->search2);
         }
-
         if( !is_null($request->search3)){
-           
             $all_mini_calib->mini($request->search3);
         }
      
@@ -138,9 +138,18 @@ class MiniaplicatorController extends Controller
         return  array('all_mini_calib'=>$res,'admin'=>$admin);
     }
 
-    public function mini_calibration_list_view(Request $request){
+    public function mini_calibration_list_view(Request $request)
+    {
 
-    return view('mini_calibration_list');
+        return view('mini_calibration_list');
+    }
+
+    public function mini_calibration_delete($id)
+    {
+        $mini_calibr = MiniCalibration::findOrFail($id);
+        $mini_calibr->delete();
+
+        return redirect('mini_calibaration_list_view');
     }
     
 

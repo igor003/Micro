@@ -235,7 +235,7 @@ function generate_calibration_html (data,admin){
                 '<a href="reports_list/update/' + data.id + '"> <div class="delete"><img height="30px" width = "30px" src="/img/update.png" alt=""></div></a>' +
                 '</td>'+
                 '<td class="text-center">' +
-                '<a href="reports_list/delete/' + data.id + '"> <div class="delete"><img height="30px" width = "30px" src="/img/delete.png" alt=""></div></a>' +
+                '<a href="/mini_calibration_delete/' + data.id + '"> <div class="delete"><img height="30px" width = "30px" src="/img/delete.png" alt=""></div></a>' +
                 '</td>';
             }
         result +='</tr>';
@@ -309,6 +309,9 @@ $( document ).ready(function() {
     });
     $('#connector1').on('change',function() {
         get_miniaplicators_list();
+    });
+    $('#conf_connectors').on('change',function(){
+        get_configuration_list();
     });
     $('#search_configuration').on('keyup',function() {
         get_configuration_list();
@@ -508,12 +511,14 @@ function get_configuration_list(){
     $('input[id="projects"]:checked').each(function () {
         filter.push(this.value);
     });
+    var filter_connector = $('#conf_connectors').val();
     $.ajax({
         url: '/configuration_list',
         type: 'POST',
         data: {
             filter: filter,
-            search:search
+            search:search,
+            filter2:filter_connector
         },
         dataType: 'json',
         success: function (data) {

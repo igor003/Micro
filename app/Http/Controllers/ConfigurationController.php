@@ -58,9 +58,9 @@ class ConfigurationController extends Controller
         $route = \Route::current();
         $codice_id = $route->parameter('codiceid');
         $projects = Project::orderBy('name','asc')->get();
-        $conneector = Connector::all();
+        $conneectors = Connector::all();
         
-        return view('configuration_list',['projects'=>$projects,'codice_id'=>$codice_id]);
+        return view('configuration_list',['projects'=>$projects,'codice_id'=>$codice_id,'connectors'=>$conneectors]);
     }
 
     public function config_list(Request $request){
@@ -78,6 +78,12 @@ class ConfigurationController extends Controller
         else if($request->filter != ''){
             $conf = Configuration::whereHas('codice',function ($query) use($request) {
                 $query->whereIn('project_id',$request->filter);
+            })->with('codice')->with('connector')->get();
+            return array('conf'=>$conf,'admin'=>$admin);
+        }
+        else if($request->filter2 != ''){
+             $conf = Configuration::whereHas('connector',function ($query) use($request) {
+                $query->where('id',$request->filter2);
             })->with('codice')->with('connector')->get();
             return array('conf'=>$conf,'admin'=>$admin);
         }

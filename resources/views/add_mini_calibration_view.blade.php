@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-xs-4">
             <!-- @if($errors)
-                @foreach($errors->all() as $error)
+                @foreach($errors as $error)
                     <div class=" errors alert alert-danger">
                         {{$error}}
                     </div>

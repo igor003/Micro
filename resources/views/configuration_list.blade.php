@@ -65,9 +65,6 @@
                         <td class="text-center">
                             Width
                         </td>
-                       <!--  <td class="text-center">
-                            Micros. list
-                        </td> -->
                         @if(Auth::user()->status == 'admin')
                             <td class="text-center">
                                 Update
@@ -83,6 +80,16 @@
                 </table>
             </div>
             <div class="col-lg-2">
+                <label for="mini">Connectors</label>
+                    <select name="connectors" class="form-control" id="conf_connectors">
+                        <option  value="" selected></option>
+                        @foreach($connectors as $connector)
+                            <option value="{{$connector->id}}">
+                                {{$connector->name}}
+                            </option>
+                        @endforeach
+                    </select>
+                    <br>
                 @foreach($projects as $project)
                     <input class="configur form-check-input" type="checkbox" value="{{$project->id}}" id="projects">
                     <label class=" project_label form-check-label" for="Project">
@@ -90,6 +97,10 @@
                     </label>
                     <br>
                 @endforeach
+
+
+              
+                
             </div>
         </div>
     </div>

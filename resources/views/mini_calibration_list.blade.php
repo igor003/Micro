@@ -2,7 +2,19 @@
 
 @section('content')
     <div class="container">
+        <div class="row">
+            <div class=" col-md-offset-4 col-md-4">
+                @if($errors)
+                    @foreach($errors as $error)
+                        <div class=" errors alert alert-danger">
+                            {{$error}}
+                        </div>
+                    @endforeach
+                @endif
+            </div>
+        </div>
          <div class="row">
+            
             <div class="col-md-12  text-center">
                 <h4>
                     Mini calibration
