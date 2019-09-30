@@ -56,7 +56,7 @@ class PhotoController extends Controller
             $photos->codice($request->codice);
         }
 
-        $photos->with('configurations.codice.project')->with('configurations.connector');
+        $photos->with('configurations.codice.project')->with('configurations.connector')->with('minis')->with('machines');
         // exit( $photos->with('configurations.codice.project')->with('configuration.connector'));
         $total_photo_with_filter =  $photos->with('configurations.codice.project')->get();
         $schip = ($request->cur_page - 1)*$request->per_page;
@@ -113,17 +113,13 @@ class PhotoController extends Controller
 
     public function raport(Request $request){
       $photoss = Photo::select('*');
-      if(!is_null($request->part)){
-        $photoss->codice($request->part);
-        
-      }
       if($request->date_from && $request->date_to){
         $photoss->raport($request->date_from,$request->date_to);
       }
-  
-        $raport = $photoss->get();
-      
-     
+      if(!is_null($request->part)){
+        $photoss->configuration($request->part);
+      }
+        $raport = $photoss->get();     
       // Создаем объект класса PHPExcel
       $xls = new PHPExcel();
 // Устанавливаем индекс активного листа
@@ -139,11 +135,15 @@ class PhotoController extends Controller
       $sheet->setCellValue("C2", 'Codice');
       $sheet->setCellValue("D2", 'Terminal/Splice');
       $sheet->setCellValue("E2", 'Configuration');
+      $sheet->setCellValue("F2", 'Miniaplicator');
+      $sheet->setCellValue("G2", 'Preseta');
       $sheet->getColumnDimension('A')->setAutoSize(true);
       $sheet->getColumnDimension('B')->setAutoSize(true);
       $sheet->getColumnDimension('C')->setAutoSize(true);
       $sheet->getColumnDimension('D')->setAutoSize(true);
       $sheet->getColumnDimension('E')->setAutoSize(true);
+      $sheet->getColumnDimension('F')->setAutoSize(true);
+      $sheet->getColumnDimension('G')->setAutoSize(true);
       $sheet->getStyle('A1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
       $sheet->getStyle('A1')->getFill()->getStartColor()->setRGB('EEEEEE');
       $sheet->getStyle('A1')->getFont()->setSize(18);
@@ -156,8 +156,10 @@ class PhotoController extends Controller
         $sheet->setCellValue('A'.$rows, $raport[$cnt]->maked_at);
         $sheet->setCellValue("B".$rows, $raport[$cnt]->configurations[0]->codice->project->name);
         $sheet->setCellValue("C".$rows, $raport[$cnt]->configurations[0]->codice->name);
-        $sheet->setCellValue("D".$rows, $raport[$cnt]->configurations[0]->connecting_element);
+        $sheet->setCellValue("D".$rows, $raport[$cnt]->configurations[0]->connector->name);
         $sheet->setCellValue("E".$rows, $raport[$cnt]->configurations[0]->components);
+        $sheet->setCellValue("F".$rows, $raport[$cnt]->minis->name);
+        $sheet->setCellValue("G".$rows, $raport[$cnt]->machines->number);
         $sheet->getRowDimension($rows)->setRowHeight(25);
         $sheet->getStyle('A'.$rows)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle('A'.$rows)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
@@ -165,11 +167,13 @@ class PhotoController extends Controller
         $sheet->getStyle('C'.$rows)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle('D'.$rows)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle('E'.$rows)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('F'.$rows)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('G'.$rows)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $rows++;
         $cnt++;
       }
 // Объединяем ячейки
-        $sheet->mergeCells('A1:E1');
+        $sheet->mergeCells('A1:G1');
 // Выравнивание текста
         $sheet->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
@@ -177,6 +181,8 @@ class PhotoController extends Controller
         $sheet->getStyle('C2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle('D2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle('E2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('F2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('G2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 // заголовки
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="rapot Micrografii '.$request->date_from.'<->'.$request->date_to.'.xls"');

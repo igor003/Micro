@@ -245,11 +245,18 @@ function generate_calibration_html (data,admin){
 function generate_html_photo(data, admin){
     var result ='<tr>' +
                 '<td class="text-center">' +data.maked_at.substr(0, data.maked_at.length - 8)+' </td>' +
-                '<td class="text-center">' + data.configurations[0].codice.project.name+ '</td>' +
                 '<td class="text-center">'+data.configurations[0].codice.name+'</td>' +
                 '<td class="text-center">' + data.configurations[0].connector.name+ '</td>' +
-                '<td class="text-center">' + data.configurations[0].components+ '</td>' +
-                '<td class="text-center">' + data.operator+ '</td>' +
+                '<td class="text-center">' + data.configurations[0].components+ '</td>';
+                if(data.minis && data.machines){
+                     result +='<td class="text-center">' + data.minis.name+ '</td>' +
+                              '<td class="text-center">' + data.machines.number+ '</td>';
+                }else{
+                     result +='<td class="text-center">' +'--'+ '</td>' +
+                              '<td class="text-center">' +'--'+ '</td>';
+                }
+           
+            result += '<td class="text-center">' + data.operator+ '</td>' +
                 '<td class="text-center">'+
                 '<form method="POST" action="/photo_download">'+
                 '<input type="hidden" name="photo_1" value="'+data.foto1+'">'+

@@ -11,9 +11,6 @@
                             Date
                         </td>
                         <td class="text-center">
-                            Project
-                        </td>
-                        <td class="text-center">
                             Codice
                         </td>
                         <td class="text-center">
@@ -21,6 +18,12 @@
                         </td>
                         <td class="text-center">
                             Configuration
+                        </td>
+                        <td class="text-center">
+                           Miniaplicator
+                        </td>
+                        <td class="text-center">
+                           Machine nmb
                         </td>
                         <td class="text-center">
                           Operator

@@ -12,7 +12,12 @@ class Photo extends Model
     public function configurations(){
         return $this->hasMany('App\Configuration','id','configuration_id');
     }
-
+    public function machines(){
+        return $this->belongsTo('App\Machine','machine_id');
+    }
+    public function minis(){
+        return $this->belongsTo('App\Miniaplicator','miniaplicator_id');
+    }
     public function scopeDate($query, $date_from , $date_to){
         return $query->whereHas('configurations.codice.project', function ($query) use($date_from,$date_to) {
             $query->whereBetween('maked_at', [$date_from, $date_to]);
@@ -33,9 +38,14 @@ class Photo extends Model
             $query->whereBetween('maked_at', [$date_from, $date_to]);
         });
     }
-      public function scopeProject1($query, $project){
+    public function scopeProject1($query, $project){
         return $query->whereHas('configurations.codice', function ($query) use($project) {
             $query->whereIn('project_id',$project);
+        });
+    }
+    public function scopeConfiguration($query, $part_id){
+        return $query->whereHas('configurations.codice', function ($query) use($part_id) {
+            $query->where('id',$part_id);
         });
     }
     // public function scopeRaportProject($query, $project_id){
