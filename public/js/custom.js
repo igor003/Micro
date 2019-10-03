@@ -323,6 +323,12 @@ $( document ).ready(function() {
     $('#search_configuration').on('keyup',function() {
         get_configuration_list();
     });
+    $('#mini').on('change', function(){
+        get_photo_list()
+    });
+    $('#machine').on('change', function(){
+        get_photo_list()
+    });
     $('#projects>input[type="checkbox"]').on('click',function(){
         get_photo_list();
     });
@@ -581,7 +587,8 @@ function get_photo_list(cur_page){
     
     date_from = $('#datepicker_photo_from').val();
     date_to = $('#datepicker_photo_to').val();
-
+    mini = $('#mini').val();
+    machine = $('#machine').val();
     $('#projects>input[type="checkbox"]:checked').each(function () {
         // console.log(this.value);
         project.push(this.value);
@@ -590,6 +597,7 @@ function get_photo_list(cur_page){
         // console.log(this.value);
         codice.push(this.value);
     });
+    
     // console.log(codice);
     // console.log(date_from);
     // console.log(date_);
@@ -604,7 +612,9 @@ function get_photo_list(cur_page){
             project:project,
             codice:codice,
             cur_page:cur_page,
-            per_page:per_page
+            per_page:per_page,
+            mini:mini,
+            machine:machine
 
         },
         success: function (data) {
@@ -622,7 +632,7 @@ function get_photo_list(cur_page){
             }
             var pages = Math.ceil(data.total_count/per_page);
             $('#pagin').empty();
-            if(codice.length == 0 && project.length == 0 && date_to === '' && date_from === ''){// если нет фильтра по codice и project
+            if(codice.length == 0 && project.length == 0 && date_to === '' && date_from === '' && mini === '' && machine === ''){// если нет фильтра по codice и project
 
                 // if(){// если нет фильтра по date
                     $('#pagin').append('<li class="page-item1 prev"><a href="#" class="page-link" >Previous</a></li>');

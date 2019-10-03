@@ -28,6 +28,16 @@ class Photo extends Model
             $query->whereIn('id',$projects);
         });
     }
+    public function scopeMini($query, $mini){
+        return $query->whereHas('minis', function ($query) use($mini) {
+            $query->where('id',$mini);
+        });
+    }
+    public function scopeMachine($query, $machine){
+        return $query->whereHas('machines', function ($query) use($machine) {
+            $query->where('id',$machine);
+        });
+    }
     public function scopeCodice($query, $codice){
         return $query->whereHas('configurations', function ($query) use($codice) {
             $query->whereIn('part_id',$codice);

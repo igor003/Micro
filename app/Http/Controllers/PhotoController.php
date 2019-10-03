@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use App\Part;
 use App\Photo;
 use App\Project;
+use App\Miniaplicator;
+use App\Machine;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use PHPExcel;
@@ -35,9 +37,11 @@ class PhotoController extends Controller
     public function index(){
         $projects = Project::orderBy('name','asc')->get();
         $codice = Part::orderBy('name','asc')->get();
+        $minis = Miniaplicator::all();
+        $machines = Machine::all();
         $route = \Route::current();
         $codice_id = $route->parameter('codiceid');
-        return view('photo_list',['projects'=>$projects,'codicies'=>$codice,'codice_id'=>$codice_id]);
+        return view('photo_list',['projects'=>$projects,'codicies'=>$codice,'codice_id'=>$codice_id,'minis'=>$minis, 'machines'=>$machines]);
     }
 
     public function photo_list(Request $request){
@@ -55,7 +59,13 @@ class PhotoController extends Controller
         if($request->codice != ''){
             $photos->codice($request->codice);
         }
-
+        if($request->mini != ''){
+            $photos->mini($request->mini);
+        }
+        if($request->machine != ''){
+            $photos->machine($request->machine);
+        }
+        
         $photos->with('configurations.codice.project')->with('configurations.connector')->with('minis')->with('machines');
         // exit( $photos->with('configurations.codice.project')->with('configuration.connector'));
         $total_photo_with_filter =  $photos->with('configurations.codice.project')->get();
@@ -155,11 +165,21 @@ class PhotoController extends Controller
       while($rows< $count_photo+3){
         $sheet->setCellValue('A'.$rows, $raport[$cnt]->maked_at);
         $sheet->setCellValue("B".$rows, $raport[$cnt]->configurations[0]->codice->project->name);
+
         $sheet->setCellValue("C".$rows, $raport[$cnt]->configurations[0]->codice->name);
         $sheet->setCellValue("D".$rows, $raport[$cnt]->configurations[0]->connector->name);
         $sheet->setCellValue("E".$rows, $raport[$cnt]->configurations[0]->components);
-        $sheet->setCellValue("F".$rows, $raport[$cnt]->minis->name);
-        $sheet->setCellValue("G".$rows, $raport[$cnt]->machines->number);
+        if($raport[$cnt]->minis){
+           $sheet->setCellValue("F".$rows, $raport[$cnt]->minis->name);
+        }else{
+           $sheet->setCellValue("F".$rows, "---");
+        }
+        if($raport[$cnt]->machines){
+            $sheet->setCellValue("G".$rows, $raport[$cnt]->machines->number);
+        }else{
+           $sheet->setCellValue("G".$rows, "---");
+        }
+       
         $sheet->getRowDimension($rows)->setRowHeight(25);
         $sheet->getStyle('A'.$rows)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle('A'.$rows)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);

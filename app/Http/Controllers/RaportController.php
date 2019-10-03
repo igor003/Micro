@@ -47,33 +47,21 @@ class RaportController extends Controller
 
 		$parts_with_micro = [];
 		$count_parts = count($parts_name_xls);
-
-		// foreach($parts_name_xls as $part_xls){
-		// 	foreach($parts_name as $part_name) {
-		// 		if(stristr($part_xls,$part_name)){
-		// 			$parts_with_micro[] = $part_name;
-		// 		}
-		// 	}
-		// }
+		
 		$flag = 0;
 		foreach($parts_name_xls as $key => $part_xls){
 			foreach($parts_name as $key1 => $part_name) {
 				if(stristr($part_xls,$part_name)){
 					$parts_with_micro[] = $part_name;
 					$flag = 1;
-					
 					break;
 				}
 			}
-
 			if($flag){
 				unset($parts_name_xls[$key]);
 			}
 			$flag=0;
-			
 		}
-		// var_dump($parts_name_xls);
-		// $parts_with_m = array_intersect_key($parts_name_xls,$parts_name);
 	
 		$photos = Photo::where('maked_at',$request->data_raport)->orWhere('maked_at','like',$request->data_raport.'%')->with('configurations.codice')->orderBy('maked_at', 'asc')->get();	 
 		$parts_names = array();
@@ -87,15 +75,15 @@ class RaportController extends Controller
 		foreach($parts_with_micro_copy as $key=>$parts){
 			foreach($parts_names_copy as $key1=>$parts_n){
 				if($parts === $parts_n){
-					$flag = 1;
+					$flag2 = 1;
 					unset($parts_names_copy[$key1]);
 					break;
 				}
 			}
-			if($flag){
+			if($flag2){
 				unset($parts_with_micro_copy[$key]);
 			}
-			$flag = 0;
+			$flag2 = 0;
 		}
 
 		return view('raport_list',['parts_micro'=>$parts_with_micro,'parts'=>$count_parts, 'parts_efectuated'=>$parts_names, 'difference'=>$parts_with_micro_copy, 'data_raport'=>$request->data_raport]);

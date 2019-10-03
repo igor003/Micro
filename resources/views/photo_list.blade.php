@@ -112,6 +112,28 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="mini">Miniaplicator</label>
+                    <select name="minaplicator" class="form-control" id="mini">
+                        <option  value="" selected></option>
+                         @foreach($minis as $mini)
+                            <option value="{{$mini->id}}">
+                                {{$mini->name}}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="mini">Machine</label>
+                    <select name="machine" class="form-control" id="machine">
+                        <option  value="" selected></option>
+                         @foreach($machines as $machine)
+                            <option value="{{$machine->id}}">
+                                {{$machine->number}}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
         </div>
     </div>
