@@ -90,6 +90,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/mini_calibaration_list_view' , 'MiniaplicatorController@mini_calibration_list_view')->name('mini_calibration_list_view');
     Route::get('/mini_calibration_delete/{id}','MiniaplicatorController@mini_calibration_delete')->name('mini_calibr_delete');
 
+//Admin Users 
+    Route::get('/user/update_view/{id}', 'UserController@update_view');
+    Route::get('/users_list', 'UserController@index')->name('usr_list');
+    Route::post('/users_update', 'UserController@update')->name('usr_update');
+    
    
     
 });

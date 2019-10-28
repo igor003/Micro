@@ -3,7 +3,14 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="col-lg-offset-8 col-lg-4">
+            <div class="col-lg-offset-2 col-lg-2 text-center ">
+                <a calss='' href="">
+                    <button class="btn btn-success">
+                        <h5>Validations</h5>
+                    </button>
+                </a>
+            </div>
+            <div class="col-lg-offset-4 col-lg-4">
                 <div class="input-group">
                     {{ csrf_field() }}
                     <input id="search_miniaplicator" type="text" class="form-control" placeholder="Search codice">

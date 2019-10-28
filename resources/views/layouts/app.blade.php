@@ -86,6 +86,13 @@ date_default_timezone_set("Europe/Chisinau");
                                             {{ csrf_field() }}
                                         </form>
                                     </li>
+                             @if(Auth::user())     
+                                @if(Auth::user()->status === 'admin')
+                                    <li>
+                                            <a href="{{route('usr_list')}}">Admin Panel</a>
+                                    </li>
+                                @endif
+                            @endif
                                 </ul>
                             </li>
                         @endguest
