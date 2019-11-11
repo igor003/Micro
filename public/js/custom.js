@@ -137,8 +137,26 @@ function generate_html_validations(data){
          '</tr>';
         return result;     
 }
+
+function generate_html_validations_done(data){
+         var result = '<tr>' +
+            '<td class="text-center">'+data.date+'</td>'+
+            '<td class="text-center">'+data.minis.name+'</td>'+
+            '<td class="text-center">'+data.minis.connector.name+'</td>'+
+            '<td class="text-center">'+data.type_validation+'</td>'+
+            '<td class="text-center">' +
+                // '<a href="/mini/validation_download/'+data.id+'"> <div><img height="40px" width = "40px" src="/img/download.png" alt=""></div></a>'+
+            '<form method="POST" action="/mini/download_validation">'+
+                ' <input type="hidden" name="path" value="'+data.path+'">'+
+                 '<button type="submit"><img height="20px" width = "20px" src="/img/download.png" alt=""></button>'+
+            '</form>'+
+                
+            '</td>' +
+         '</tr>';
+        return result;     
+}
 function generate_html_connectors(data,entity,admin){
-    console.log(data.specification_path);
+    
         var result = '<tr>' +
             '<td class="text-center">'+data.name+'</td>';
             if(data.specification_path){
@@ -365,7 +383,7 @@ $( document ).ready(function() {
     get_reports_list();
     get_calibrations_list();
     get_validation_list();
-
+    get_validation_done_list();
 });
 
 function get_codice_list(){
@@ -529,6 +547,31 @@ function get_validation_list(){
     })
 }
 
+function get_validation_done_list(){
+    var search;
+    search = $('#search_validarea_done').val();
+    // var filter = $('#connector1').val();
+    $.ajax({
+        url: '/mini_valid_done_list',
+        type: 'POST',
+        data: {
+            search:search,
+        },
+        dataType: 'json',
+        success: function (data) {
+            $('#table_validation_done').empty();
+            var i = 0;
+            while(i< data.length){
+                $('#table_validation_done').append(generate_html_validations_done(data[i]));
+                i++;
+            }
+        },
+        error:function(error){
+            console.log('error; ' + eval(error));
+        }
+    })
+}
+
 function get_miniaplicators_list(){
     var search;
     search = $('#search_miniaplicator').val();
@@ -629,17 +672,13 @@ function get_photo_list(cur_page){
     mini = $('#mini').val();
     machine = $('#machine').val();
     $('#projects>input[type="checkbox"]:checked').each(function () {
-        // console.log(this.value);
+       
         project.push(this.value);
     });
     $('#codice>input[type="checkbox"]:checked').each(function () {
-        // console.log(this.value);
+        
         codice.push(this.value);
     });
-    
-    // console.log(codice);
-    // console.log(date_from);
-    // console.log(date_);
    
     $.ajax({
         url: '/photo_list',

@@ -21,6 +21,10 @@
                     </div>
                     {{ csrf_field() }}
                     <div class="form-group">
+                    	<input type="hidden" name='mini_name' value='{{$cur_validation[0]->minis->name}}'>
+                		<input type="hidden" name='valid_id' value='{{$cur_validation[0]->id}}'>
+                		<input type="hidden" name='valid_date' value='{{$cur_validation[0]->date}}'>
+        			    <input type="hidden" name='valid_type' value='{{$cur_validation[0]->type_validation}}'>
                         <b>
                             Select file
                         </b>

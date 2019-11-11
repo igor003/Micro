@@ -75,33 +75,37 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/specification_view', 'ConnectorController@upload_specification_view')->name('specification_view');
     Route::post('/upload_specifications', 'ConnectorController@upload_specifications')->name('upload_specif');
     Route::post('/download_specification', 'ConnectorController@download_specification')->name('download_specif');
-   
 //Miniaplicators
     Route::get('/add_miniaplicator_view', 'MiniaplicatorController@index')->name('add_miniaplicator_view');
     Route::post('/add_miniaplicator', 'MiniaplicatorController@create')->name('add_miniaplicator');
     Route::get('/miniaplicator_list_view', 'MiniaplicatorController@miniaplicators_list_view')->name('mini_list_view');
     Route::post('/miniaplicator_list', 'MiniaplicatorController@miniaplicator_list')->name('miniaplicator_list');
     Route::get('/miniaplicator_list/delete/{id}', 'MiniaplicatorController@delete')->name('delete_miniaplicator');
-
 //Mini Calibration    
     Route::post('/add_mini_calibration', 'MiniaplicatorController@add_mini_calibration')->name('add_mini_calibration');
     Route::get('/add_mini_calibaration_view' , 'MiniaplicatorController@add_calibration_view')->name('mini_calibration_view');
     Route::post('/mini_calibaration_list' , 'MiniaplicatorController@mini_calibration_list')->name('mini_calibration_list');
     Route::get('/mini_calibaration_list_view' , 'MiniaplicatorController@mini_calibration_list_view')->name('mini_calibration_list_view');
     Route::get('/mini_calibration_delete/{id}','MiniaplicatorController@mini_calibration_delete')->name('mini_calibr_delete');
-
 //Admin Users 
     Route::get('/user/update_view/{id}', 'UserController@update_view');
     Route::get('/users_list', 'UserController@index')->name('usr_list');
     Route::post('/users_update', 'UserController@update')->name('usr_update');
-    
 //Validation mini
-   Route::get('mini/validations','MiniValidationController@add_validation_view')->name('valid_view');
-   Route::post('mini/add_validation','MiniValidationController@add_validation')->name('add_validation');
-   Route::get('mini/validations_list_view','MiniValidationController@validation_list_view')->name('valid_list_view');
-   Route::post('mini_valid_list','MiniValidationController@validations_list')->name('valid_list');
-   Route::get('mini/validation_upload/{id}','MiniValidationController@upload_validation_view')->name('valid_upload_view');
-   Route::post('mini/upload_validation','MiniValidationController@upload_validation')->name('upload_valid');
+    Route::get('mini/validations','MiniValidationController@add_validation_view')->name('valid_view');
+    Route::post('mini/add_validation','MiniValidationController@add_validation')->name('add_validation');
+
+
+    Route::get('mini/validations_list_view','MiniValidationController@validation_list_view')->name('valid_list_view');
+
+    Route::get('mini/mini_valid_list_done_view','MiniValidationController@validation_list_done_view')->name('valid_list_done_view');
+
+    Route::post('mini_valid_list','MiniValidationController@validations_list')->name('valid_list');
+    Route::post('mini_valid_done_list','MiniValidationController@validations_done_list')->name('valid_done_list');
+
+    Route::get('mini/validation_upload/{id}','MiniValidationController@upload_validation_view')->name('valid_upload_view');
+    Route::post('mini/upload_validation','MiniValidationController@upload_validation')->name('upload_valid');
+    Route::post('mini/download_validation','MiniValidationController@download_validation')->name('valid_download');
     
 });
 

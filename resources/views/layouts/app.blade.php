@@ -92,10 +92,10 @@ date_default_timezone_set("Europe/Chisinau");
                                             <a href="{{route('usr_list')}}">Admin Panel</a>
                                     </li>
                                     <li>
-                                            <a href="{{route('valid_list_view')}}">Validation list to be done</a>
+                                            <a href="{{route('valid_list_view')}}">Validation list to be done   </a>
                                     </li>
                                      <li>
-                                            <a href="{{route('valid_list_view')}}">Validation list done</a>
+                                            <a href="{{route('valid_list_done_view')}}">Validation list done</a>
                                     </li>
                                 @endif
                             @endif
