@@ -30,5 +30,9 @@ class Miniaplicator extends Model
         return $this->hasMany('App\MiniCalibration','id','miniaplicator_id');
     }
 
+    public function validation(){
+        return $this->hasMany('App\MiniValidation','id','id_mini');
+    }
+
 }
 

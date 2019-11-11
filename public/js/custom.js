@@ -125,6 +125,18 @@ function generate_html(data,entity,admin){
         return result;     
 }
 
+function generate_html_validations(data){
+         var result = '<tr>' +
+            '<td class="text-center">'+data.date+'</td>'+
+            '<td class="text-center">'+data.minis.name+'</td>'+
+            '<td class="text-center">'+data.minis.connector.name+'</td>'+
+            '<td class="text-center">'+data.type_validation+'</td>'+
+            '<td class="text-center">' +
+                '<a href="/mini/validation_upload/'+data.id+'"> <div><img height="40px" width = "40px" src="/img/upload.png" alt=""></div></a>'+
+            '</td>' +
+         '</tr>';
+        return result;     
+}
 function generate_html_connectors(data,entity,admin){
     console.log(data.specification_path);
         var result = '<tr>' +
@@ -352,6 +364,7 @@ $( document ).ready(function() {
     get_machines_list();
     get_reports_list();
     get_calibrations_list();
+    get_validation_list();
 
 });
 
@@ -481,6 +494,32 @@ function get_machines_list(){
             var i = 0;
             while(i< data.machines.length){
                 $('#table_machines').append(generate_machines_html(data.machines[i],'machine',data.admin));
+                i++;
+            }
+        },
+        error:function(error){
+            console.log('error; ' + eval(error));
+        }
+    })
+}
+
+function get_validation_list(){
+    var search;
+    search = $('#search_validarea').val();
+    // var filter = $('#connector1').val();
+    $.ajax({
+        url: '/mini_valid_list',
+        type: 'POST',
+        data: {
+            search:search,
+        },
+        dataType: 'json',
+        success: function (data) {
+
+            $('#table_validation').empty();
+            var i = 0;
+            while(i< data.length){
+                $('#table_validation').append(generate_html_validations(data[i]));
                 i++;
             }
         },

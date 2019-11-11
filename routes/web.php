@@ -28,7 +28,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('configuration_project', 'CodiceController@get_by_id_project')->name('get_project_by_codice_id');
     Route::get('codice_list_view', 'CodiceController@codice_list_view')->name('codice_list_view');
     Route::post('/codice_list', 'CodiceController@codice_list')->name('codice_list');
-    Route::post('codice_list/seraching', 'CodiceController@searching');
+    Route::post('codice_list/searching', 'CodiceController@searching');
     Route::get('codice_list/delete/{id}', 'CodiceController@delete')->name('delete_codice');
     Route::post('/codice_list/filter', 'CodiceController@get_by_project')->name('filter_by_project');
     Route::get('codice_list/update_view/{id}', 'CodiceController@update_view')->name('update_view');
@@ -95,7 +95,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/users_list', 'UserController@index')->name('usr_list');
     Route::post('/users_update', 'UserController@update')->name('usr_update');
     
-   
+//Validation mini
+   Route::get('mini/validations','MiniValidationController@add_validation_view')->name('valid_view');
+   Route::post('mini/add_validation','MiniValidationController@add_validation')->name('add_validation');
+   Route::get('mini/validations_list_view','MiniValidationController@validation_list_view')->name('valid_list_view');
+   Route::post('mini_valid_list','MiniValidationController@validations_list')->name('valid_list');
+   Route::get('mini/validation_upload/{id}','MiniValidationController@upload_validation_view')->name('valid_upload_view');
+   Route::post('mini/upload_validation','MiniValidationController@upload_validation')->name('upload_valid');
     
 });
 

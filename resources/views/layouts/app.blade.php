@@ -91,6 +91,12 @@ date_default_timezone_set("Europe/Chisinau");
                                     <li>
                                             <a href="{{route('usr_list')}}">Admin Panel</a>
                                     </li>
+                                    <li>
+                                            <a href="{{route('valid_list_view')}}">Validation list to be done</a>
+                                    </li>
+                                     <li>
+                                            <a href="{{route('valid_list_view')}}">Validation list done</a>
+                                    </li>
                                 @endif
                             @endif
                                 </ul>
@@ -188,6 +194,9 @@ date_default_timezone_set("Europe/Chisinau");
                                     </li>
                                     <li>
                                         <a href="{{route('report_list_view')}}">Daily reports</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{route('valid_view')}}">Maintenance</a>
                                     </li>
                                 @endif
                             @endif

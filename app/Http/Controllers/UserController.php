@@ -25,4 +25,8 @@ class UserController extends Controller
         $user->save();
         return redirect(route('usr_list'));
     }
+
+    public function delete($id){
+
+    }
 }
