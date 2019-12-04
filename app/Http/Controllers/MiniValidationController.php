@@ -31,9 +31,11 @@ class MiniValidationController extends Controller
 	
 		return view('validation_list');
 	}
+
 	public function validation_list_done_view(){
-	
-		return view('validation_list_done');
+		$minis = Miniaplicator::all();
+
+		return view('validation_list_done',['minis'=>$minis]);
 	}
 
 	public function validations_list(){
@@ -42,9 +44,16 @@ class MiniValidationController extends Controller
 		return $validatinos;
 	}
 
-	public function validations_done_list(){
-		$validatinos = MiniValidation::where('status','=','done')->with('minis.connector')->orderBy('date', 'desc')->get();
+	public function validations_done_list(Request $request){
+		 $validations = MiniValidation::select('*');
 		
+        if($request->date != ''){
+            $validations->date($request->date);
+        }
+        else if($request->mini != ''){
+        	$validations->mini($request->mini);
+        }
+       	$validatinos =  $validations->where('status','=','done')->with('minis.connector')->orderBy('date', 'desc')->get();
 		return $validatinos;
 	}
 

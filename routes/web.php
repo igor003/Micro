@@ -43,6 +43,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/add_configuration', 'ConfigurationController@index')->name('add_configuration');
     Route::post('insert_configuration', 'ConfigurationController@insert')->name('insert_configuration');
     Route::get('/configuration/get_list_excel', 'ConfigurationController@get_excell')->name('get_excell');
+    Route::post('/configuration/get_by_part_id','Configurationcontroller@get_by_part_id')->name('get_by_part_id');
 //Project
     Route::get('project_list/delete/{id}', 'ProjectController@delete')->name('delete_project');
     Route::get('project_list_view', 'ProjectController@project_list_view')->name('projects_list_view');

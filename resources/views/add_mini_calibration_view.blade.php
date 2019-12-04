@@ -28,7 +28,8 @@
                 </div>
                 <div class="form-group">
                     <label for="exampleInputEmail1">Components</label>
-                    <input type="text" name="components" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter components">
+                    <select  name="components" class="form-control" id="calibr_components">
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="mini">Miniaplicator</label>

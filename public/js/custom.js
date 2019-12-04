@@ -347,8 +347,14 @@ $( document ).ready(function() {
     $('#connector1').on('change',function() {
         get_miniaplicators_list();
     });
+    $('#codice').on('change',function(){
+        get_conf_by_part_id();
+    })
     $('#conf_connectors').on('change',function(){
         get_configuration_list();
+    });
+    $('#date_validation').change(function(){
+        get_validation_done_list();
     });
     $('#search_configuration').on('keyup',function() {
         get_configuration_list();
@@ -356,8 +362,11 @@ $( document ).ready(function() {
     $('#mini').on('change', function(){
         get_photo_list()
     });
+    $('#mini').on('change', function(){
+        get_validation_done_list();
+    });
     $('#machine').on('change', function(){
-        get_photo_list()
+        get_photo_list();
     });
     $('#projects>input[type="checkbox"]').on('click',function(){
         get_photo_list();
@@ -437,6 +446,30 @@ function get_project_list(){
             }
         },
         error:function(error){
+            console.log('error; ' + eval(error));
+        }
+    })
+}
+function get_conf_by_part_id(){
+    var cur_part = $('#codice').val();
+    $.ajax({
+        url:'/configuration/get_by_part_id',
+        type: 'POST',
+        data:{
+            part_id:cur_part
+        },
+        dataType:'json',
+        success: function (data){
+
+            console.log(data);
+                $('#calibr_components').empty();
+                var i = 0;
+                while(i< data.length){
+                    $('#calibr_components').append('<option value='+data[i].components+'>'+data[i].components+'</option>');
+                    i++;
+                };
+        },
+        error:function (error){
             console.log('error; ' + eval(error));
         }
     })
@@ -548,14 +581,16 @@ function get_validation_list(){
 }
 
 function get_validation_done_list(){
-    var search;
-    search = $('#search_validarea_done').val();
-    // var filter = $('#connector1').val();
+    var search = $('#search_validarea').val();
+    var date = $('#date_validation').val();
+    var mini = $('#mini').val();
     $.ajax({
         url: '/mini_valid_done_list',
         type: 'POST',
         data: {
             search:search,
+            date:date,
+            mini:mini
         },
         dataType: 'json',
         success: function (data) {
@@ -837,6 +872,16 @@ $(function(){
         buttonText: "Choose",
         beforeShow: function(){
             $(".ui-datepicker").css('font-size', 12)
+        }
+    });
+
+    $('#date_validation').datepicker({
+        dateFormat: "yy-mm-dd",
+        autoSize: true,
+        buttonText: "Choose",
+        onSelect: function(){
+            $(".ui-datepicker").css('font-size', 12)
+            get_validation_done_list();
         }
     });
 

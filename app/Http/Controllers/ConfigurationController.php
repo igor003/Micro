@@ -53,6 +53,10 @@ class ConfigurationController extends Controller
         $configuration->save();
         return redirect('/home');
     }
+    
+    public function get_by_part_id(Request $request){
+        return Configuration::where('part_id',$request->part_id)->get();
+    }
 
     public function config_list_view(){
         $route = \Route::current();

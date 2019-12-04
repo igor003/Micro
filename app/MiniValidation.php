@@ -17,5 +17,16 @@ class MiniValidation extends Model
         return $this->belongsTo('App\Miniaplicator','id_mini');
     }
 
+    public function scopeDate($query, $date){
+        return $query->whereHas('minis.connector', function ($query) use($date) {
+            $query->where('date', $date);
+        });
+    }
+
+    public function scopeMini($query, $mini){
+        return $query->whereHas('minis', function ($query) use($mini) {
+            $query->where('id',$mini);
+        });
+    }
 }
 

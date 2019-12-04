@@ -5,12 +5,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-offset-8 col-lg-4">
-                <div class="input-group">
-                    <input id="search_validarea" type="text" class="form-control" placeholder="Search for...">
-                    {{--<span class="input-group-btn">--}}
-                        {{--<button id="search" class="btn btn-default" type="button">Go!</button>--}}
-                    {{--</span>--}}
-                </div>
+                
             </div>
         </div>
         <div class="row">
@@ -46,7 +41,24 @@
                 </table>
             </div>
             <div class="col-xs-2 ">
-
+            	<div class="form-group">
+                    <label  for="datepicker_photo_from">
+                              Enter date from  
+                    </label>
+                    <input id="date_validation" name='date_valid' type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter date from">
+                </div>
+                <br>
+				<div class="form-group">
+                    <label for="mini">Miniaplicator</label>
+                    <select name="minaplicator" class="form-control" id="mini">
+                        <option  value="" selected></option>
+                         @foreach($minis as $mini)
+                            <option value="{{$mini->id}}">
+                                {{$mini->name}}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
         </div>
     </div>
