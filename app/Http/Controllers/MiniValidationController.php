@@ -45,13 +45,16 @@ class MiniValidationController extends Controller
 	}
 
 	public function validations_done_list(Request $request){
-		 $validations = MiniValidation::select('*');
+		$validations = MiniValidation::select('*');
 		
         if($request->date != ''){
             $validations->date($request->date);
         }
-        else if($request->mini != ''){
+        if($request->mini != ''){
         	$validations->mini($request->mini);
+        }
+        if($request->type != ''){
+        	$validations->type($request->type);
         }
        	$validatinos =  $validations->where('status','=','done')->with('minis.connector')->orderBy('date', 'desc')->get();
 		return $validatinos;
@@ -59,9 +62,7 @@ class MiniValidationController extends Controller
 
 	public function upload_validation_view($id){
 
-
 		$cur_validation = MiniValidation::where('id',$id)->with('minis.connector')->get();
-		// exit($cur_validation);
 		return view('upload_validation',['cur_validation'=>$cur_validation]);
 	}
 

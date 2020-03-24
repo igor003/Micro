@@ -111,7 +111,6 @@ class MiniaplicatorController extends Controller
             return redirect('/mini_calibaration_list_view');
         }
 
-        // return redirect('/home');
     }
 
     public function mini_calibration_list(Request $request)

@@ -59,6 +59,7 @@ class ConfigurationController extends Controller
     }
 
     public function config_list_view(){
+
         $route = \Route::current();
         $codice_id = $route->parameter('codiceid');
         $projects = Project::orderBy('name','asc')->get();
@@ -92,25 +93,25 @@ class ConfigurationController extends Controller
             return array('conf'=>$conf,'admin'=>$admin);
         }
         $conf = Configuration::with(array('codice' => function($query){
-            $query->orderBy('name','ASC');
+            $query->orderBy('name','DESC');
         }))->with('connector')->get();
-          // $conf = Configuration::with('codice')->get()->sortByDesc('codice.name');
-        // $conf = Configuration::whereHas('codice',function ($query) use($request) {
-        //         $query->orderBy('name', 'asc');
-        //     })->with('codice')->get();
-
+           // $conf = Configuration::with('codice')->orderBy('codice.name','')->with('connector')->get();
+        
         
       return array('conf'=>$conf,'admin'=>$admin);
     }
 
     public function  upload_foto_view(Request $request){
-        $conf = Configuration::where('id','=',$request->id)->with('codice.project')->get();
+        $conf = Configuration::where('id','=',$request->id)->with('codice.project')->with('connector')->get();
+
+        
         $minis = Miniaplicator::all();
         $machines = Machine::all();
         return view('upload_view',['conf'=>$conf,'minis'=>$minis, 'machines'=>$machines]);
     }
 
     public function upload_photo(Request $request){
+       
         if($request->maked_at != ''){
             $date = $request->maked_at;
         }else{

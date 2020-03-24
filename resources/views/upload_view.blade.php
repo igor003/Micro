@@ -17,7 +17,7 @@
                 <b>Project:</b>{{ $conf[0]->codice->project->name}}<br>
                 <b>Codice:</b>{{ $conf[0]->codice->name}}<br>
                 <b>Components:</b>{{ $conf[0]->components}}<br>
-                <b>Splice/Terminal:</b>{{ $conf[0]->connecting_element}}<br>
+                <b>Splice/Terminal:</b>{{$conf[0]->connector->name}}<br>
                 <b>Sez Components:</b> {{$conf[0]->sez_components}}<br>
                 <b>Number of Strands:</b> {{$conf[0]->nr_strand}}<br>
                 <b>Height:</b> {{$conf[0]->height}}<br>
@@ -61,7 +61,7 @@
                     <input type="hidden" name="project" value="{{$conf[0]->codice->project->name}}">
                     <input type="hidden" name="codice" value="{{$conf[0]->codice->name}}">
                     <input type="hidden" name="components" value="{{$conf[0]->components}}">
-                    <input type="hidden" name="connector" value="{{$conf[0]->connecting_element}}">
+                    <input type="hidden" name="connector" value="{{$conf[0]->connector->id}}">
                     <input type="hidden" name="strands" value="{{$conf[0]->nr_strand}}">
                     <input type="hidden" name="height" value="{{$conf[0]->height}}">
                     <input type="hidden" name="width" value="{{$conf[0]->width}}">

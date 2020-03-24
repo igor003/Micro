@@ -365,6 +365,9 @@ $( document ).ready(function() {
     $('#mini').on('change', function(){
         get_validation_done_list();
     });
+    $('#type_val').on('change', function(){
+        get_validation_done_list();
+    });
     $('#machine').on('change', function(){
         get_photo_list();
     });
@@ -584,13 +587,15 @@ function get_validation_done_list(){
     var search = $('#search_validarea').val();
     var date = $('#date_validation').val();
     var mini = $('#mini').val();
+    var type = $('#type_val').val();
     $.ajax({
         url: '/mini_valid_done_list',
         type: 'POST',
         data: {
             search:search,
             date:date,
-            mini:mini
+            mini:mini,
+            type:type
         },
         dataType: 'json',
         success: function (data) {

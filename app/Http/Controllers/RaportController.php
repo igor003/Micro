@@ -67,6 +67,7 @@ class RaportController extends Controller
 		$parts_names = array();
 			foreach ($photos as $photo){
 			 	$parts_names[] = ($photo->configurations[0]->codice['name']);
+			 	
 			}
         $flag2 = 0;
         $difference = array();

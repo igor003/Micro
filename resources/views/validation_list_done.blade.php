@@ -43,7 +43,7 @@
             <div class="col-xs-2 ">
             	<div class="form-group">
                     <label  for="datepicker_photo_from">
-                              Enter date from  
+                              Enter date   
                     </label>
                     <input id="date_validation" name='date_valid' type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter date from">
                 </div>
@@ -57,6 +57,15 @@
                                 {{$mini->name}}
                             </option>
                         @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="type_val">Type of validation</label>
+                    <select name="type_of_valid" class="form-control" id="type_val">
+                        <option  value="" selected></option>
+                        <option value="initial"> Initial</option>
+                        <option value="ordinary"> Ordinary</option>
+                        <option value="extraordinary"> Extraordinary</option>
                     </select>
                 </div>
             </div>

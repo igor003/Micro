@@ -36,7 +36,7 @@ class PhotoController extends Controller
      */
     public function index(){
         $projects = Project::orderBy('name','asc')->get();
-        $codice = Part::orderBy('name','asc')->get();
+        $codice = Part::orderBy('name','ASC')->get();
         $minis = Miniaplicator::all();
         $machines = Machine::all();
         $route = \Route::current();

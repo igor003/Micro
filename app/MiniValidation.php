@@ -28,5 +28,8 @@ class MiniValidation extends Model
             $query->where('id',$mini);
         });
     }
+    public function scopeType($query, $type){
+        return $query->where('type_validation','=',$type);
+    }
 }
 
