@@ -12,19 +12,30 @@
         }
     </script>
     <div class="container">
+
         <div class="row">
+            <div id='start' class="btn btn-danger ">
+                    Start Micrografia
+                </div>
+        </div>
+        <div class="row " id='content'>
             <div class="col-xs-3">
-                <b>Project:</b>{{ $conf[0]->codice->project->name}}<br>
-                <b>Codice:</b>{{ $conf[0]->codice->name}}<br>
-                <b>Components:</b>{{ $conf[0]->components}}<br>
-                <b>Splice/Terminal:</b>{{$conf[0]->connector->name}}<br>
-                <b>Sez Components:</b> {{$conf[0]->sez_components}}<br>
-                <b>Number of Strands:</b> {{$conf[0]->nr_strand}}<br>
-                <b>Height:</b> {{$conf[0]->height}}<br>
-                <b>Width:</b> {{$conf[0]->width}}
+                 
+                <div>
+                    <b>Project:</b>{{ $conf[0]->codice->project->name}}<br>
+                    <b>Codice:</b>{{ $conf[0]->codice->name}}<br>
+                    <b>Components:</b>{{ $conf[0]->components}}<br>
+                    <b>Splice/Terminal:</b>{{$conf[0]->connector->name}}<br>
+                    <b>Sez Components:</b> {{$conf[0]->sez_components}}<br>
+                    <b>Number of Strands:</b> {{$conf[0]->nr_strand}}<br>
+                    <b>Height:</b> {{$conf[0]->height}}<br>
+                    <b>Width:</b> {{$conf[0]->width}}
+                </div>
+               
             </div>
+            
             <div class="col-xs-9">
-                <form action="{{route('upload')}}" method="post" enctype="multipart/form-data">
+                <form id='form_microgr' action="{{route('upload')}}" method="post" enctype="multipart/form-data">
                     <label for="datepicker_config">Date:</label>
                     <input type="text" class="form-control" name="maked_at" id="datepicker_config" aria-describedby="emailHelp" placeholder="Enter date">
                     <label for="mini">Miniaplicator</label>

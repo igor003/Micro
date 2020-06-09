@@ -697,6 +697,41 @@ function get_reports_list(){
     })
 }
 
+function get_micro_time (){
+    var date_micro = $('#datepicker_photo').val();
+
+    $('#date_micro').attr('href','/raport_view/'+date_micro);
+  
+}
+
+// funtion get_monthly_micro(){
+//     $month = $('#get_monthly_micro').val();
+
+//       $.ajax({
+//         url: '/get_monthly_micro',
+//         type: 'POST',
+//         data: {
+//              $month:$month
+//         },
+//         dataType: 'json',
+//         success: function (data) {
+
+//             var reports = data.length;
+//             $('#table_reports').empty();
+//             var i = 0;
+//             while(i< reports){
+//                 $('#table_reports').append(generate_html_reports(data[i]));
+//                 i++;
+//             }
+//         },
+//         error:function(error){
+//             console.log('error; ' + eval(error));
+//         }
+//     })
+
+    
+// }
+
 function get_photo_list(cur_page){
     var date_from;
     var date_to;
@@ -900,8 +935,19 @@ $(function(){
         }
 
     });
+       $('#datepicker_exec').datepicker({
+        dateFormat: "yy-mm-dd",
+        autoSize: true,
+        buttonText: "Choose",
+        beforeShow: function(){
+            $(".ui-datepicker").css('font-size', 12)
+           
+        }
 
-    $('#datepicker_photo_to, #datepicker_photo_from').datepicker({
+    });
+    
+
+    $('#datepicker_photo_to, #datepicker_photo_from, #datepicker_photo').datepicker({
         dateFormat: "yy-mm-dd",
         autoSize: true,
         buttonText: "Choose",
@@ -924,6 +970,24 @@ $(function(){
     
     
 });
+$(document).ready(function (){
+    $('#start').on('click', function(){
+        // $("#content").removeClass('hide')
+        
+        $('#start').removeClass('btn btn-danger').addClass('btn btn-success');
+        var dt = new Date();
+        console.log(dt.toISOString());
+        var month  = dt.getMonth() + 1;
+        var minutes = dt.getMinutes();
+        var seconds = dt.getSeconds()
+        if (seconds < 10) {seconds = "0"+seconds};
+        if (minutes< 10) {minutes = "0"+minutes};
+        $('#form_microgr').append('<input type="hidden" name="start_time" value="'+dt.getFullYear()+'/'+month+'/'+dt.getDate()+' '+dt.getHours() + ':' +minutes+ ':' +seconds+'">');
+    })
+
+
+});
+
 $(function(){
     if($('.alert:visible')){
         $('.alert').delay(1800).slideUp();
@@ -934,5 +998,46 @@ $(function(){
 $(document).ready(function (){
     $('#datepicker_photo_to').change(function() {
         get_photo_list();
+    });
+});
+$(document).ready(function (){
+    $('#datepicker_photo').change(function() {
+        get_micro_time();
+    });
+});
+$(document).ready(function(){
+    $('#raport_monthly, #raport_monthly_year').change(function(){
+
+        var month = $('#raport_monthly').val();
+        if(month<10){month = '0'+month}
+        var year = $('#raport_monthly_year').val();
+
+        if(month && year != ''){
+            $('#month_micro').attr('href','/monthly_report/'+month+'/'+year);
+        }else if(month != ''){
+           $('#month_micro').attr('href','/monthly_report/'+month); 
+        }else{
+             $('#month_micro').attr('href','/monthly_report'); 
+        }
+
+    });
+
+    $('#raport_yearly').change(function(){
+        var year = $('#raport_yearly').val();
+        if(year){
+            $('#year_micro').attr('href','/yearly_report/'+year);
+        }else{
+            $('#year_micro').attr('href','/yearly_report');
+        }
+
+    });
+    $('#datepicker_exec').change(function(){
+        var date = $('#datepicker_exec').val();
+        if(date){
+            $('#exec_micro').attr('href','/execut_time_report/'+date);
+        }else{
+            $('#exec_micro').attr('href','/execut_time_report');
+        }
+
     });
 });

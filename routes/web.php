@@ -58,11 +58,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/photo/raport_view', 'PhotoController@raport_view')->name('photo_raport_view');
     Route::post('/photo/raport_generate', 'PhotoController@raport')->name('generate_raport');
 //Raport
-    Route::get('/raport_view', 'RaportController@get_compare_view')->name('raport_view');
+    Route::get('/raport_view/{date?}', 'RaportController@get_compare_view')->name('raport_view');
+    Route::get('/monthly_report/{month?}/{year?}', 'RaportController@monthly_report')->name('monthly_report');
+    Route::get('/yearly_report/{year?}','RaportController@yearly_report')->name('yearly_report');
+    Route::get('/execut_time_report/{date?}','RaportController@execut_time_report')->name('execut_time_report');
     Route::post('/generate_raport', 'RaportController@generate_raport')->name('generate_raport');
     Route::get('/raport_list_view', 'RaportController@report_list_view')->name('report_list_view');
     Route::post('/add_report','RaportController@create_report')->name('create_report');
     Route::post('/all_reports', 'RaportController@get_all')->name('get_all_reports');
+
 //Machines
     Route::get('/add_machine_view', 'MachineController@index')->name('add_machine_view');
     Route::get('/machine_list_view', 'MachineController@machines_list_view')->name('machine_list_view');

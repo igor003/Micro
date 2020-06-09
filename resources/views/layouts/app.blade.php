@@ -26,8 +26,13 @@ date_default_timezone_set("Europe/Chisinau");
     <script src="{{ asset('js/timepicker/jquery-ui-timepicker-addon.js') }}"></script>
 
     <link href="{{ asset('js/timepicker/jquery-ui-timepicker-addon.css') }}" rel="stylesheet">
-
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      
     
+    
+    </script>
 </head>
 <script>
 
@@ -157,6 +162,43 @@ date_default_timezone_set("Europe/Chisinau");
                                             </li>
                                         </ul>
                                     </div>
+
+                                </ul>
+                                       <ul class="nav navbar-nav navbar-center vertical-center">
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            Reports
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"> 
+                                            <li>
+                                                <a href="{{route('report_list_view')}}">
+                                                    Reports
+                                                </a>
+                                            </li>
+                                             <li>
+                                                <a href="{{route('raport_view')}}">
+                                                    Daily Report Micro
+                                                </a>
+                                            </li>
+                                             <li>
+                                                <a href="{{route('monthly_report')}}">
+                                                    Monthly Report Micro
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{route('yearly_report')}}">
+                                                    Yearly Report Micro
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{route('execut_time_report')}}">
+                                                    Execute Time Report Micro
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    
                                 </ul>
                             @endif
                          @endif
@@ -192,9 +234,7 @@ date_default_timezone_set("Europe/Chisinau");
                                     <li>
                                         <a href="{{route('machine_list_view')}}">Machines</a>
                                     </li>
-                                    <li>
-                                        <a href="{{route('report_list_view')}}">Daily reports</a>
-                                    </li>
+                                    
                                     <li>
                                         <a href="{{route('valid_view')}}">Maintenance</a>
                                     </li>
@@ -202,9 +242,7 @@ date_default_timezone_set("Europe/Chisinau");
                             @endif
                             @if(Auth::user())
                                 @if(Auth::user()->status == 'admin' || Auth::user()->status == 'user' )   
-                            <li>
-                                <a href="{{route('raport_view')}}">Report efficiency</a>
-                            </li>
+                           
                             
                             <li>
                                 <a href="{{route('mini_calibration_list_view')}}">Mini Calibration</a>

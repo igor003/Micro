@@ -47,7 +47,6 @@
                     </label>
                     <input id="date_validation" name='date_valid' type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter date from">
                 </div>
-                <br>
 				<div class="form-group">
                     <label for="mini">Miniaplicator</label>
                     <select name="minaplicator" class="form-control" id="mini">

@@ -6,11 +6,210 @@ use PHPExcel;
 use PHPExcel_IOFactory;
 use App\Photo;
 use App\Raport;
+use Illuminate\Support\Facades\DB;
 class RaportController extends Controller
 {
-	public function get_compare_view(){
-	        return view('raport_view');
+
+	public function generate_custome_html_tooltyp($operator,$date_from,$date_to,$diff){
+		$result = '<div style="padding: 12px 12px 12px 12px;font-size:13px">
+						<div class ="text-center" style="line-height:12px;">
+							<strong> Operator:</strong> <br>'.$operator.'
+						</div>
+						<div class ="text-center" style="line-height:12px; padding-top:15px">
+							<strong>From:</strong> '.$date_from.'	<br>
+							<strong>To:</strong> '.$date_to.'
+						</div>
+						<div style="font-size:20px;line-height:24px; padding-top:15px" class ="text-info text-center">
+						<strong>'.$diff.' min.</strong>
+						</div>
+				   </div>';
+	   return $result;
+	}
+
+	public function execut_time_report(){
+		$route = \Route::current();
+        $date1 = $route->parameter('date');
+        if($date1){
+        	$dates = $this->dates_of_micross($date1,1);
+        	
+        }else{
+			$dates = $this->dates_of_micross(date("Y-m-d"),1);
+			$date1 = date("Y-m-d");
+		}	
+
+		  
+		 $result = array();
+			$cnt = 1;
+		foreach ($dates as $key=>$date) {
+			$time_start = new \DateTime($date[0]);
+			$time_done = new \DateTime($date[1]);
+		
+		  	$diff_min = abs(strtotime($date[0]) - strtotime($date[1]))/60;
+		  	$result[] = [$cnt,round($diff_min,1,PHP_ROUND_HALF_UP),$this->generate_custome_html_tooltyp($date[2],
+		  																								$time_done->format('H:i:s'),
+		  																								$time_start->format('H:i:s'),
+		  																								round($diff_min,1,PHP_ROUND_HALF_UP))]; 
+			$cnt++;
+			
+		}
+		return view('execut_raport_view',['data'=>$result,'cur_date'=>$date1]);
+	}
+
+	public function yearly_report(){
+		$months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+		$years_data = $this->get_distinct_year();
+		$years = [];
+	 	foreach($years_data as $year_data){
+			$years[] = $year_data['year'];
+	 	}
+		$route = \Route::current();
+		if($route->parameter('year')){
+	 		$year = $route->parameter('year');
+  		}else{
+  			$year = date('Y');
+  		}	
+  		$cnt = 1;
+  		$count_month = array();
+  		for ($cnt = 1; $cnt <= 12; $cnt++) {
+
+  			$count_month[$cnt][] =  $months[$cnt-1];
+    		$count_month[$cnt][] = Photo::whereMonth('maked_at', '=', str_pad($cnt, 2, '0', STR_PAD_LEFT))->whereYear('maked_at', $year)->count();
+		}
+  			
+  			 array_unshift($count_month,array("date","number of micrography"));
+		return view('yearly_raport_view',['years'=>$years,'cur_year'=>$year,'fotos'=>$count_month]);
+	}
+	public function monthly_report() {
+	 	$months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+	 	$years_data = $this->get_distinct_year();
+	 	$years = [];
+	 	foreach($years_data as $year_data){
+			$years[] = $year_data['year'];
+	 	}
+	 	$route = \Route::current();
+	 	if($route->parameter('month')){
+	 		$month = $route->parameter('month');
+	 	}else{
+	 		$month = date('m');
+	 	}
+	 	if($route->parameter('year')){
+	 		$year = $route->parameter('year');
+  		}else{
+  			$year = date('Y');
+  		}	
+    	$fotos_dates = $this->months_count_micros($month,$year);
+		
+    	
+    	
+    	$foto_dates = [];
+        $cnt = 1;
+	
+    	foreach ($fotos_dates as $foto_date) {
+    	
+    		$caunt = Photo::where('maked_at','LIKE',''.$foto_date['date'].'%')->count();
+			$foto_caunt[] = [$foto_date['date'],$caunt];
+    	}
+	    array_unshift($foto_caunt,array("date","number of micrography"));
+		return view('monthly_raport_view',['years'=>$years,'months'=>$months,'fotos'=>$foto_caunt,'cur_month'=>$months[$month-1], 'cur_year'=>$year]);
+	}
+	
+	public function get_distinct_year(){
+		$years = Photo::whereNotNull('created_at')->distinct()->get([DB::raw('YEAR(created_at) as year')]);
+		return $years;
+	}
+	public function months_count_micros($month,$year){
+		
+		if($month && $year){
+		 	$fotos_dates = Photo::whereMonth('maked_at','=',$month)
+				->whereYear('maked_at', $year)
+				->whereNotNull('maked_at')
+				->distinct()
+				->get([DB::raw('DATE(maked_at) as date')]);
+		}else if($month){
+			$fotos_dates = Photo::whereMonth('maked_at','=',$month)
+				->whereYear('maked_at',  Date('Y'))
+				->whereNotNull('maked_at')
+				->distinct()
+				->get([DB::raw('DATE(maked_at) as date')]);
+		}else{
+			$fotos_dates = Photo::whereMonth('maked_at','=',Date("m"))
+				->whereYear('maked_at',  Date('Y'))
+				->whereNotNull('maked_at')
+				->distinct()
+				->get([DB::raw('DATE(maked_at) as date')]);
+		}
+		return $fotos_dates;
+	}
+
+	public function dates_of_micross($date,$flag){
+		
+		if($date){
+			$fotos = Photo::whereDate('maked_at','=',$date)
+				->whereYear('maked_at', Date('Y'))
+				->with('configurations.codice')
+			    ->orderBy('maked_at', 'asc')
+				->get();
+		}else{
+			$fotos = Photo::whereDate('maked_at','=',date("Y-m-d"))
+				->whereYear('maked_at', Date('Y'))
+				->with('configurations.codice')
+			    ->orderBy('maked_at', 'asc')
+				->get();
+		}
+          
+		$dates = array();
+		$dates_codice= array();
+		$cnt=0;
+		foreach($fotos as $photo){
+
+			$dates[$cnt]['date']=$photo->maked_at;
+			$dates[$cnt]['operator'] = $photo->operator;
+			$dates[$cnt]['start_time'] = $photo->start_time;
+			$cnt++;
+
+		};
+	
+		$cnt = 0;
+		foreach ($dates as $dates1) {
+
+			$dates_codice[$cnt]['date'] = $dates1['date'];
+			$dates_codice[$cnt]['start'] = $dates1['start_time'];
+			$dates_codice[$cnt]['operator'] = $dates1['operator'];
+			$cnt++;
+
+		}
+		
+		$jsArray1 = array();
+		$jsArray2 = array();
+		$cnt=1;
+
+		foreach($dates_codice as $array) {
+			if($flag == 0){
+		  		$jsArray1[] = array((string)$array['operator'],(string)$array['start'],(string)$array['date']); 
+		  		
+			}else if($flag == 1){
+				$jsArray1[] = array((string)$array['date'],(string)$array['start'],(string)$array['operator']); 
+			}
+		    $cnt++;
+		}
+
+	    if($flag == 0){
+	 	    return [$jsArray1,$jsArray2];
 	    }
+
+		return $jsArray1;
+	}
+	public function get_compare_view(){
+		$route = \Route::current();
+    	$codice_id = $route->parameter('date');
+    	if($codice_id){
+			$date = $this->dates_of_micross($codice_id,0);
+    	}else{
+			$date = $this->dates_of_micross(date('Y-m-d'),0);
+		}
+		
+        return view('raport_view',['jsArray1'=>$date[0],'jsArray2'=>$date[1]]);
+    }
 
     public function generate_raport(Request $request){
 

@@ -123,25 +123,33 @@ class ConfigurationController extends Controller
         $cnt = 0;
                 $path = '\images'.'\\'.$request->project.'\\'.$request->codice.'\\'.$request->components;
 //            File::makeDirectory(storage_path().'\images'.'\\'.$request->project.'\\'.$request->codice.'\\'.$request->components);
-        Storage::makeDirectory('images/'.$request->project.'/'.$request->codice.'/'.$request->components);
-        $image_path = array();
-        foreach($images as $image){
-            $image_path[] = $image->storeAs($request->project.'\\'.$request->codice.'\\'.$request->components.'\\'.$date, $cnt.'_'.date('Y-m-d').'.'.$image->getClientOriginalExtension(), 'images');
-            $cnt++;
-        }
-           $foto = new Photo;
-           $foto->configuration_id = $request->id;
-           $foto->foto1 = $image_path[0];
-           $foto->foto2 = $image_path[1];
-           $foto->foto3 = $image_path[2];
-           $foto->miniaplicator_id = $request->mini;
-           $foto->machine_id = $request->machines;
-           $foto->operator = Auth::user()->name;
-           $foto->maked_at = $date;
-           $foto->save();
+            Storage::makeDirectory('images/'.$request->project.'/'.$request->codice.'/'.$request->components);
+            $image_path = array();
+            foreach($images as $image){
+                $image_path[] = $image->storeAs($request->project.'\\'.$request->codice.'\\'.$request->components.'\\'.$date, $cnt.'_'.date('Y-m-d').'.'.$image->getClientOriginalExtension(), 'images');
+                $cnt++;
+            }
+            if($request->start_time){
+                 $format = "Y/m/d H:i:s";
+               $dateobj = \DateTime::createFromFormat($format, $request->start_time);
+            }
+          
+               $foto = new Photo;
+               $foto->configuration_id = $request->id;
+               $foto->foto1 = $image_path[0];
+               $foto->foto2 = $image_path[1];
+               $foto->foto3 = $image_path[2];
+               $foto->miniaplicator_id = $request->mini;
+               $foto->machine_id = $request->machines;
+            if($request->start_time){
+               $foto->start_time = $dateobj->format('Y-m-d H:i:s');
+            }
+               $foto->operator = Auth::user()->name;
+               $foto->maked_at = $date;
+               $foto->save();
 
-        }
-        return redirect(route('conf_list_view'));
+            }
+            return redirect(route('conf_list_view'));
     }
 
     public function update_view($id){
