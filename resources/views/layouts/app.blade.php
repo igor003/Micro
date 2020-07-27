@@ -20,6 +20,7 @@ date_default_timezone_set("Europe/Chisinau");
     <!--Datapicker-->
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/custom.js') }}"></script>
+   
     <script src="{{asset('js/jquery-ui-1.12.1.custom/jquery-ui.js')}}"></script>
     <!--Timepicker-->
     <script src="{{ asset('js/timepicker/jquery-ui-sliderAccess.js') }}"></script>
@@ -164,7 +165,7 @@ date_default_timezone_set("Europe/Chisinau");
                                     </div>
 
                                 </ul>
-                                       <ul class="nav navbar-nav navbar-center vertical-center">
+                                <ul class="nav navbar-nav navbar-center vertical-center">
                                     <div class="dropdown">
                                         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             Reports
@@ -188,7 +189,7 @@ date_default_timezone_set("Europe/Chisinau");
                                             </li>
                                             <li>
                                                 <a href="{{route('yearly_report')}}">
-                                                    Yearly Report Micro
+                                                    Yearly Report Micros
                                                 </a>
                                             </li>
                                             <li>
@@ -198,9 +199,35 @@ date_default_timezone_set("Europe/Chisinau");
                                             </li>
                                         </ul>
                                     </div>
-                                    
                                 </ul>
+                                 
                             @endif
+                         @endif
+                         @if(Auth::user())     
+                            @if(Auth::user()->status === 'admin' || Auth::user()->status === 'marcel')
+                               <ul class="nav navbar-nav navbar-center vertical-center">
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            Interfaces
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"> 
+                                            <li>
+                                                <a href="{{route('interface_view')}}">
+                                                  Interfaces
+                                                </a>
+                                               
+                                            </li>
+                                             <li>
+                                                <a href="{{route('add_interface')}}">
+                                                  Add Interface
+                                                </a>
+                                             
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </ul>
+                             @endif
                          @endif
                         <ul class="nav navbar-nav navbar-center vertical-center">
                              @if(Auth::user())

@@ -3,14 +3,16 @@
 @section('content')
 
 <script>
+
     var result1  = <?php print_r(json_encode($jsArray1)); ?>;
+       console.log(result1);
       var i = 0;
     for (i; i < result1.length; i++){
         result1[i][1] = new Date(result1[i][1]);
-         result1[i][2] = new Date(result1[i][2]);
+        result1[i][2] = new Date(result1[i][2]);
         
     }
-   console.log(result1);
+   
 google.charts.load("current", {packages:["timeline"]});
   google.charts.setOnLoadCallback(drawChart);
   function drawChart() {
@@ -19,22 +21,15 @@ google.charts.load("current", {packages:["timeline"]});
     var dataTable = new google.visualization.DataTable();
     dataTable.addColumn({ type: 'string', id: 'Operatpr' });
     dataTable.addColumn({ type: 'datetime', id: 'Start' });
-    dataTable.addColumn({ type: 'datetime', id: 'End' });
+    dataTable.addColumn({type: 'datetime', id: 'End' });
+    dataTable.addColumn({'type': 'string', 'role': 'tooltip', 'p': {html: true}});
     dataTable.addRows(result1);
 
-     dataTable.insertColumn(2, {type: 'string', role: 'tooltip', p: {html: true}});
-
+     
     var options = {
-        colors: ['blue', 'green', 'yellow'],
+        colors: ['#3471EB', 'green', 'gray'],
         height: 400,
-        animation:{
-            duration: 1700,
-            easing: 'inAndOut',
-            startup: true
-        },
-        hAxis: {
-            format: 'HH:mm'
-        },
+     
         tooltip: {
             isHtml: true
         }
@@ -42,6 +37,13 @@ google.charts.load("current", {packages:["timeline"]});
     };
 
     chart.draw(dataTable, options);
+    function myHandler(e){
+        if(e.row != null){
+            $(".google-visualization-tooltip").html(dataTable.getValue(e.row,3)).css({width:"auto",height:"auto"});
+        }        
+    }
+    
+    google.visualization.events.addListener(chart, 'onmouseover', myHandler);
   }
 //     var i = 0;
 //     for (i; i < result1.length; i++){

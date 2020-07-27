@@ -30,6 +30,7 @@
                                 <option value="user">User</option>
                                 <option value="minolog">Minolog</option>
                                 <option value="admin">Admin</option>
+                                 <option value="marcel">Marcel</option>
                             </select>
                         </div>
                     </div>

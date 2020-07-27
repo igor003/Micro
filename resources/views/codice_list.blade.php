@@ -13,6 +13,11 @@
             </div>
         </div>
         <div class="row">
+            <div id='codice_project' class="col-md-offset-2 col-md-8  text-center">
+                
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-offset-2 col-md-8  text-center">
                 <h4>
                     Codice
@@ -45,7 +50,7 @@
                 @foreach($projects as $project)
                     <input class="form-check-input" type="checkbox" value="{{$project->id}}" id="project">
                     <label class=" project_label form-check-label " for="Project">
-                       <small>{{$project->name}}</small>
+                     {{$project->name}}
                     </label>
                     <br>
                 @endforeach

@@ -11,8 +11,8 @@
 
 namespace Symfony\Component\HttpFoundation\File\MimeType;
 
-use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 /**
  * A singleton mime type guesser.
@@ -51,7 +51,7 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface
      *
      * @var array
      */
-    protected $guessers = array();
+    protected $guessers = [];
 
     /**
      * Returns the singleton instance.
@@ -127,7 +127,9 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface
         }
 
         if (2 === \count($this->guessers) && !FileBinaryMimeTypeGuesser::isSupported() && !FileinfoMimeTypeGuesser::isSupported()) {
-            throw new \LogicException('Unable to guess the mime type as no guessers are available (Did you enable the php_fileinfo extension?)');
+            throw new \LogicException('Unable to guess the mime type as no guessers are available (Did you enable the php_fileinfo extension?).');
         }
+
+        return null;
     }
 }

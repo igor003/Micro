@@ -4,13 +4,23 @@ $.ajaxSetup({
     }
 });
 
+function get_micro_time (){
+    var date_micro = $('#datepicker_photo').val();
+  
+
+    $('#date_micro').attr('href','/raport_view/'+date_micro); 
+}
+
+
 $('#submit_form').on('click', function(){
     $('#form_configuration').submit();
 });
 
 
 
-$($('#project_conf').on('change', function() {
+
+$(
+    $('#project_conf').on('change', function() {
         var selected = $(this).val();
         $.ajax({
             url:'/configuration_codice',
@@ -35,7 +45,8 @@ $($('#project_conf').on('change', function() {
     })
 );
 
-$($('#codice_conf').on('change', function() {
+$(
+    $('#codice_conf').on('change', function() {
         var selected = $(this).val();
         $.ajax({
             url:'/configuration_project',
@@ -234,8 +245,8 @@ function generate_html_configuration(data,admin){
             }
             result +='</tr>';
         return result;
-
 }
+
 function generate_html_reports(data){
         var result = '<tr>' +
             '<td class="text-center">' + data.date + '</td>' +
@@ -249,8 +260,47 @@ function generate_html_reports(data){
             // }
             result +='</tr>';
         return result;
-
 }
+
+function generate_html_interface(data, cnt){
+    var result = '<tr>' +
+        '<td class="text-center">' + data.name + '</td>' +
+        '<td class="text-center">' + data.code + '</td>' +
+        '<td class="text-center">' + data.blocket + '</td>'+
+        '<td class="text-center">'+
+            '<form method="POST" action="/interface/download">'+
+            '<input type="hidden" name="id" value="'+data.id+'">'+
+            '<input type="hidden" name="format" value="stl">'+
+           
+            '<button type="submit"><img height="20px" width = "20px" src="/img/download.png" alt=""></button>'+
+            '</form>'+
+        '</td>'+
+        '<td class="text-center">'+
+            '<form method="POST" action="/interface/download">'+
+            '<input type="hidden" name="id" value="'+data.id+'">'+
+            '<input type="hidden" name="format" value="f3d">'+
+            
+            '<button type="submit"><img height="20px" width = "20px" src="/img/download.png" alt=""></button>'+
+            '</form>'+
+        '</td>'+
+        '<td class="text-center">'+
+            '<form method="POST" action="/interface/download">'+
+            '<input type="hidden" name="id" value="'+data.id+'">'+
+            '<input type="hidden" name="format" value="jpg">'+
+           
+            '<button style="width:20px; height:20px;" class="interf_btn" id="jpg_'+data.id+'" type="submit"></button>'+
+            '</form>'+
+        '</td>'+
+         '<td class="text-center">'+
+            
+           
+      ' <a href="/interface/update/'+data.id+'"><button type="submit"><img height="20px" width = "20px" src="/img/update.png" alt=""></button></a>'+
+         
+        '</td>';
+        result +='</tr>';
+    return result;
+}
+
 function generate_calibration_html (data,admin){
     var result = '<tr>' +
         '<td class="text-center">' + data.codice.name + '</td>' +
@@ -298,14 +348,14 @@ function generate_html_photo(data, admin){
                 '</td>' ;
     if(admin === true){
         result+='<td class="text-center">' +
-                '<a href="photo_delete/'+data.id+'"> <div><img height="20px" width = "20px" src="/img/delete.png" alt=""></div></a>' +
+                '<a href="photo_delete/'+data.id+'"> <div><img height="20px" width ="20px" src="/img/delete.png" alt=""></div></a>' +
                 '</td>' 
     };
     result +='</tr>';
 
     return result;
-
 }
+
 $( document ).ready(function() {
     $('#project_conf').on('click', function() {
         get_codice_by_project_conf_update();
@@ -383,6 +433,15 @@ $( document ).ready(function() {
     $('#search_machine').on('keyup',function(){
         get_machines_list();
     });
+   $('#name_interface').on('change', function(){
+        get_interfaces_list();
+    });
+   $('#code_interface').on('change', function(){
+        get_interfaces_list();
+    });
+   $('#blocket_interface').on('change', function(){
+        get_interfaces_list();
+    });
     get_codice_list();
     get_project_list();
     get_configuration_list();
@@ -396,6 +455,8 @@ $( document ).ready(function() {
     get_calibrations_list();
     get_validation_list();
     get_validation_done_list();
+    get_interfaces_list();
+
 });
 
 function get_codice_list(){
@@ -415,11 +476,16 @@ function get_codice_list(){
         },
         dataType: 'json',
             success: function (data) {
-
+                console.log(data);
                 $('#table_codice').empty();
                 var i = 0;
                 while(i< data.parts.length){
                     $('#table_codice').append(generate_html_codice(data.parts[i],'codice',data.admin));
+                    if(data.parts[i].project){
+                            $('#codice_project').html('<h4>'+data.parts[i].project.name+'</h4>');
+                    }else{
+                         $('#codice_project').html('');
+                    }
                     i++;
                 }
         },
@@ -453,6 +519,7 @@ function get_project_list(){
         }
     })
 }
+
 function get_conf_by_part_id(){
     var cur_part = $('#codice').val();
     $.ajax({
@@ -464,7 +531,7 @@ function get_conf_by_part_id(){
         dataType:'json',
         success: function (data){
 
-            console.log(data);
+            
                 $('#calibr_components').empty();
                 var i = 0;
                 while(i< data.length){
@@ -694,16 +761,114 @@ function get_reports_list(){
         error:function(error){
             console.log('error; ' + eval(error));
         }
+    });
+}
+
+function get_interfaces_list(){
+    var name = $('#name_interface').val();
+    var code = $('#code_interface').val();
+    var blocket = $('#blocket_interface').val();
+    $.ajax({
+        url: '/interface/get_list',
+        type: 'POST',
+        data: {
+            name:name,
+            code:code,
+            blo:blocket
+        },
+        dataType: 'json',
+        success: function (data) {
+            var interfaces = data.length;
+            $('#interfaces_body').empty();
+            var i = 0;
+            while(i< interfaces){
+                $('#interfaces_body').append(generate_html_interface(data[i],i));
+                i++;
+            }
+            $('.interf_btn').on('mouseenter', function(evt){
+console.log('mouseenter');
+                $.ajax({
+                    url: '/interface/preview',
+                    type: 'POST',
+                    data: {
+                        id:$(this).attr('id')
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        var str = data;
+                        $('#preview').html('<img id="preview_img" style="width:200px; width:200px;  " alt="fotki net" title="asdsadsad" src="'+str+'"></img>');
+                        $('#preview').css({left: evt.pageX+30, top: evt.pageY-15}).show();
+                    },
+                      error: function (jqXHR, exception) {
+                            var msg = '';
+                            if (jqXHR.status === 0) {
+                                msg = 'Not connect.\n Verify Network.';
+                            } else if (jqXHR.status == 404) {
+                                msg = 'Requested page not found. [404]';
+                            } else if (jqXHR.status == 500) {
+                                msg = 'Internal Server Error [500].';
+                            } else if (exception === 'parsererror') {
+                                msg = 'Requested JSON parse failed.';
+                            } else if (exception === 'timeout') {
+                                msg = 'Time out error.';
+                            } else if (exception === 'abort') {
+                                msg = 'Ajax request aborted.';
+                            } else {
+                                msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                            }
+                            console.log(msg);
+                        },
+                });
+        
+            });
+            $('.interf_btn').on('mouseleave', function(){
+                console.log('mouseeout');
+                    $('#preview').hide();
+                     $(document).off('mousemove');
+            })
+        },
+        error:function(error){
+            console.log('error; ' + eval(error));
+        }
     })
 }
 
-function get_micro_time (){
-    var date_micro = $('#datepicker_photo').val();
 
-    $('#date_micro').attr('href','/raport_view/'+date_micro);
-  
+
+
+function get_ajax_exec_time_data(handleData){
+    var date = $('#datepicker_exec').val();
+    var dt = new Date();
+
+    var month  = dt.getMonth() + 1;
+    if (month < 10) {month = "0"+month};
+    if(date){
+        $('#cur_date').html(date);
+    }else{
+       $('#cur_date').html(dt.getFullYear()+'-'+month+'-'+dt.getDate()); 
+    }
+    
+
+    $.ajax({
+        url:'/data_exec_time',
+        type:'POST',
+        data:{
+            date:date,
+        },
+        dataType:'json',
+        success:function(data){
+            $('#media').html('<h3>Executing average time: ' +data[1]+'min.</h3>');
+          
+
+            handleData(data[0]); 
+        },
+        error:function(error){
+            handleData(0); 
+            $('#media').html('');
+            console.log('error' + eval(error));
+        }
+    })
 }
-
 // funtion get_monthly_micro(){
 //     $month = $('#get_monthly_micro').val();
 
@@ -856,7 +1021,7 @@ function get_photo_list(cur_page){
                         get_photo_list($(this).text());
                     });
             }else{//если есть фильтры 
-                var pages_with_filter = Math.ceil(data.total_photo_with_filter.length/per_page);
+                var pages_with_filter = Math.ceil(data.total_photo_with_filter/per_page);
           
                 $('#pagin').append('<li class="page-item1 prev"><a href="#" class="page-link" >Previous</a></li>'); 
                 if(pages_with_filter>show_pages && cur_page < pages_with_filter-4){
@@ -976,7 +1141,7 @@ $(document).ready(function (){
         
         $('#start').removeClass('btn btn-danger').addClass('btn btn-success');
         var dt = new Date();
-        console.log(dt.toISOString());
+       
         var month  = dt.getMonth() + 1;
         var minutes = dt.getMinutes();
         var seconds = dt.getSeconds()
@@ -999,12 +1164,18 @@ $(document).ready(function (){
     $('#datepicker_photo_to').change(function() {
         get_photo_list();
     });
+
+   
 });
 $(document).ready(function (){
     $('#datepicker_photo').change(function() {
-        get_micro_time();
+      
+get_micro_time();
+
     });
+
 });
+   
 $(document).ready(function(){
     $('#raport_monthly, #raport_monthly_year').change(function(){
 
@@ -1021,7 +1192,6 @@ $(document).ready(function(){
         }
 
     });
-
     $('#raport_yearly').change(function(){
         var year = $('#raport_yearly').val();
         if(year){
@@ -1031,13 +1201,63 @@ $(document).ready(function(){
         }
 
     });
-    $('#datepicker_exec').change(function(){
-        var date = $('#datepicker_exec').val();
-        if(date){
-            $('#exec_micro').attr('href','/execut_time_report/'+date);
-        }else{
-            $('#exec_micro').attr('href','/execut_time_report');
-        }
+    function drow_charts(data){
+        google.charts.load('current',"1", {'packages':['bar']});
+        google.charts.setOnLoadCallback(drawChart(data));
 
+        function drawChart(data) {
+            var data_foto = data;
+            var data = new google.visualization.DataTable();
+            data.addColumn('number','micrografia nmb');
+            data.addColumn('number','time for executing min');
+            data.addColumn({'type':'string','role':'tooltip','p': {'html': true}});
+            data.addRows(data_foto);
+            var options = {
+                tooltip:{isHtml: true},
+                bar: {groupWidth: "75%"},
+                legend:'none',
+                height: 400,
+                opacity: 0.8,
+                animation:{
+                    duration: 10000,
+                    easing: 'out',
+                },
+                hAxis: {
+                    gridlines: {
+                    count: 10,
+                    }
+                },
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('columnchart_material'));
+             
+            chart.draw(data, options);
+            function resize () {
+          
+                chart.draw(data , options);
+            }
+            if (window.addEventListener) {
+                window.addEventListener('resize', resize);
+            }
+            else {
+                window.attachEvent('onresize', resize);
+            }
+        }
+    }
+      
+     
+    $('#datepicker_exec').change(function(){
+        get_ajax_exec_time_data(function(output){
+            var data = output ;
+            drow_charts(data);
+        });
     });
+
+    get_ajax_exec_time_data(function(output){
+        var data = output ;
+        drow_charts(data);
+    });
+
+
 });
+

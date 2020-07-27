@@ -67,8 +67,8 @@ class PhotoController extends Controller
         }
         
         $photos->with('configurations.codice.project')->with('configurations.connector')->with('minis')->with('machines');
-        // exit( $photos->with('configurations.codice.project')->with('configuration.connector'));
-        $total_photo_with_filter =  $photos->with('configurations.codice.project')->get();
+        $total_photo_with_filter =  $photos->with('configurations.codice.project')->count();
+  
         $schip = ($request->cur_page - 1)*$request->per_page;
 
         if($request->config_id){

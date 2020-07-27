@@ -16,43 +16,80 @@ class RaportController extends Controller
 							<strong> Operator:</strong> <br>'.$operator.'
 						</div>
 						<div class ="text-center" style="line-height:12px; padding-top:15px">
-							<strong>From:</strong> '.$date_from.'	<br>
-							<strong>To:</strong> '.$date_to.'
+							<strong>From:</strong> '.$date_to.'	<br>
+							<strong>To:</strong> '.$date_from.'
 						</div>
 						<div style="font-size:20px;line-height:24px; padding-top:15px" class ="text-info text-center">
-						<strong>'.$diff.' min.</strong>
+						<strong>'.$diff.'</strong>
 						</div>
 				   </div>';
 	   return $result;
 	}
-
-	public function execut_time_report(){
-		$route = \Route::current();
-        $date1 = $route->parameter('date');
-        if($date1){
-        	$dates = $this->dates_of_micross($date1,1);
-        	
-        }else{
+	public  function get_data_exec_time(Request $request){
+		
+		$date = $request->date;
+    	
+		if($date){
+		    $dates = $this->dates_of_micross($date,1);
+		    	
+		}else{
 			$dates = $this->dates_of_micross(date("Y-m-d"),1);
-			$date1 = date("Y-m-d");
+			$date = date("Y-m-d");
 		}	
 
-		  
-		 $result = array();
-			$cnt = 1;
-		foreach ($dates as $key=>$date) {
-			$time_start = new \DateTime($date[0]);
-			$time_done = new \DateTime($date[1]);
+	    $result = array();
+		$cnt = 1;
+		$summ_difer = 0;
+		foreach ($dates as $key=>$date1) {
+
+			$time_start = new \DateTime($date1[0]);
+			$time_done = new \DateTime($date1[1]);
+			$summ_difer +=abs(strtotime($date1[0]) - strtotime($date1[1]));
 		
-		  	$diff_min = abs(strtotime($date[0]) - strtotime($date[1]))/60;
-		  	$result[] = [$cnt,round($diff_min,1,PHP_ROUND_HALF_UP),$this->generate_custome_html_tooltyp($date[2],
+		  	$diff_min = intdiv(abs(strtotime($date1[0]) - strtotime($date1[1])),60);
+		  	$diff_sec = abs(strtotime($date1[0]) - strtotime($date1[1]))-($diff_min*60);
+
+		  	$result[0][] = [$cnt,round($diff_min,1,PHP_ROUND_HALF_UP),$this->generate_custome_html_tooltyp($date1[2],
 		  																								$time_done->format('H:i:s'),
 		  																								$time_start->format('H:i:s'),
-		  																								round($diff_min,1,PHP_ROUND_HALF_UP))]; 
+		  																								$diff_min.'min '.$diff_sec.'sec')]; 
 			$cnt++;
 			
 		}
-		return view('execut_raport_view',['data'=>$result,'cur_date'=>$date1]);
+			 	$result[1] =  round($summ_difer / count($dates)/60,1,PHP_ROUND_HALF_UP);
+		return $result;
+	}
+	// public  function get_data_exec_time($date){
+	// 	if($date){
+	// 	    $dates = $this->dates_of_micross($date,1);
+		    	
+	// 	}else{
+	// 		$dates = $this->dates_of_micross(date("Y-m-d"),1);
+	// 		$date = date("Y-m-d");
+	// 	}	
+
+	//     $result = array();
+	// 	$cnt = 1;
+	// 	foreach ($dates as $key=>$date1) {
+	// 		$time_start = new \DateTime($date1[0]);
+	// 		$time_done = new \DateTime($date1[1]);
+		
+	// 	  	$diff_min = intdiv(abs(strtotime($date1[0]) - strtotime($date1[1])),60);
+	// 	  	$diff_sec = abs(strtotime($date1[0]) - strtotime($date1[1]))-($diff_min*60);
+
+	// 	  	$result[] = [$cnt,round($diff_min,1,PHP_ROUND_HALF_UP),$this->generate_custome_html_tooltyp($date1[2],
+	// 	  																								$time_done->format('H:i:s'),
+	// 	  																								$time_start->format('H:i:s'),
+	// 	  																								$diff_min.'min '.$diff_sec.'sec')]; 
+	// 		$cnt++;
+			
+	// 	}
+	// 	return $result;
+	// }
+
+	public function execut_time_report(){
+
+		return view('execut_raport_view');
 	}
 
 	public function yearly_report(){
@@ -180,35 +217,47 @@ class RaportController extends Controller
 		}
 		
 		$jsArray1 = array();
-		$jsArray2 = array();
 		$cnt=1;
-
+		$summ_diff = 0;
 		foreach($dates_codice as $array) {
 			if($flag == 0){
-		  		$jsArray1[] = array((string)$array['operator'],(string)$array['start'],(string)$array['date']); 
+				$time_start = new \DateTime($array['start']);
+				$time_done = new \DateTime($array['date']);
+			  	$diff_min = intdiv(abs(strtotime($array['date']) - strtotime($array['start'])),60);
+			  	$diff_sec = abs(strtotime($array['date']) - strtotime($array['start']))-($diff_min*60);
+			  	$summ_diff += abs(strtotime($array['date']) - strtotime($array['start']));
+		  		$jsArray1[] = array((string)$array['operator'],
+
+		  							(string)$array['start'],
+	  								(string)$array['date'],
+		  							$this->generate_custome_html_tooltyp($array['operator'],
+		  																 $time_done->format('H:i:s'),
+																		 $time_start->format('H:i:s'),
+		  																 $diff_min.'min '.$diff_sec.'sec')
+		  							); 
 		  		
 			}else if($flag == 1){
 				$jsArray1[] = array((string)$array['date'],(string)$array['start'],(string)$array['operator']); 
 			}
 		    $cnt++;
+		   
 		}
 
-	    if($flag == 0){
-	 	    return [$jsArray1,$jsArray2];
-	    }
-
+	
 		return $jsArray1;
 	}
 	public function get_compare_view(){
 		$route = \Route::current();
     	$codice_id = $route->parameter('date');
+		
     	if($codice_id){
 			$date = $this->dates_of_micross($codice_id,0);
     	}else{
 			$date = $this->dates_of_micross(date('Y-m-d'),0);
+			
 		}
 		
-        return view('raport_view',['jsArray1'=>$date[0],'jsArray2'=>$date[1]]);
+        return view('raport_view',['jsArray1'=>$date]);
     }
 
     public function generate_raport(Request $request){

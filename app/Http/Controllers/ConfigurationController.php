@@ -116,7 +116,7 @@ class ConfigurationController extends Controller
             $date = $request->maked_at;
         }else{
 
-            $date = date('Y-m-d H-i');
+            $date = date('Y-m-d H-i-s');
         }
         $images = $request->file('images');
         if($images){

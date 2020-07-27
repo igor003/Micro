@@ -45,7 +45,7 @@ class ProjectController extends Controller
         }else{
             $admin = false;
         }
-        return  array('project' => $project->get(),'admin'=>$admin);
+        return response()->json(array('project' => $project->get(),'admin'=>$admin));
     }
 
     public function update_project_view($id)

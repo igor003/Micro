@@ -60,6 +60,12 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
+        'interfaces'=>[
+            'driver' => 'local',
+            'root' => storage_path('app/interfaces'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+        ],
         'specifications' => [
             'driver' => 'local',
             'root' => storage_path('app/specifications'),

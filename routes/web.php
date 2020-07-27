@@ -66,6 +66,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/raport_list_view', 'RaportController@report_list_view')->name('report_list_view');
     Route::post('/add_report','RaportController@create_report')->name('create_report');
     Route::post('/all_reports', 'RaportController@get_all')->name('get_all_reports');
+    Route::post('/data_exec_time', 'RaportController@get_data_exec_time')->name('exec_time');
 
 //Machines
     Route::get('/add_machine_view', 'MachineController@index')->name('add_machine_view');
@@ -99,18 +100,19 @@ Route::group(['middleware' => 'auth'], function () {
 //Validation mini
     Route::get('mini/validations','MiniValidationController@add_validation_view')->name('valid_view');
     Route::post('mini/add_validation','MiniValidationController@add_validation')->name('add_validation');
-
-
     Route::get('mini/validations_list_view','MiniValidationController@validation_list_view')->name('valid_list_view');
-
     Route::get('mini/mini_valid_list_done_view','MiniValidationController@validation_list_done_view')->name('valid_list_done_view');
-
     Route::post('mini_valid_list','MiniValidationController@validations_list')->name('valid_list');
     Route::post('mini_valid_done_list','MiniValidationController@validations_done_list')->name('valid_done_list');
-
     Route::get('mini/validation_upload/{id}','MiniValidationController@upload_validation_view')->name('valid_upload_view');
     Route::post('mini/upload_validation','MiniValidationController@upload_validation')->name('upload_valid');
     Route::post('mini/download_validation','MiniValidationController@download_validation')->name('valid_download');
-    
+//Interface
+    Route::get('/interface','InterfaceController@index')->name('interface_view');
+    Route::get('/interface/add','InterfaceController@add_interface_view')->name('add_interface');
+    Route::post('/interface/upload','InterfaceController@upload_interfaces')->name('upload_interf');
+    Route::post('/interface/get_list','InterfaceController@get_list');
+    Route::post('/interface/download', 'InterfaceController@download');
+    Route::post('/interface/preview','InterfaceController@get_jpg_by_id');
 });
 

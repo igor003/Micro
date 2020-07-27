@@ -26,7 +26,7 @@
 
         };
 
-        var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
+        var chart = new google.charts.Bar(document.getElementById('columnchart_material1'));
                   
         chart.draw(data, google.charts.Bar.convertOptions(options));
       }
@@ -41,7 +41,7 @@
         <div class="row">
 
             <div class="col-xs-10">
-                <div id="columnchart_material"></div>
+                <div id="columnchart_material1"></div>
             </div>
             <div class="col-xs-2">
               

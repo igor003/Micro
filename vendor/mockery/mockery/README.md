@@ -25,8 +25,6 @@ version
 composer require --dev mockery/mockery
 ```
 
-⚠️️ The remainder of this README refers specifically to the master branch (1.0-dev).
-
 ## Documentation
 
 In older versions, this README file was the documentation for Mockery. Over time
@@ -237,7 +235,7 @@ $spy->shouldHaveReceived()
 
 All of the global helpers are wrapped in a `!function_exists` call to avoid
 conflicts. So if you already have a global function called `spy`, Mockery will
-silently skip the declaring it's own `spy` function.
+silently skip the declaring its own `spy` function.
 
 ### Testing Traits
 

@@ -650,6 +650,7 @@ class Connection implements ConnectionInterface
      */
     protected function runQueryCallback($query, $bindings, Closure $callback)
     {
+        
         // To execute the statement, we'll simply call the callback, which will actually
         // run the SQL against the PDO connection. Then we can calculate the time it
         // took to execute and log the query SQL, bindings and time in our memory.

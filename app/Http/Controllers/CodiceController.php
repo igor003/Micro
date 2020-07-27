@@ -9,8 +9,27 @@ use App\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use Elasticsearch\ClientBuilder;
 class CodiceController extends Controller
 {
+
+    public static function convert_from_latin1_to_utf8_recursively($dat)
+   {
+      if (is_string($dat)) {
+         return utf8_encode($dat);
+      } elseif (is_array($dat)) {
+         $ret = [];
+         foreach ($dat as $i => $d) $ret[ $i ] = self::convert_from_latin1_to_utf8_recursively($d);
+
+         return $ret;
+      } elseif (is_object($dat)) {
+         foreach ($dat as $i => $d) $dat->$i = self::convert_from_latin1_to_utf8_recursively($d);
+
+         return $dat;
+      } else {
+         return $dat;
+      }
+   }
     public function index()
     {
         $projects = Project::all();
@@ -46,6 +65,7 @@ class CodiceController extends Controller
     }
 
     public function codice_list(Request $request){
+          
 //
 //        if($request->filter and $request->search){
 //            $parts = Part::search($request->search)->filter($request->filter)->get();
@@ -59,7 +79,32 @@ class CodiceController extends Controller
 //        }
 //            $parts = Part::all();
 //            return $parts;
+//            
+
+
+// $client = ClientBuilder::create()->build();
+// $params = [
+//     'index' => 'my_index',
+//     'id'    => 'my_id',
+//     'type'  => '_doc',
+//     'body'  => ['testField' => 'abc']
+// ];
+
+// $response = $client->index($params);
+// $params = [
+//     'index' => 'my_index',
+//     'type'  => '_doc',
+//     'id'    => 'my_id'
+// ];
+
+// $response = $client->get($params);
+
+
+
+// var_dump($response);
+  
         $parts = Part::select('*');
+        
         if($request->search != ''){
             $parts->search($request->search);
         }
@@ -73,7 +118,8 @@ class CodiceController extends Controller
         }else{
             $admin = false;
         }
-        return array('parts' => $parts->get(),'admin'=>$admin);
+        
+        return $this->convert_from_latin1_to_utf8_recursively(array('parts' => $parts->get(),'admin'=>$admin));
     }
 
     public function delete($id)
