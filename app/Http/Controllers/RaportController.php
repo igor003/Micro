@@ -178,7 +178,7 @@ class RaportController extends Controller
 		return $fotos_dates;
 	}
 
-	public function dates_of_micross($date,$flag){
+	public function dates_of_micross($date,$flag,$operator = null){
 		
 		if($date){
 			$fotos = Photo::whereDate('maked_at','=',$date)

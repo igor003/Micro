@@ -117,7 +117,9 @@ abstract class AbstractCloner implements ClonerInterface
         'DateTimeZone' => ['Symfony\Component\VarDumper\Caster\DateCaster', 'castTimeZone'],
         'DatePeriod' => ['Symfony\Component\VarDumper\Caster\DateCaster', 'castPeriod'],
 
+        'CurlHandle' => ['Symfony\Component\VarDumper\Caster\ResourceCaster', 'castCurl'],
         ':curl' => ['Symfony\Component\VarDumper\Caster\ResourceCaster', 'castCurl'],
+
         ':dba' => ['Symfony\Component\VarDumper\Caster\ResourceCaster', 'castDba'],
         ':dba persistent' => ['Symfony\Component\VarDumper\Caster\ResourceCaster', 'castDba'],
         ':gd' => ['Symfony\Component\VarDumper\Caster\ResourceCaster', 'castGd'],
@@ -216,7 +218,7 @@ abstract class AbstractCloner implements ClonerInterface
     public function cloneVar($var, $filter = 0)
     {
         $this->prevErrorHandler = set_error_handler(function ($type, $msg, $file, $line, $context = []) {
-            if (E_RECOVERABLE_ERROR === $type || E_USER_ERROR === $type) {
+            if (\E_RECOVERABLE_ERROR === $type || \E_USER_ERROR === $type) {
                 // Cloner never dies
                 throw new \ErrorException($msg, 0, $type, $file, $line);
             }

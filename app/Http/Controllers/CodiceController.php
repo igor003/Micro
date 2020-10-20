@@ -63,6 +63,12 @@ class CodiceController extends Controller
         $projects = Project::all();
         return view('codice_list',['projects'=>$projects]);
     }
+    public function bom_list ($id){
+
+
+        return view('codice_list-bom');
+    }
+
 
     public function codice_list(Request $request){
           

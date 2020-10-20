@@ -32,7 +32,11 @@
                         <td class="text-center">
                             Name
                         </td>
+
                         @if(Auth::user()->status == 'admin')
+                            <td class="text-center">
+                                BOM
+                            </td>
                             <td class="text-center">
                                 Update
                             </td>

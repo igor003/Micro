@@ -139,6 +139,11 @@ date_default_timezone_set("Europe/Chisinau");
                                                 </a>
                                             </li>
                                             <li>
+                                                <a href="{{route('add_codice_BOM')}}">
+                                                    Add codice BOM
+                                                </a>
+                                            </li>
+                                            <li>
                                                 <a href="{{route('add_configuration')}}">
                                                     Add configuration
                                                 </a>
@@ -165,6 +170,8 @@ date_default_timezone_set("Europe/Chisinau");
                                     </div>
 
                                 </ul>
+                                @endif
+                                @endif
                                 <ul class="nav navbar-nav navbar-center vertical-center">
                                     <div class="dropdown">
                                         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -201,8 +208,7 @@ date_default_timezone_set("Europe/Chisinau");
                                     </div>
                                 </ul>
                                  
-                            @endif
-                         @endif
+                      
                          @if(Auth::user())     
                             @if(Auth::user()->status === 'admin' || Auth::user()->status === 'marcel')
                                <ul class="nav navbar-nav navbar-center vertical-center">

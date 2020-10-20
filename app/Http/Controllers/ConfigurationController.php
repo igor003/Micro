@@ -19,7 +19,7 @@ use PHPExcel_IOFactory;
 use PHPExcel_Style_Alignment;
 use PHPExcel_Style_Border;
 use PHPExcel_Style_Fill;
-
+use PHPExcel_Worksheet_Drawing;
 
 
 class ConfigurationController extends Controller
@@ -110,6 +110,11 @@ class ConfigurationController extends Controller
         return view('upload_view',['conf'=>$conf,'minis'=>$minis, 'machines'=>$machines]);
     }
 
+    public function get_server_date(){
+        // return date("Y-m-d H:i:s");
+         return  json_encode(date("Y/m/d H:i:s"));
+    }
+
     public function upload_photo(Request $request){
        
         if($request->maked_at != ''){
@@ -182,9 +187,18 @@ class ConfigurationController extends Controller
 
     }
 
-    public function get_excell(){
-        $conf = Configuration::with('codice')->with('connector')->get();
+    public function get_excell($project_id = null){
+        if($project_id){
+            
+           $projects =  explode(',',$project_id);
+            $conf =Configuration::whereHas('codice',function ($query) use($projects) {
+                $query->whereIn('project_id',$projects);
+            })->with('codice')->with('connector')->get();
 
+        }else{
+           $conf = Configuration::with('codice')->with('connector')->get();
+        }
+        
         $xls = new PHPExcel();
 // Устанавливаем индекс активного листа
         try {
@@ -196,6 +210,20 @@ class ConfigurationController extends Controller
 // Подписываем лист
         $sheet->setTitle('Configuration list');
 // Вставляем текст в ячейку A1
+ $objDrawing = new PHPExcel_Worksheet_Drawing();
+$objDrawing->setName('test_img');
+$objDrawing->setDescription('test_img');
+$objDrawing->setPath('img/SAMMY_logo.jpg');
+$objDrawing->setCoordinates('A1');                      
+//setOffsetX works properly
+$objDrawing->setOffsetX(7); 
+$objDrawing->setOffsetY(7);                
+//set width, height
+// $objDrawing->setWidth(20); 
+$objDrawing->setHeight(40); 
+$objDrawing->setWorksheet($sheet);
+
+
         $sheet->setCellValue("A1", 'TABELA AGRAFATURILOR CU MICROGRAFIE LA FIECARE LOT');
         $sheet->setCellValue("A2", 'Codice');
         $sheet->setCellValue("B2", 'Grup agrafat');
@@ -217,7 +245,7 @@ class ConfigurationController extends Controller
         $sheet->getStyle('B2')->getFill()->getStartColor()->setRGB('84, 157, 1');
         $sheet->getStyle('C2')->getFill()->getStartColor()->setRGB('84, 157, 1');
         $sheet->getStyle('D2')->getFill()->getStartColor()->setRGB('84, 157, 1');
-        $sheet->getRowDimension(1)->setRowHeight(25);
+        $sheet->getRowDimension(1)->setRowHeight(42);
         $sheet->getRowDimension(2)->setRowHeight(25);
         $rows = 3;
         $cnt = 0;
@@ -231,7 +259,7 @@ class ConfigurationController extends Controller
             $sheet->setCellValue("F".$rows, $conf[$cnt]->width);
             $sheet->setCellValue("G".$rows, $conf[$cnt]->nr_strand);
             $sheet->getRowDimension($rows)->setRowHeight(25);
-            $sheet->getStyle('A'.$rows)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+           
             $sheet->getStyle('A'.$rows)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             $sheet->getStyle('B'.$rows)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             $sheet->getStyle('C'.$rows)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);

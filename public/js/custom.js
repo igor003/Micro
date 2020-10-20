@@ -215,6 +215,9 @@ function generate_html_codice (data,entity,admin){
             '<td class="text-center"><a href="photo_list_view/'+data.id+'">'+data.name+'</a></td>' ;
             if(admin === true){
                 result += '<td class="text-center">' +
+                '<a href="'+entity+'_list/BOM/'+data.id+'"> <div>BOM</div></a>'+
+                '</td>' +
+                '<td class="text-center">' +
                 '<a href="'+entity+'_list/update_view/'+data.id+'"> <div><img height="40px" width = "40px" src="/img/update.png" alt=""></div></a>'+
                 '</td>' +
                 '<td class="text-center">' +
@@ -294,7 +297,7 @@ function generate_html_interface(data, cnt){
          '<td class="text-center">'+
             
            
-      ' <a href="/interface/update/'+data.id+'"><button type="submit"><img height="20px" width = "20px" src="/img/update.png" alt=""></button></a>'+
+      ' <a href="/interfaces/update_view/'+data.id+'"><button type="submit"><img height="20px" width = "20px" src="/img/update.png" alt=""></button></a>'+
          
         '</td>';
         result +='</tr>';
@@ -713,6 +716,13 @@ function get_configuration_list(){
     $('input[id="projects"]:checked').each(function () {
         filter.push(this.value);
     });
+      
+     if(filter.length <1){
+        $('.excell').attr('href','/configuration/get_list_excel');
+     }else{
+        $('.excell').attr('href','/configuration/get_list_excel/'+filter.toString());
+     }
+     
     var filter_connector = $('#conf_connectors').val();
     $.ajax({
         url: '/configuration_list',
@@ -1138,17 +1148,57 @@ $(function(){
 $(document).ready(function (){
     $('#start').on('click', function(){
         // $("#content").removeClass('hide')
+         
+    $.ajax({
+        url: '/configuration/serv_datetitme',
+        type: 'POST',
         
+        dataType: 'json',
+        data:{
+
+        },
+        success: function (data) {
         $('#start').removeClass('btn btn-danger').addClass('btn btn-success');
-        var dt = new Date();
+           // console.log(data);
+        $('#form_microgr').append('<input type="hidden" name="start_time" value="'+data+'">');
+   
+        },
+          error: function (jqXHR, exception) {
+                            var msg = '';
+                            if (jqXHR.status === 0) {
+                                msg = 'Not connect.\n Verify Network.';
+                            } else if (jqXHR.status == 404) {
+                                msg = 'Requested page not found. [404]';
+                            } else if (jqXHR.status == 500) {
+                                msg = 'Internal Server Error [500].';
+                            } else if (exception === 'parsererror') {
+                                msg = 'Requested JSON parse failed.';
+                            } else if (exception === 'timeout') {
+                                msg = 'Time out error.';
+                            } else if (exception === 'abort') {
+                                msg = 'Ajax request aborted.';
+                            } else {
+                                msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                            }
+                            console.log(msg);
+                        },
+    });
+        
        
-        var month  = dt.getMonth() + 1;
-        var minutes = dt.getMinutes();
-        var seconds = dt.getSeconds()
-        if (seconds < 10) {seconds = "0"+seconds};
-        if (minutes< 10) {minutes = "0"+minutes};
-        $('#form_microgr').append('<input type="hidden" name="start_time" value="'+dt.getFullYear()+'/'+month+'/'+dt.getDate()+' '+dt.getHours() + ':' +minutes+ ':' +seconds+'">');
+        // var dt = new Date();
+       
+        // var month  = dt.getMonth() + 1;
+        // var minutes = dt.getMinutes();
+        // var seconds = dt.getSeconds()
+        // if (seconds < 10) {seconds = "0"+seconds};
+        // if (minutes< 10) {minutes = "0"+minutes};
+        // $('#form_microgr').append('<input type="hidden" name="start_time" value="'+dt.getFullYear()+'/'+month+'/'+dt.getDate()+' '+dt.getHours() + ':' +minutes+ ':' +seconds+'">');
+         
+
+
     })
+
+
 
 
 });

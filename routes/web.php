@@ -33,6 +33,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/codice_list/filter', 'CodiceController@get_by_project')->name('filter_by_project');
     Route::get('codice_list/update_view/{id}', 'CodiceController@update_view')->name('update_view');
     Route::post('codice_list/update', 'CodiceController@update_codice')->name('codice_update');
+     Route::get('/codice/add_BOM', 'CodiceController@add_BOOM')->name('add_codice_BOM');
+    Route::get('/codice_list/BOM/{id}', 'CodiceController@bom_list')->name('bom_list');
 //Configuration
     Route::get('/configuration_list/update_view/{id}', 'ConfigurationController@update_view')->name('update_view');
     Route::post('/configuration_list/update', 'ConfigurationController@update')->name('update_configuration');
@@ -42,8 +44,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/configuration/upload', 'ConfigurationController@upload_photo')->name('upload');
     Route::get('/add_configuration', 'ConfigurationController@index')->name('add_configuration');
     Route::post('insert_configuration', 'ConfigurationController@insert')->name('insert_configuration');
-    Route::get('/configuration/get_list_excel', 'ConfigurationController@get_excell')->name('get_excell');
+    Route::get('/configuration/get_list_excel/{project_id?}', 'ConfigurationController@get_excell')->name('get_excell');
     Route::post('/configuration/get_by_part_id','Configurationcontroller@get_by_part_id')->name('get_by_part_id');
+    Route::post('/configuration/serv_datetitme','Configurationcontroller@get_server_date')->name('get_serv_datetitme');
 //Project
     Route::get('project_list/delete/{id}', 'ProjectController@delete')->name('delete_project');
     Route::get('project_list_view', 'ProjectController@project_list_view')->name('projects_list_view');
@@ -114,5 +117,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/interface/get_list','InterfaceController@get_list');
     Route::post('/interface/download', 'InterfaceController@download');
     Route::post('/interface/preview','InterfaceController@get_jpg_by_id');
+    Route::get('/interfaces/update_view/{id}','InterfaceController@update_view')->name('interf_update_view');
+    Route::post('/interfaces/update','InterfaceController@update_interface')->name('update_interf');
 });
 

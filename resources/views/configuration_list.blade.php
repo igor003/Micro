@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-2">
-                <a href="{{route('get_excell')}}">
+                <a class='excell' href="{{route('get_excell')}}">
                     <div class="btn btn-success">
                         Generate Excel
                     </div>

@@ -5,7 +5,6 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-        <script src="{{ asset('js/video.js') }}"></script>
         <title>Laravel</title>
 
         <!-- Fonts -->

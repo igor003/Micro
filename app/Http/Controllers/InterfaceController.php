@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Interfaces;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 class InterfaceController extends Controller
 {
  	public function index(){
@@ -104,6 +105,43 @@ class InterfaceController extends Controller
 
         return redirect(route('interface_view'));
 	}
+    public function update_view($id){
+        $data = Interfaces::find($id);
+        return view('interface_update_view',['interface_date'=>$data]);
+    }
+    
+    public function update_interface (Request $request){
+       
+         $path = Storage::disk('public')->getAdapter()->getPathPrefix();
+         unlink($path.'/interfaces/'.$request->path_stl);
+         unlink($path.'/interfaces/'.$request->path_f3d);
+         unlink($path.'/interfaces/'.$request->path_jpg);
+         
+
+        $filename_stl = $request->file('file_stl_new')->getClientOriginalName();
+        $path_stl = $request->file('file_stl_new')->storeAs('public/interfaces\\'.$request->interface_name.'\\'.$request->blo_name1.'\\'.$request->interface_code, $filename_stl);
+        $file_stl_path = $request->interface_name.'/'.$request->blo_name1.'/'.$request->interface_code.'//'.basename($filename_stl);
+
+        $filename_f3d = $request->file('file_f3d_new')->getClientOriginalName();
+        $path_f3d = $request->file('file_f3d_new')->storeAs('public/interfaces\\'.$request->interface_name.'\\'.$request->blo_name1.'\\'.$request->interface_code, $filename_f3d);
+        $file_f3d_path = $request->interface_name.'/'.$request->blo_name1.'/'.$request->interface_code.'//'.basename($filename_f3d);
+
+        $filename_jpg = $request->file('file_jpg_new')->getClientOriginalName();
+        $path_jpg = $request->file('file_jpg_new')->storeAs('public/interfaces\\'.$request->interface_name.'\\'.$request->blo_name1.'\\'.$request->interface_code, $filename_jpg);
+        $file_jpg_path = $request->interface_name.'/'.$request->blo_name1.'/'.$request->interface_code.'//'.basename($filename_jpg);
+        
+        $interf = Interfaces::find($request->id);
+        $interf->name = $request->interface_name;
+        $interf->code=$request->interface_code;
+        $interf->blocket=$request->blo_name1;
+        $interf->path_stl=$file_stl_path;
+        $interf->path_f3d=$file_f3d_path;
+        $interf->path_jpg=$file_jpg_path;
+        $interf->save();
+
+        return redirect(route('interface_view'));
+    }
+
 
 
 }
