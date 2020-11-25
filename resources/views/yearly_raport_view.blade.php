@@ -12,12 +12,14 @@
         console.log(data_foto);
        var data = google.visualization.arrayToDataTable(data_foto);
 
+
         var options = {
           
             bar: {groupWidth: "75%"},
             legend: { position: "none" },
             height: 400,
             opacity: 0.8,
+             vAxis: {format: 'decimal'},
             animation:{
                 duration: 1000,
                 easing: 'out',

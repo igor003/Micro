@@ -65,7 +65,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/monthly_report/{month?}/{year?}', 'RaportController@monthly_report')->name('monthly_report');
     Route::get('/yearly_report/{year?}','RaportController@yearly_report')->name('yearly_report');
     Route::get('/execut_time_report/{date?}','RaportController@execut_time_report')->name('execut_time_report');
-    Route::post('/generate_raport', 'RaportController@generate_raport')->name('generate_raport');
+    Route::post('/generate_raport', 'RaportController@generate_raport')->name('generate_raport_aggraf');
     Route::get('/raport_list_view', 'RaportController@report_list_view')->name('report_list_view');
     Route::post('/add_report','RaportController@create_report')->name('create_report');
     Route::post('/all_reports', 'RaportController@get_all')->name('get_all_reports');

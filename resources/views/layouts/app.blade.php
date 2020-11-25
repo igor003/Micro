@@ -120,7 +120,6 @@ date_default_timezone_set("Europe/Chisinau");
                          @endif
                         @if(Auth::user())     
                             @if(Auth::user()->status === 'admin')
-                                 
                                 <ul class="nav navbar-nav navbar-center vertical-center">
                                     <div class="dropdown">
                                         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -168,7 +167,6 @@ date_default_timezone_set("Europe/Chisinau");
                                             </li>
                                         </ul>
                                     </div>
-
                                 </ul>
                                 @endif
                                 @endif
@@ -204,11 +202,24 @@ date_default_timezone_set("Europe/Chisinau");
                                                     Execute Time Report Micro
                                                 </a>
                                             </li>
+                                            <li>
+                                                <a href="{{route('report_list_view')}}">
+                                                    Report list
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{route('generate_raport_aggraf')}}">
+                                                    Generate raport
+                                                </a>
+                                            </li>
+                                            <li>    
+                                                    <a href="{{'raport_view'}}">
+                                                        raport view
+                                                    </a>              
+                                            </li>           
                                         </ul>
                                     </div>
                                 </ul>
-                                 
-                      
                          @if(Auth::user())     
                             @if(Auth::user()->status === 'admin' || Auth::user()->status === 'marcel')
                                <ul class="nav navbar-nav navbar-center vertical-center">
@@ -222,13 +233,11 @@ date_default_timezone_set("Europe/Chisinau");
                                                 <a href="{{route('interface_view')}}">
                                                   Interfaces
                                                 </a>
-                                               
                                             </li>
                                              <li>
                                                 <a href="{{route('add_interface')}}">
                                                   Add Interface
                                                 </a>
-                                             
                                             </li>
                                         </ul>
                                     </div>

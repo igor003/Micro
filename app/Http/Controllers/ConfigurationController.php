@@ -146,6 +146,7 @@ class ConfigurationController extends Controller
                $foto->foto3 = $image_path[2];
                $foto->miniaplicator_id = $request->mini;
                $foto->machine_id = $request->machines;
+               $foto->height= $request->height_agraf;
             if($request->start_time){
                $foto->start_time = $dateobj->format('Y-m-d H:i:s');
             }

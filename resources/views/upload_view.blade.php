@@ -56,6 +56,8 @@
                             </option>
                         @endforeach
                     </select>
+                    <label for="datepicker_config">Enter height </label>
+                    <input type="text" class="form-control" name="height_agraf" id="height_agraff" aria-describedby="emailHelp" placeholder="Enter height">
                     <div class="row">
                         <br>
                     </div>

@@ -1032,23 +1032,42 @@ function get_photo_list(cur_page){
                     });
             }else{//если есть фильтры 
                 var pages_with_filter = Math.ceil(data.total_photo_with_filter/per_page);
+                console.log('foto wiht filter:'+data.total_photo_with_filter);
+                console.log(pages_with_filter);
+                console.log(cur_page);
           
                 $('#pagin').append('<li class="page-item1 prev"><a href="#" class="page-link" >Previous</a></li>'); 
-                if(pages_with_filter>show_pages && cur_page < pages_with_filter-4){
-                        $('#pagin').append('<li class="page-item disabled"><a class="page-link disabled">...</a></li>');
+               
+                if(cur_page >6){
+                    $('#pagin').append('<li class="page-item disabled"><a class="page-link disabled">...</a></li>'); 
+                    for(var cnt = 1; cnt<=pages_with_filter; cnt++){
+                        if( cnt >= start_page && cnt<=finish_page){
+                            if( cnt == cur_page){
+                                $('#pagin').append('<li class="page-item active "><a class="page-link" href="#">'+cnt+'</a></li>');
+                            }else{
+                                $('#pagin').append('<li class="page-item  "><a class="page-link" href="#">'+cnt+'</a></li>');
+                            }
+                        }else{
+                            continue;
+                        }
+                    }
+                }else{
+                    for(var cnt = 1; cnt<=pages_with_filter; cnt++){
+                        if(cur_page == undefined){
+                            $('#pagin').append('<li class="page-item active"><a class="page-link " href="#">1</a></li>');    
+                            cur_page = true;
+                        }else if( cnt == cur_page){
+                            $('#pagin').append('<li class="page-item active "><a class="page-link" href="#">'+cnt+'</a></li>');
+                        }else{
+                            $('#pagin').append('<li class="page-item"><a class="page-link" href="#">'+cnt+'</a></li>');
+                        }
+                        if(cnt>show_pages){
+                            break;
+                        }
+                    }
                 }
-                for(var cnt = 1; cnt<=pages_with_filter; cnt++){
-                    if(cur_page == undefined){
-                        $('#pagin').append('<li class="page-item active"><a class="page-link " href="#">1</a></li>');    
-                        cur_page = true;
-                    }else if( cnt == cur_page){
-                        $('#pagin').append('<li class="page-item active "><a class="page-link" href="#">'+cnt+'</a></li>');
-                    }else{
-                        $('#pagin').append('<li class="page-item"><a class="page-link" href="#">'+cnt+'</a></li>');
-                    }
-                    if(cnt>show_pages){
-                        break;
-                    }
+                 if(pages_with_filter>show_pages && cur_page < pages_with_filter-4){
+                        $('#pagin').append('<li class="page-item disabled"><a class="page-link disabled">...</a></li>');
                 }
                 // клик на элемент пагинации
                 $('.page-item').on('click',function(){

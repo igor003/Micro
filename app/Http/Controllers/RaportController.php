@@ -111,6 +111,7 @@ class RaportController extends Controller
 
   			$count_month[$cnt][] =  $months[$cnt-1];
     		$count_month[$cnt][] = Photo::whereMonth('maked_at', '=', str_pad($cnt, 2, '0', STR_PAD_LEFT))->whereYear('maked_at', $year)->count();
+    		
 		}
   			
   			 array_unshift($count_month,array("date","number of micrography"));

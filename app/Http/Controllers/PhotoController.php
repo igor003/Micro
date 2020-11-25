@@ -37,7 +37,7 @@ class PhotoController extends Controller
     public function index(){
         $projects = Project::orderBy('name','asc')->get();
         $codice = Part::orderBy('name','ASC')->get();
-        $minis = Miniaplicator::all();
+        $minis = Miniaplicator::orderBy('name','ASC')->get();
         $machines = Machine::all();
         $route = \Route::current();
         $codice_id = $route->parameter('codiceid');
@@ -58,6 +58,7 @@ class PhotoController extends Controller
         }
         if($request->codice != ''){
             $photos->codice($request->codice);
+
         }
         if($request->mini != ''){
             $photos->mini($request->mini);
@@ -67,9 +68,12 @@ class PhotoController extends Controller
         }
         
         $photos->with('configurations.codice.project')->with('configurations.connector')->with('minis')->with('machines');
+        // var_dump($photos->count());
         $total_photo_with_filter =  $photos->with('configurations.codice.project')->count();
+
   
         $schip = ($request->cur_page - 1)*$request->per_page;
+        // var_dump($request->cur_page);
 
         if($request->config_id){
           $photos = $photos->where('configuration_id',$requestconfig_id)->take($request->per_page)->orderBy('maked_at', 'desc')->skip($schip)->get();
