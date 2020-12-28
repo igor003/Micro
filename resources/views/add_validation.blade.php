@@ -43,6 +43,7 @@
                         </label>
                         <input id="datepicker_photo_from" name='date' type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter date from">
                     </div>
+                   
                     <input type="hidden" name='status' value='during'>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>

@@ -277,14 +277,14 @@ date_default_timezone_set("Europe/Chisinau");
                                         <a href="{{route('machine_list_view')}}">Machines</a>
                                     </li>
                                     
-                                    <li>
-                                        <a href="{{route('valid_view')}}">Maintenance</a>
-                                    </li>
+                                   
                                 @endif
                             @endif
                             @if(Auth::user())
                                 @if(Auth::user()->status == 'admin' || Auth::user()->status == 'user' )   
-                           
+                            <li>
+                                        <a href="{{route('valid_view')}}">Maintenance</a>
+                                    </li>
                             
                             <li>
                                 <a href="{{route('mini_calibration_list_view')}}">Mini Calibration</a>

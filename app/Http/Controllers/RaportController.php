@@ -10,10 +10,11 @@ use Illuminate\Support\Facades\DB;
 class RaportController extends Controller
 {
 
-	public function generate_custome_html_tooltyp($operator,$date_from,$date_to,$diff){
+	public function generate_custome_html_tooltyp($codice,$operator,$date_from,$date_to,$diff){
 		$result = '<div style="padding: 12px 12px 12px 12px;font-size:13px">
 						<div class ="text-center" style="line-height:12px;">
-							<strong> Operator:</strong> <br>'.$operator.'
+							<strong> Operator:</strong> <br>'.$operator.' <br>
+							<strong> Codice:</strong> <br>'.$codice.'
 						</div>
 						<div class ="text-center" style="line-height:12px; padding-top:15px">
 							<strong>From:</strong> '.$date_to.'	<br>
@@ -49,7 +50,9 @@ class RaportController extends Controller
 		  	$diff_min = intdiv(abs(strtotime($date1[0]) - strtotime($date1[1])),60);
 		  	$diff_sec = abs(strtotime($date1[0]) - strtotime($date1[1]))-($diff_min*60);
 
-		  	$result[0][] = [$cnt,round($diff_min,1,PHP_ROUND_HALF_UP),$this->generate_custome_html_tooltyp($date1[2],
+		  	$result[0][] = [$cnt,round($diff_min,1,PHP_ROUND_HALF_UP),$this->generate_custome_html_tooltyp(
+		  		'',
+		  																								$date1[2],
 		  																								$time_done->format('H:i:s'),
 		  																								$time_start->format('H:i:s'),
 		  																								$diff_min.'min '.$diff_sec.'sec')]; 
@@ -108,13 +111,13 @@ class RaportController extends Controller
   		$cnt = 1;
   		$count_month = array();
   		for ($cnt = 1; $cnt <= 12; $cnt++) {
-
+  			$cur_string = Photo::whereMonth('maked_at', '=', str_pad($cnt, 2, '0', STR_PAD_LEFT))->whereYear('maked_at', $year)->count();
   			$count_month[$cnt][] =  $months[$cnt-1];
-    		$count_month[$cnt][] = Photo::whereMonth('maked_at', '=', str_pad($cnt, 2, '0', STR_PAD_LEFT))->whereYear('maked_at', $year)->count();
-    		
+			$count_month[$cnt][] = strval($cur_string);
+    		$count_month[$cnt][] = $cur_string;
 		}
   			
-  			 array_unshift($count_month,array("date","number of micrography"));
+  			 // array_unshift($count_month,array("date","number of micrography"));
 		return view('yearly_raport_view',['years'=>$years,'cur_year'=>$year,'fotos'=>$count_month]);
 	}
 	public function monthly_report() {
@@ -199,9 +202,10 @@ class RaportController extends Controller
 		$dates_codice= array();
 		$cnt=0;
 		foreach($fotos as $photo){
-
+		
 			$dates[$cnt]['date']=$photo->maked_at;
 			$dates[$cnt]['operator'] = $photo->operator;
+			$dates[$cnt]['codice'] = $photo->configurations[0]->codice->name;
 			$dates[$cnt]['start_time'] = $photo->start_time;
 			$cnt++;
 
@@ -209,10 +213,10 @@ class RaportController extends Controller
 	
 		$cnt = 0;
 		foreach ($dates as $dates1) {
-
 			$dates_codice[$cnt]['date'] = $dates1['date'];
 			$dates_codice[$cnt]['start'] = $dates1['start_time'];
 			$dates_codice[$cnt]['operator'] = $dates1['operator'];
+			$dates_codice[$cnt]['codice'] =  $dates1['codice'];
 			$cnt++;
 
 		}
@@ -221,6 +225,7 @@ class RaportController extends Controller
 		$cnt=1;
 		$summ_diff = 0;
 		foreach($dates_codice as $array) {
+
 			if($flag == 0){
 				$time_start = new \DateTime($array['start']);
 				$time_done = new \DateTime($array['date']);
@@ -231,7 +236,8 @@ class RaportController extends Controller
 
 		  							(string)$array['start'],
 	  								(string)$array['date'],
-		  							$this->generate_custome_html_tooltyp($array['operator'],
+		  							$this->generate_custome_html_tooltyp($array['codice'],
+		  																 $array['operator'],
 		  																 $time_done->format('H:i:s'),
 																		 $time_start->format('H:i:s'),
 		  																 $diff_min.'min '.$diff_sec.'sec')

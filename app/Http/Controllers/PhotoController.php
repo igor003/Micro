@@ -58,13 +58,16 @@ class PhotoController extends Controller
         }
         if($request->codice != ''){
             $photos->codice($request->codice);
-
         }
         if($request->mini != ''){
             $photos->mini($request->mini);
         }
         if($request->machine != ''){
             $photos->machine($request->machine);
+        }
+         if($request->work_order != ''){
+
+            $photos->where('work_order', '=',$request->work_order);
         }
         
         $photos->with('configurations.codice.project')->with('configurations.connector')->with('minis')->with('machines');

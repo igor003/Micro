@@ -240,10 +240,10 @@ function generate_html_configuration(data,admin){
             '<td class="text-center">' + data.width + '</td>';
         if(admin === true){
             result +='<td class="text-center">' +
-            '<a href="configuration_list/update_view/' + data.id + '"> <div class="update"><img height="30px" width = "30px" src="/img/update.png" alt=""></div></a>' +
+            '<a class="delete_link" href="configuration_list/update_view/' + data.id + '"> <div class="update"><img height="30px" width = "30px" src="/img/update.png" alt=""></div></a>' +
             '</td>' +
             '<td class="text-center">' +
-            '<a href="configuration_list/delete/' + data.id + '"> <div class="delete"><img height="30px" width = "30px" src="/img/delete.png" alt=""></div></a>' +
+            '<a  href="configuration_list/delete/' + data.id + '"> <div class="delete"><img height="30px" width = "30px" src="/img/delete.png" alt=""></div></a>' +
             '</td>';
             }
             result +='</tr>';
@@ -360,6 +360,10 @@ function generate_html_photo(data, admin){
 }
 
 $( document ).ready(function() {
+ $('.delete_link').on('click', function(){
+confirm("Do you want to delete?");
+ });
+
     $('#project_conf').on('click', function() {
         get_codice_by_project_conf_update();
     });
@@ -406,6 +410,12 @@ $( document ).ready(function() {
     $('#conf_connectors').on('change',function(){
         get_configuration_list();
     });
+
+
+    
+    $('#total_sez').on('change',function(){
+        get_configuration_list();
+    });
     $('#date_validation').change(function(){
         get_validation_done_list();
     });
@@ -414,6 +424,9 @@ $( document ).ready(function() {
     });
     $('#mini').on('change', function(){
         get_photo_list()
+    });
+     $('#work_ord').on('change', function(){
+        get_photo_list();
     });
     $('#mini').on('change', function(){
         get_validation_done_list();
@@ -712,6 +725,7 @@ function get_miniaplicators_list(){
 function get_configuration_list(){
     var search;
     search = $('#search_configuration').val();
+    var total_sez = $('#total_sez').val();
     var filter = [];
     $('input[id="projects"]:checked').each(function () {
         filter.push(this.value);
@@ -730,7 +744,8 @@ function get_configuration_list(){
         data: {
             filter: filter,
             search:search,
-            filter2:filter_connector
+            filter2:filter_connector,
+            total_sez:total_sez
         },
         dataType: 'json',
         success: function (data) {
@@ -916,11 +931,13 @@ function get_photo_list(cur_page){
     var show_pages = 9;
     var finish_page = Number(cur_page)+4;
     var start_page = Number(cur_page)-4;
+
     
     date_from = $('#datepicker_photo_from').val();
     date_to = $('#datepicker_photo_to').val();
     mini = $('#mini').val();
     machine = $('#machine').val();
+    var work_order = $('#work_ord').val();
     $('#projects>input[type="checkbox"]:checked').each(function () {
        
         project.push(this.value);
@@ -942,11 +959,12 @@ function get_photo_list(cur_page){
             cur_page:cur_page,
             per_page:per_page,
             mini:mini,
-            machine:machine
+            machine:machine,
+            work_order:work_order
 
         },
         success: function (data) {
-
+                        console.log(data);
             $('#table_photo').empty();
             var i = 0;
             while(i< data.photos.length){
@@ -960,7 +978,7 @@ function get_photo_list(cur_page){
             }
             var pages = Math.ceil(data.total_count/per_page);
             $('#pagin').empty();
-            if(codice.length == 0 && project.length == 0 && date_to === '' && date_from === '' && mini === '' && machine === ''){// если нет фильтра по codice и project
+            if(codice.length == 0 && project.length == 0 && date_to === '' && date_from === '' && mini === '' && machine === '' && work_order === ''){// если нет фильтра по codice и project
 
                 // if(){// если нет фильтра по date
                     $('#pagin').append('<li class="page-item1 prev"><a href="#" class="page-link" >Previous</a></li>');
@@ -1276,10 +1294,12 @@ $(document).ready(function(){
 
         function drawChart(data) {
             var data_foto = data;
+            console.log(data_foto);
             var data = new google.visualization.DataTable();
             data.addColumn('number','micrografia nmb');
             data.addColumn('number','time for executing min');
             data.addColumn({'type':'string','role':'tooltip','p': {'html': true}});
+            
             data.addRows(data_foto);
             var options = {
                 tooltip:{isHtml: true},

@@ -59,6 +59,13 @@
                     </label>
                     <input id="datepicker_photo_to" type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter date at">
                 </div>
+                 <div class="form-group">
+                     <label class=" project_label form-check-label" for="work_order">
+                                  Enter work order
+                    </label>
+                    <input name='work_order' id="work_ord" type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter work order">
+                </div>
+
                 <a href="/photo/raport_view">
                     <div class="btn btn-info">
                         Generate raport

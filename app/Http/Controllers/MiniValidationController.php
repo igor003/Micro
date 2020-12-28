@@ -8,6 +8,9 @@ use App\Connector;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
 class MiniValidationController extends Controller
 {
 	public function add_validation_view(){
@@ -23,6 +26,32 @@ class MiniValidationController extends Controller
         $validation->status = $request->status;
         $validation->date = $request->date;
         $validation->save();
+  	$miniaplicator = Miniaplicator::find($request->minaplicator_id);
+    $mailto = "igor.bodean@sammycablaggi.com";
+    $mailSub = "Validarea mini:".$miniaplicator->name."";
+   
+    $mailMsg = "A fost efectuata schimbarea Kit!!<br> Data:" . $request->date."<br>Miniaplicator:" .$miniaplicator->name." <br>  Tipul interventiei:" .$request->type_valid."";
+    
+    $mail = new PHPMailer();
+   
+    $mail->IsSmtp();
+    $mail->SMTPDebug = 2;
+
+    $mail->SMTPAuth = true;
+    $mail->SMTPSecure = 'tls';
+    $mail->Host = "smtps.aruba.it";
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    
+    $mail->Port = 587; 
+
+    $mail->IsHTML(true);
+    $mail->Username = "igor.bodean@sammycablaggi.com";
+    $mail->Password = "mercedes190";
+    $mail->setFrom("igor.bodean@sammycablaggi.com");
+    $mail->Subject = $mailSub;
+    $mail->Body = $mailMsg;
+    $mail->AddAddress($mailto);
+    $mail->Send();
 
 		return redirect('mini/validations');
 	}

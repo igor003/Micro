@@ -64,8 +64,13 @@ class ConfigurationController extends Controller
         $codice_id = $route->parameter('codiceid');
         $projects = Project::orderBy('name','asc')->get();
         $conneectors = Connector::all();
-        
-        return view('configuration_list',['projects'=>$projects,'codice_id'=>$codice_id,'connectors'=>$conneectors]);
+        $sections = DB::table('part_configuration')
+                    ->select('total_sez')
+                    ->orderBy('total_sez', 'asc')
+                    ->distinct()
+                    ->get();
+           
+        return view('configuration_list',['sections'=>$sections,'projects'=>$projects,'codice_id'=>$codice_id,'connectors'=>$conneectors]);
     }
 
     public function config_list(Request $request){
@@ -73,6 +78,11 @@ class ConfigurationController extends Controller
                 $admin = true;
             }else{
                 $admin = false;
+        }
+        if($request->total_sez != ''){
+
+            $conf = Configuration::where('total_sez','=',$request->total_sez)->with('codice')->with('connector')->get();
+            return  array('conf'=>$conf,'admin'=>$admin);
         }
         if($request->search != ''){
             $conf = Configuration::whereHas('codice',function ($query) use($request) {
@@ -95,16 +105,49 @@ class ConfigurationController extends Controller
         $conf = Configuration::with(array('codice' => function($query){
             $query->orderBy('name','DESC');
         }))->with('connector')->get();
-           // $conf = Configuration::with('codice')->orderBy('codice.name','')->with('connector')->get();
+          
         
         
       return array('conf'=>$conf,'admin'=>$admin);
     }
 
+
+    // public function config_list(Request $request){
+    //     if(Auth::user()->status == 'admin'){
+    //             $admin = true;
+    //         }else{
+    //             $admin = false;
+    //     }
+  
+
+    //     $conf = Configuration::select('*');
+
+    //     if($request->total_sez != ''){
+
+    //         $conf->section($request->total_sez);
+    //     }
+       
+    //     if($request->filter != ''){
+
+    //         exit($conf->project($request->filter));
+
+    //     }
+
+    //     if($request->filter2 != ''){
+
+    //         $conf->connectors($request->filter2);
+    //     }
+      
+    //  exit($conf->with('codice.project')->with('connector')->get());
+        
+        
+    //   return array('conf'=>$conf,'admin'=>$admin);
+    // }
+
     public function  upload_foto_view(Request $request){
         $conf = Configuration::where('id','=',$request->id)->with('codice.project')->with('connector')->get();
 
-        
+     
         $minis = Miniaplicator::all();
         $machines = Machine::all();
         return view('upload_view',['conf'=>$conf,'minis'=>$minis, 'machines'=>$machines]);
@@ -147,9 +190,12 @@ class ConfigurationController extends Controller
                $foto->miniaplicator_id = $request->mini;
                $foto->machine_id = $request->machines;
                $foto->height= $request->height_agraf;
-            if($request->start_time){
-               $foto->start_time = $dateobj->format('Y-m-d H:i:s');
-            }
+               if($request->work_order){
+                    $foto->work_order = $request->work_order;
+               }
+               if($request->start_time){
+                   $foto->start_time = $dateobj->format('Y-m-d H:i:s');
+               }
                $foto->operator = Auth::user()->name;
                $foto->maked_at = $date;
                $foto->save();

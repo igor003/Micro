@@ -80,22 +80,33 @@
                 </table>
             </div>
             <div class="col-lg-2">
+               
+                  
                 <label for="mini">Connectors</label>
-                    <select name="connectors" class="form-control" id="conf_connectors">
-                        <option  value="" selected></option>
-                        @foreach($connectors as $connector)
-                            <option value="{{$connector->id}}">
-                                {{$connector->name}}
-                            </option>
-                        @endforeach
-                    </select>
-                    <br>
+                <select name="connectors" class="form-control" id="conf_connectors">
+                    <option  value="" selected></option>
+                    @foreach($connectors as $connector)
+                        <option value="{{$connector->id}}">
+                            {{$connector->name}}
+                        </option>
+                    @endforeach
+                </select>
+                 <label for="mini">Total section</label>
+                <select name="section" class="form-control" id="total_sez">
+                    <option  value="" selected></option>
+                     @foreach($sections as $section)
+                        <option value=" {{$section->total_sez}}">
+                            {{$section->total_sez}}
+                        </option>
+                    @endforeach
+                   
+                <br>
                 @foreach($projects as $project)
                     <input class="configur form-check-input" type="checkbox" value="{{$project->id}}" id="projects">
                     <label class=" project_label form-check-label" for="Project">
                         {{$project->name}}
                     </label>
-                    <br>
+                     <br>
                 @endforeach
 
 

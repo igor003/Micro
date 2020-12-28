@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Photo extends Model
 {
     protected $table = 'foto';
-    protected $fillable = ['configuration_id','foto1','foto2','foto3','miniaplicator_id','machine_id','start_time','maked_at','created_at','height'];
+    protected $fillable = ['configuration_id','foto1','foto2','foto3','miniaplicator_id','machine_id','start_time','maked_at','created_at','height','work_order'];
 
     public function configurations(){
         return $this->hasMany('App\Configuration','id','configuration_id');
@@ -60,8 +60,9 @@ class Photo extends Model
     }
     public function photos_last_year($year){
         return $this->where('maked_at','like','%'.$year);
-
     }
+
+  
     // public function scopeRaportProject($query, $project_id){
     //     return $query->where('project_id', '=', $project_id);
     // }

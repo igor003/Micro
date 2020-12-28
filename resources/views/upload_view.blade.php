@@ -36,8 +36,14 @@
             
             <div class="col-xs-9">
                 <form id='form_microgr' action="{{route('upload')}}" method="post" enctype="multipart/form-data">
+                   
                     <label for="datepicker_config">Date:</label>
                     <input type="text" class="form-control" name="maked_at" id="datepicker_config" aria-describedby="emailHelp" placeholder="Enter date">
+                    <div class="pages alert alert-info">
+                        
+                    </div>
+                    <label for="datepicker_config">Work order number </label>
+                    <input type="text" class="form-control" name="work_order" id="work_rod" aria-describedby="emailHelp" placeholder="Enter work order number">
                     <label for="mini">Miniaplicator</label>
                     <select name="mini" class="form-control" id="minis">
                         <option  value="" selected></option>

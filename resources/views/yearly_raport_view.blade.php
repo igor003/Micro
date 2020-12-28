@@ -4,35 +4,77 @@
 
   
 <script type="text/javascript">
-      google.charts.load('current', {'packages':['bar']});
-      google.charts.setOnLoadCallback(drawChart);
+      //google.charts.load('current', {'packages':['bar']});
+      //google.charts.setOnLoadCallback(drawChart);
 
-      function drawChart() {
-        var data_foto = <?php print_r(json_encode($fotos)); ?>;
-        console.log(data_foto);
-       var data = google.visualization.arrayToDataTable(data_foto);
+      //function drawChart() {
+     
+        //console.log(data_foto);
+      // var data = google.visualization.arrayToDataTable(data_foto);
 
 
-        var options = {
+       // var options = {
           
-            bar: {groupWidth: "75%"},
-            legend: { position: "none" },
-            height: 400,
-            opacity: 0.8,
-             vAxis: {format: 'decimal'},
-            animation:{
-                duration: 1000,
-                easing: 'out',
-      },
+           // bar: {groupWidth: "75%"},
+           // legend: { position: "none" },
+          // height: 400,
+          //  opacity: 0.8,
+           //  vAxis: {format: 'decimal'},
+           // animation:{
+            //    duration: 1000,
+           //     easing: 'out',
+    //  },
             
 
-        };
+       // };
 
-        var chart = new google.charts.Bar(document.getElementById('columnchart_material1'));
+      //  var chart = new google.charts.Bar(document.getElementById('columnchart_material1'));
                   
-        chart.draw(data, google.charts.Bar.convertOptions(options));
-      }
+      //  chart.draw(data, google.charts.Bar.convertOptions(options));
+      
+
+           google.charts.load('current','1', {'packages':['corechart']});
+
+           google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data_foto = <?php print_r( json_encode($fotos, false))?>;
+            var data = new google.visualization.DataTable();
+            data.addColumn('string',' month');
+            data.addColumn({type:'string', role:'annotation'});
+            data.addColumn('number','number of micro');
+          
+            data.addRows(Object.values(data_foto));
+            var options ={
+                annotations: {
+                    alwaysOutside: true,
+                },
+                bar: {groupWidth: "75%"},
+                legend:'none',
+                chartArea: {
+                    width: '90%'
+                },
+                height: 400,
+                opacity: 0.8,
+                animation:{
+                    duration: 10000,
+                    easing: 'out',
+                },
+                hAxis: {
+                    gridlines: {
+                        count: 10,
+                    }
+                },
+            }
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('columnchart_material1'));
+             
+            chart.draw(data, options);
+          }
+         
+        
 </script>
+
  <div class="container">
     <div class="row">
         <div class="col-xs-10 text-center">

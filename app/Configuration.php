@@ -18,6 +18,24 @@ class Configuration extends Model
     public function connector(){
         return $this->belongsTo('App\Connector','connector_id');
     }
+
+
+    public function scopeProject($query, $projects){
+        return $query->whereHas('codice.project', function ($query) use($projects) {
+            $query->whereIn('id',$projects);
+        });
+    }
+    public function scopeConnectors($query, $connector){
+        return $query->whereHas('connector', function ($query) use($connector) {
+            $query->whereIn('id',$connector);
+        });
+    }
+    public function scopeSection($query, $section){
+        return $query->where('total_sez','=',$section);
+        
+    }
+
+
     public function scopeSearch($query,$req){
         return $query::with(['codice'=> function ($query) use($req) {
             $query->where('name','like','%'.$req.'%');
