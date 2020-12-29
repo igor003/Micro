@@ -21,13 +21,14 @@ class Configuration extends Model
 
 
     public function scopeProject($query, $projects){
-        return $query->whereHas('codice.project', function ($query) use($projects) {
-            $query->whereIn('id',$projects);
+         return $query->whereHas('codice', function ($query) use($projects) {
+            $query->whereIn('project_id',$projects);
         });
     }
+    
     public function scopeConnectors($query, $connector){
         return $query->whereHas('connector', function ($query) use($connector) {
-            $query->whereIn('id',$connector);
+            $query->where('id','=',$connector);
         });
     }
     public function scopeSection($query, $section){
