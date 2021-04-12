@@ -13,7 +13,7 @@ class Miniaplicator extends Model
 
 
     public function connector(){
-        return $this->belongsTo('App\Connector');
+        return $this->belongsTo('App\Connector','connector_id');
     }
  
     public function scopeFilter($query, $req){

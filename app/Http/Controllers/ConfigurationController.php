@@ -210,6 +210,7 @@ class ConfigurationController extends Controller
     }
 
     public function update_view($id){
+
         $cur_config = Configuration::with('codice.project')->where('id','=',$id)->get();
         $projects = Project::all();
         $codice = Part::all();
@@ -217,14 +218,36 @@ class ConfigurationController extends Controller
         
         return view('update_config_view',['connectors'=>$connectors,'config'=>$cur_config,'projects'=>$projects,'codice'=>$codice]);
     }
+
+    public function height_measurements_view ($id){
+          $cur_configuration = Configuration::where('id',$id)->with('codice')->get();
+          
+          
+          $cur_height = floatval (substr($cur_configuration[0]->height, 0, 4));
+ 
+          $cur_tollerance = substr($cur_configuration[0]->height, 6, 5);
+          $measurements = Photo::whereNotNull('height')->where('configuration_id',$id)->get();
+          $chart_array = array();
+          $cnt = 1;
+         
+          foreach($measurements as $measurement ){
+
+             $chart_array[] =array($cnt,$measurement->height,$cur_height - $cur_tollerance,$cur_height + $cur_tollerance);
+             $cnt++;
+          }
+       
+        
+        return view('height_measurements_view',['measurements'=>$chart_array,'cur_config'=>$cur_configuration]);
+    }
+
     public function update(Request $request){
         $config = Configuration::find($request->id);
         $config->part_id = $request->codice_configuration;
-        $config->components=$request->components;
-        $config->connector_id=$request->connector;
-        $config->sez_components=$request->sez_components;
-        $config->nr_strand=$request->amount_strands;
-        $config->height=$request->height;
+        $config->components = $request->components;
+        $config->connector_id = $request->connector;
+        $config->sez_components = $request->sez_components;
+        $config->nr_strand = $request->amount_strands;
+        $config->height = $request->height;
         $config->width = $request->width;
         $config->total_sez = $request->total_sez;
         if($config->save() != true){

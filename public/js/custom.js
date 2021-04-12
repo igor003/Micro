@@ -228,28 +228,6 @@ function generate_html_codice (data,entity,admin){
         return result;
 }
 
-function generate_html_configuration(data,admin){
-        var result = '<tr>' +
-            '<td class="text-center"><a href="configuration/upload_view/'+data.id+'">'+ data.codice.name +'</a></td>' +
-            '<td class="text-center">' + data.components + '</td>' +
-            '<td class="text-center">' + data.connector.name + '</td>' +
-            '<td class="text-center">' + data.sez_components + '</td>' +
-            '<td class="text-center">' + data.total_sez + '</td>' +
-            '<td class="text-center">' + data.nr_strand + '</td>' +
-            '<td class="text-center">' + data.height + '</td>' +
-            '<td class="text-center">' + data.width + '</td>';
-        if(admin === true){
-            result +='<td class="text-center">' +
-            '<a class="delete_link" href="configuration_list/update_view/' + data.id + '"> <div class="update"><img height="30px" width = "30px" src="/img/update.png" alt=""></div></a>' +
-            '</td>' +
-            '<td class="text-center">' +
-            '<a  href="configuration_list/delete/' + data.id + '"> <div class="delete"><img height="30px" width = "30px" src="/img/delete.png" alt=""></div></a>' +
-            '</td>';
-            }
-            result +='</tr>';
-        return result;
-}
-
 function generate_html_reports(data){
         var result = '<tr>' +
             '<td class="text-center">' + data.date + '</td>' +
@@ -267,6 +245,7 @@ function generate_html_reports(data){
 
 function generate_html_interface(data, cnt){
     var result = '<tr>' +
+        '<td class="text-center">' + data.id + '</td>' +
         '<td class="text-center">' + data.name + '</td>' +
         '<td class="text-center">' + data.code + '</td>' +
         '<td class="text-center">' + data.blocket + '</td>'+
@@ -325,44 +304,22 @@ function generate_calibration_html (data,admin){
     return result;
 }
 
-function generate_html_photo(data, admin){
-    var result ='<tr>' +
-                '<td class="text-center">' +data.maked_at.substr(0, data.maked_at.length - 8)+' </td>' +
-                '<td class="text-center">'+data.configurations[0].codice.name+'</td>' +
-                '<td class="text-center">' + data.configurations[0].connector.name+ '</td>' +
-                '<td class="text-center">' + data.configurations[0].components+ '</td>';
-                if(data.minis && data.machines){
-                     result +='<td class="text-center">' + data.minis.name+ '</td>' +
-                              '<td class="text-center">' + data.machines.number+ '</td>';
-                }else{
-                     result +='<td class="text-center">' +'--'+ '</td>' +
-                              '<td class="text-center">' +'--'+ '</td>';
-                }
-           
-            result += '<td class="text-center">' + data.operator+ '</td>' +
-                '<td class="text-center">'+
-                '<form method="POST" action="/photo_download">'+
-                '<input type="hidden" name="photo_1" value="'+data.foto1+'">'+
-                '<input type="hidden" name="photo_2" value="'+data.foto2+'">'+
-                '<input type="hidden" name="photo_3" value="'+data.foto3+'">'+
-                '<div></div>'+
-                '<button type="submit"><img height="20px" width = "20px" src="/img/download.png" alt=""></button>'+
-                '</form>'+
-                '</td>' ;
-    if(admin === true){
-        result+='<td class="text-center">' +
-                '<a href="photo_delete/'+data.id+'"> <div><img height="20px" width ="20px" src="/img/delete.png" alt=""></div></a>' +
-                '</td>' 
-    };
-    result +='</tr>';
-
-    return result;
-}
-
 $( document ).ready(function() {
- $('.delete_link').on('click', function(){
-confirm("Do you want to delete?");
- });
+ 
+    $('#sez_comp').on('keyup',function(){
+        var str = $(this).val().split('+');
+        console.log(str);
+        var summ = 0;
+        for(var i = 0;i<str.length;i++){
+                summ = Number(summ)+ Number(str[i]);
+        }
+        $('#total_sez').val(summ.toFixed(2));
+        console.log(summ);
+
+    });
+    $('.delete_link').on('click', function(){
+        confirm("Do you want to delete?");
+    });
 
     $('#project_conf').on('click', function() {
         get_codice_by_project_conf_update();
@@ -376,9 +333,6 @@ confirm("Do you want to delete?");
     });
     $("input[type='checkbox']").on('click',function(){
         get_miniaplicators_list();
-    });
-    $("input[type='checkbox']").on('click',function(){
-        get_configuration_list();
     });
     $('#search_project').on('keyup',function(){
         get_project_list();
@@ -407,41 +361,15 @@ confirm("Do you want to delete?");
     $('#codice').on('change',function(){
         get_conf_by_part_id();
     })
-    $('#conf_connectors').on('change',function(){
-        get_configuration_list();
-    });
-
-
-    
-    $('#total_sez').on('change',function(){
-        get_configuration_list();
-    });
     $('#date_validation').change(function(){
         get_validation_done_list();
     });
-    $('#search_configuration').on('keyup',function() {
-        get_configuration_list();
-    });
-    $('#mini').on('change', function(){
-        get_photo_list()
-    });
-     $('#work_ord').on('change', function(){
-        get_photo_list();
-    });
+  
     $('#mini').on('change', function(){
         get_validation_done_list();
     });
     $('#type_val').on('change', function(){
         get_validation_done_list();
-    });
-    $('#machine').on('change', function(){
-        get_photo_list();
-    });
-    $('#projects>input[type="checkbox"]').on('click',function(){
-        get_photo_list();
-    });
-    $('#codice>input[type="checkbox"]').on('click',function(){
-        get_photo_list();
     });
     $('#search_miniaplicator').on('keyup',function(){
         get_miniaplicators_list();
@@ -460,8 +388,6 @@ confirm("Do you want to delete?");
     });
     get_codice_list();
     get_project_list();
-    get_configuration_list();
-    get_photo_list();
     get_codice_by_project_conf_update();
     get_codice_by_project_conf_created();
     get_miniaplicators_list();
@@ -556,6 +482,35 @@ function get_conf_by_part_id(){
                 };
         },
         error:function (error){
+            console.log('error; ' + eval(error));
+        }
+    })
+}
+
+ function generate_html_select_mini(data){
+    var result = '<option value="'+data.id+'">'+data.name+'</option>';
+    return result;
+}
+function get_minis_by_terminal(){
+    var connector_id = $('#conenctor_id').val();
+
+   $.ajax({
+        url: '/get_minis_by_connector',
+        type: 'POST',
+        data: {
+            connector:connector_id
+        },
+        dataType: 'json',
+        success: function (data) {
+           
+            var i = 0;
+            while(i< data.length){
+                $('#minis').append(generate_html_select_mini(data[i]));
+                i++;
+            }
+         
+        },
+        error:function(error){
             console.log('error; ' + eval(error));
         }
     })
@@ -722,47 +677,6 @@ function get_miniaplicators_list(){
     })
 }
 
-function get_configuration_list(){
-    var search;
-    search = $('#search_configuration').val();
-    var total_sez = $('#total_sez').val();
-    var filter = [];
-    $('input[id="projects"]:checked').each(function () {
-        filter.push(this.value);
-    });
-      
-     if(filter.length <1){
-        $('.excell').attr('href','/configuration/get_list_excel');
-     }else{
-        $('.excell').attr('href','/configuration/get_list_excel/'+filter.toString());
-     }
-     
-    var filter_connector = $('#conf_connectors').val();
-    $.ajax({
-        url: '/configuration_list',
-        type: 'POST',
-        data: {
-            filter: filter,
-            search:search,
-            filter2:filter_connector,
-            total_sez:total_sez
-        },
-        dataType: 'json',
-        success: function (data) {
-
-            var count_conf = data.conf.length;
-            $('#table_configuration').empty();
-            var i = 0;
-            while(i< count_conf){
-                $('#table_configuration').append(generate_html_configuration(data.conf[i], data.admin));
-                i++;
-            }
-        },
-        error:function(error){
-            console.log('error; ' + eval(error));
-        }
-    })
-}
 
 function get_reports_list(){
      $.ajax({
@@ -880,6 +794,7 @@ function get_ajax_exec_time_data(handleData){
         data:{
             date:date,
         },
+       
         dataType:'json',
         success:function(data){
             $('#media').html('<h3>Executing average time: ' +data[1]+'min.</h3>');
@@ -893,220 +808,6 @@ function get_ajax_exec_time_data(handleData){
             console.log('error' + eval(error));
         }
     })
-}
-// funtion get_monthly_micro(){
-//     $month = $('#get_monthly_micro').val();
-
-//       $.ajax({
-//         url: '/get_monthly_micro',
-//         type: 'POST',
-//         data: {
-//              $month:$month
-//         },
-//         dataType: 'json',
-//         success: function (data) {
-
-//             var reports = data.length;
-//             $('#table_reports').empty();
-//             var i = 0;
-//             while(i< reports){
-//                 $('#table_reports').append(generate_html_reports(data[i]));
-//                 i++;
-//             }
-//         },
-//         error:function(error){
-//             console.log('error; ' + eval(error));
-//         }
-//     })
-
-    
-// }
-
-function get_photo_list(cur_page){
-    var date_from;
-    var date_to;
-    var project = [];
-    var codice = [];
-    var per_page = 15;
-    var show_pages = 9;
-    var finish_page = Number(cur_page)+4;
-    var start_page = Number(cur_page)-4;
-
-    
-    date_from = $('#datepicker_photo_from').val();
-    date_to = $('#datepicker_photo_to').val();
-    mini = $('#mini').val();
-    machine = $('#machine').val();
-    var work_order = $('#work_ord').val();
-    $('#projects>input[type="checkbox"]:checked').each(function () {
-       
-        project.push(this.value);
-    });
-    $('#codice>input[type="checkbox"]:checked').each(function () {
-        
-        codice.push(this.value);
-    });
-   
-    $.ajax({
-        url: '/photo_list',
-        type: 'POST',
-        dataType: 'json',
-        data: {
-            date_from:date_from,
-            date_to:date_to,
-            project:project,
-            codice:codice,
-            cur_page:cur_page,
-            per_page:per_page,
-            mini:mini,
-            machine:machine,
-            work_order:work_order
-
-        },
-        success: function (data) {
-                        console.log(data);
-            $('#table_photo').empty();
-            var i = 0;
-            while(i< data.photos.length){
-                if(data.photos[i].configurations[0].codice.name){
-                    $('#table_photo').append(generate_html_photo(data.photos[i],data.admin));
-                    i++;
-                }else{
-                    i++;
-                    continue;  
-                }
-            }
-            var pages = Math.ceil(data.total_count/per_page);
-            $('#pagin').empty();
-            if(codice.length == 0 && project.length == 0 && date_to === '' && date_from === '' && mini === '' && machine === '' && work_order === ''){// если нет фильтра по codice и project
-
-                // if(){// если нет фильтра по date
-                    $('#pagin').append('<li class="page-item1 prev"><a href="#" class="page-link" >Previous</a></li>');
-                    // если текущая страница больше 6 добавляем кнопку ...
-                    if(cur_page >6){
-                        $('#pagin').append('<li class="page-item disabled"><a class="page-link disabled">...</a></li>'); 
-                        for(var cnt = 1; cnt<=pages; cnt++){
-                            if( cnt >= start_page && cnt<=finish_page){
-                                if( cnt == cur_page){
-                                    $('#pagin').append('<li class="page-item active "><a class="page-link" href="#">'+cnt+'</a></li>');
-                                }else{
-                                    $('#pagin').append('<li class="page-item  "><a class="page-link" href="#">'+cnt+'</a></li>');
-                                }
-                            }else{
-                                continue;
-                            }
-                        }
-                    }else{
-                        for(var cnt = 1; cnt<=pages; cnt++){
-                            if(cur_page == undefined){
-                                $('#pagin').append('<li class="page-item active"><a class="page-link " href="#">1</a></li>');    
-                                cur_page = true;
-                            }else if( cnt == cur_page){
-                                $('#pagin').append('<li class="page-item active "><a class="page-link" href="#">'+cnt+'</a></li>');
-                            }else{
-                                $('#pagin').append('<li class="page-item"><a class="page-link" href="#">'+cnt+'</a></li>');
-                            }
-                            if(cnt>show_pages){
-                                break;
-                            }
-                        }
-                    }
-                    if(pages>show_pages && cur_page < pages-4){
-                        $('#pagin').append('<li class="page-item disabled"><a class="page-link disabled">...</a></li>');
-                    } 
-                    $('#pagin').append('<li class="page-item1 next"><a href="#" class="page-link disabled" >Next</a></li>');
-                    $('#pagin').append('<div class="pages alert alert-info"><strong>Info! </strong>Total pages: '+pages+'</div>');
-                   // если мы на первой странице кнопку prev дизэйблим
-                    if(cur_page == 1){
-                        $('.prev>a .page-link').addClass('disabled');
-                        $('.prev').addClass('disabled');
-                    }
-                    // если мы на последней странице кнопку next дизэйблим
-                    if(cur_page == pages){
-                        $('.next>a .page-link').addClass('disabled');
-                        $('.next').addClass('disabled');
-                    }
-                    // клик на кнопку prev
-                    $('.prev').on('click',function(){
-                        if(cur_page >1){
-                            get_photo_list(Number(cur_page) - 1);
-                        }else{
-                             return false;
-                        }
-                    });
-                    // клик на кнопку next
-                    $('.next').on('click',function(){
-                        if(cur_page != pages){
-                            get_photo_list(Number(cur_page) + 1);
-                        }else{
-                            return false;
-                        }
-                    });
-                    // клик на элемент пагинации
-                    $('.page-item').on('click',function(){
-                        $('#pagin>li.active').removeClass('active');
-                        $(this).addClass('active');
-                        get_photo_list($(this).text());
-                    });
-            }else{//если есть фильтры 
-                var pages_with_filter = Math.ceil(data.total_photo_with_filter/per_page);
-                console.log('foto wiht filter:'+data.total_photo_with_filter);
-                console.log(pages_with_filter);
-                console.log(cur_page);
-          
-                $('#pagin').append('<li class="page-item1 prev"><a href="#" class="page-link" >Previous</a></li>'); 
-               
-                if(cur_page >6){
-                    $('#pagin').append('<li class="page-item disabled"><a class="page-link disabled">...</a></li>'); 
-                    for(var cnt = 1; cnt<=pages_with_filter; cnt++){
-                        if( cnt >= start_page && cnt<=finish_page){
-                            if( cnt == cur_page){
-                                $('#pagin').append('<li class="page-item active "><a class="page-link" href="#">'+cnt+'</a></li>');
-                            }else{
-                                $('#pagin').append('<li class="page-item  "><a class="page-link" href="#">'+cnt+'</a></li>');
-                            }
-                        }else{
-                            continue;
-                        }
-                    }
-                }else{
-                    for(var cnt = 1; cnt<=pages_with_filter; cnt++){
-                        if(cur_page == undefined){
-                            $('#pagin').append('<li class="page-item active"><a class="page-link " href="#">1</a></li>');    
-                            cur_page = true;
-                        }else if( cnt == cur_page){
-                            $('#pagin').append('<li class="page-item active "><a class="page-link" href="#">'+cnt+'</a></li>');
-                        }else{
-                            $('#pagin').append('<li class="page-item"><a class="page-link" href="#">'+cnt+'</a></li>');
-                        }
-                        if(cnt>show_pages){
-                            break;
-                        }
-                    }
-                }
-                 if(pages_with_filter>show_pages && cur_page < pages_with_filter-4){
-                        $('#pagin').append('<li class="page-item disabled"><a class="page-link disabled">...</a></li>');
-                }
-                // клик на элемент пагинации
-                $('.page-item').on('click',function(){
-                    $('#pagin>li.active').removeClass('active');
-                    $(this).addClass('active');
-                    get_photo_list($(this).text());
-                });
-                // клик на кнопку prev
-                $('.prev').on('click',function(){
-                    if(cur_page >1){
-                        get_photo_list(Number(cur_page) - 1);
-                    }else{
-                         return false;
-                    }
-                });
-            }
-        },
-        error:function(error){
-            console.log('error; ' + eval(error));
-        }
-    });
 }
 
 $(function(){
@@ -1137,17 +838,17 @@ $(function(){
         }
     });
 
-    $('#datepicker_raport').datepicker({
-        dateFormat: "yy-mm-dd",
-        autoSize: true,
-        buttonText: "Choose",
-        beforeShow: function(){
-            $(".ui-datepicker").css('font-size', 12)
-            get_photo_list();
-        }
+    // $('#datepicker_raport').datepicker({
+    //     dateFormat: "yy-mm-dd",
+    //     autoSize: true,
+    //     buttonText: "Choose",
+    //     beforeShow: function(){
+    //         $(".ui-datepicker").css('font-size', 12)
+    //         get_photo_list();
+    //     }
 
-    });
-       $('#datepicker_exec').datepicker({
+    // });
+    $('#datepicker_exec').datepicker({
         dateFormat: "yy-mm-dd",
         autoSize: true,
         buttonText: "Choose",
@@ -1159,16 +860,16 @@ $(function(){
     });
     
 
-    $('#datepicker_photo_to, #datepicker_photo_from, #datepicker_photo').datepicker({
-        dateFormat: "yy-mm-dd",
-        autoSize: true,
-        buttonText: "Choose",
-        beforeShow: function(){
-            $(".ui-datepicker").css('font-size', 12)
-            get_photo_list();
-        }
+    // $('#datepicker_photo_to, #datepicker_photo_from, #datepicker_photo').datepicker({
+    //     dateFormat: "yy-mm-dd",
+    //     autoSize: true,
+    //     buttonText: "Choose",
+    //     beforeShow: function(){
+    //         $(".ui-datepicker").css('font-size', 12)
+    //         get_photo_list();
+    //     }
 
-    });
+    // });
     $('#datepicker_config').datetimepicker({
          dateFormat: "yy-mm-dd",
          controlType: 'slider',
@@ -1185,7 +886,7 @@ $(function(){
 $(document).ready(function (){
     $('#start').on('click', function(){
         // $("#content").removeClass('hide')
-         
+         get_minis_by_terminal();
     $.ajax({
         url: '/configuration/serv_datetitme',
         type: 'POST',
@@ -1247,13 +948,13 @@ $(function(){
 
 
 });
-$(document).ready(function (){
-    $('#datepicker_photo_to').change(function() {
-        get_photo_list();
-    });
+// $(document).ready(function (){
+//     $('#datepicker_photo_to').change(function() {
+//         get_photo_list();
+//     });
 
    
-});
+// });
 $(document).ready(function (){
     $('#datepicker_photo').change(function() {
       

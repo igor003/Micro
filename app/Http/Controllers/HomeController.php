@@ -56,6 +56,7 @@ class HomeController extends Controller
     // $mail->Body = $mailMsg;
     // $mail->AddAddress($mailto);
     // $mail->Send();
+    
 
         return view('home');
     }

@@ -42,7 +42,9 @@ class MiniaplicatorController extends Controller
 
        	return redirect('/home');
     }
-
+     public function update_view($id){
+        $part = Miniaplicator::find($id);  
+     }
     public function delete($id){
         $part = Miniaplicator::find($id);
         $part->delete();
@@ -70,20 +72,20 @@ class MiniaplicatorController extends Controller
             // })->with('connector');
             // $mini = Miniaplicator::select('*');
             $mini->filter($request->filter);
-            return $mini->orderBy('name','asc')->get();
+            return json_encode($mini->orderBy('name','asc')->get());
         }
         
-        return $mini->orderBy('name','asc')->get();
+        return json_encode($mini->orderBy('name','asc')->get());
     }
 
 
      public function add_calibration_view (Request $request)
      {
-        $minis = Miniaplicator::all();
+       
         $machines = Machine::all();
         $parts = Part::orderBy('name','asc')->get();
 
-        return view('add_mini_calibration_view',['minis'=>$minis,'machines'=>$machines,'parts'=>$parts]);
+        return view('add_mini_calibration_view',['machines'=>$machines,'parts'=>$parts]);
     }
 
     public function add_mini_calibration(Request $request)
@@ -149,6 +151,12 @@ class MiniaplicatorController extends Controller
         $mini_calibr->delete();
 
         return redirect('mini_calibaration_list_view');
+    }
+    public function get_minis_by_terminal(Request $request){
+       
+        $minis =  Miniaplicator::where('connector_id','=',$request->connector)->get();
+      
+        return utf8_encode(json_encode($minis));
     }
     
 

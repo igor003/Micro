@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-
+ <script src="{{ asset('js/photo_list.js')}}"></script>
     <div class="container">
         <div class="row">
             <div class="col-xs-10">
@@ -33,7 +33,7 @@
                         </td>
                         @if(Auth::user()->status == 'admin')
                             <td class="text-center">
-                                Actions
+                                Delete 
                             </td>
                         @endif
                     </thead>

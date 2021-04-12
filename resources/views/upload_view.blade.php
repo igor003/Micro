@@ -11,12 +11,25 @@
             }
         }
     </script>
+
+    
     <div class="container">
 
         <div class="row">
-            <div id='start' class="btn btn-danger ">
+            <div class="col-xs-4">
+                <div id='start' class="btn btn-danger ">
                     Start Micrografia
                 </div>
+            </div>
+            <div class="col-xs-4">
+            </div>
+             <div class="col-xs-4">
+                <a href="/configuration/height_measurements/{{$conf[0]->id}}">
+                    <div id='start' class="btn btn-info ">
+                        Height measurements
+                    </div>
+                </a>
+            </div>
         </div>
         <div class="row " id='content'>
             <div class="col-xs-3">
@@ -47,11 +60,7 @@
                     <label for="mini">Miniaplicator</label>
                     <select name="mini" class="form-control" id="minis">
                         <option  value="" selected></option>
-                        @foreach($minis as $mini)
-                            <option value="{{$mini->id}}">
-                                {{$mini->name}}
-                            </option>
-                        @endforeach
+                     
                     </select>
                     <label for="codice_conf">Machines</label>
                     <select name="machines" class="form-control" id="machiness">
@@ -79,8 +88,8 @@
                     <input type="hidden" name="id" value="{{$conf[0]->id}}">
                     <input type="hidden" name="project" value="{{$conf[0]->codice->project->name}}">
                     <input type="hidden" name="codice" value="{{$conf[0]->codice->name}}">
-                    <input type="hidden" name="components" value="{{$conf[0]->components}}">
-                    <input type="hidden" name="connector" value="{{$conf[0]->connector->id}}">
+                    <input  type="hidden" name="components" value="{{$conf[0]->components}}">
+                    <input id='conenctor_id' type="hidden" name="connector" value="{{$conf[0]->connector->id}}">
                     <input type="hidden" name="strands" value="{{$conf[0]->nr_strand}}">
                     <input type="hidden" name="height" value="{{$conf[0]->height}}">
                     <input type="hidden" name="width" value="{{$conf[0]->width}}">

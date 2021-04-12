@@ -47,6 +47,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/configuration/get_list_excel/{project_id?}', 'ConfigurationController@get_excell')->name('get_excell');
     Route::post('/configuration/get_by_part_id','Configurationcontroller@get_by_part_id')->name('get_by_part_id');
     Route::post('/configuration/serv_datetitme','Configurationcontroller@get_server_date')->name('get_serv_datetitme');
+    Route::get('/configuration/height_measurements/{id}','Configurationcontroller@height_measurements_view')->name('heighr_measur');
 //Project
     Route::get('project_list/delete/{id}', 'ProjectController@delete')->name('delete_project');
     Route::get('project_list_view', 'ProjectController@project_list_view')->name('projects_list_view');
@@ -60,16 +61,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/photo_delete/{id}', 'PhotoController@delete_photo')->name('delete_photo');
     Route::get('/photo/raport_view', 'PhotoController@raport_view')->name('photo_raport_view');
     Route::post('/photo/raport_generate', 'PhotoController@raport')->name('generate_raport');
-//Raport
-    Route::get('/raport_view/{date?}', 'RaportController@get_compare_view')->name('raport_view');
-    Route::get('/monthly_report/{month?}/{year?}', 'RaportController@monthly_report')->name('monthly_report');
-    Route::get('/yearly_report/{year?}','RaportController@yearly_report')->name('yearly_report');
-    Route::get('/execut_time_report/{date?}','RaportController@execut_time_report')->name('execut_time_report');
-    Route::post('/generate_raport', 'RaportController@generate_raport')->name('generate_raport_aggraf');
-    Route::get('/raport_list_view', 'RaportController@report_list_view')->name('report_list_view');
-    Route::post('/add_report','RaportController@create_report')->name('create_report');
-    Route::post('/all_reports', 'RaportController@get_all')->name('get_all_reports');
-    Route::post('/data_exec_time', 'RaportController@get_data_exec_time')->name('exec_time');
+
 
 //Machines
     Route::get('/add_machine_view', 'MachineController@index')->name('add_machine_view');
@@ -90,6 +82,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/miniaplicator_list_view', 'MiniaplicatorController@miniaplicators_list_view')->name('mini_list_view');
     Route::post('/miniaplicator_list', 'MiniaplicatorController@miniaplicator_list')->name('miniaplicator_list');
     Route::get('/miniaplicator_list/delete/{id}', 'MiniaplicatorController@delete')->name('delete_miniaplicator');
+    Route::get('/miniaplicator_list/update_view/{id}', 'MiniaplicatorController@update_view')->name('update_mini_view');
+    Route::post('/get_minis_by_connector','MiniaplicatorController@get_minis_by_terminal')->name('minis_by_connect');
 //Mini Calibration    
     Route::post('/add_mini_calibration', 'MiniaplicatorController@add_mini_calibration')->name('add_mini_calibration');
     Route::get('/add_mini_calibaration_view' , 'MiniaplicatorController@add_calibration_view')->name('mini_calibration_view');
@@ -121,3 +115,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/interfaces/update','InterfaceController@update_interface')->name('update_interf');
 });
 
+//Raport
+    Route::get('/raport_view/{date?}', 'RaportController@get_compare_view')->name('raport_view');
+    Route::get('/monthly_report/{month?}/{year?}', 'RaportController@monthly_report')->name('monthly_report');
+    Route::get('/yearly_report/{year?}','RaportController@yearly_report')->name('yearly_report');
+    Route::get('/execut_time_report/{date?}','RaportController@execut_time_report')->name('execut_time_report');
+    Route::post('/generate_raport', 'RaportController@generate_raport')->name('generate_raport_aggraf');
+    Route::get('/raport_list_view', 'RaportController@report_list_view')->name('report_list_view');
+    Route::post('/add_report','RaportController@create_report')->name('create_report');
+    Route::post('/all_reports', 'RaportController@get_all')->name('get_all_reports');
+    Route::post('/data_exec_time', 'RaportController@get_data_exec_time')->name('exec_time');

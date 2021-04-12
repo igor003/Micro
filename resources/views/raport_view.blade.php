@@ -163,7 +163,7 @@ else {
                
             </div>
             <div class=" col-xs-4 ">
-                <form action="{{route('generate_raport_aggraf')}}" method="POST" enctype="multipart/form-data">
+          <!--       <form action="{{route('generate_raport_aggraf')}}" method="POST" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     
                          <label class=" project_label form-check-label" for="file">
@@ -180,7 +180,7 @@ else {
                     
                         <input type="submit" class="btn btn-primary" name='submit_excell' value="Upload Excell">
                     
-                </form>
+                </form> -->
             </div>
         </div>
     </div>

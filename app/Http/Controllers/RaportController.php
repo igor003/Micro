@@ -59,6 +59,7 @@ class RaportController extends Controller
 			$cnt++;
 			
 		}
+		// var_dump(((14*60)-($summ_difer/60))/60);
 			 	$result[1] =  round($summ_difer / count($dates)/60,1,PHP_ROUND_HALF_UP);
 		return $result;
 	}
@@ -185,8 +186,9 @@ class RaportController extends Controller
 	public function dates_of_micross($date,$flag,$operator = null){
 		
 		if($date){
+			  $year = date("Y", strtotime($date));
 			$fotos = Photo::whereDate('maked_at','=',$date)
-				->whereYear('maked_at', Date('Y'))
+				->whereYear('maked_at',$year )
 				->with('configurations.codice')
 			    ->orderBy('maked_at', 'asc')
 				->get();

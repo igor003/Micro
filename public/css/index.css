@@ -1,6 +1,6 @@
 body{
     line-height:3.6;
-
+    font-size:13px;
     font-family:Calibri;
 }
 .errors{
@@ -18,7 +18,10 @@ div#ui-datepicker-div{
     padding:0px 0px 0px 10px;
     margin-bottom:5px;
 }
+.table>tbody>tr>td{
 
+    padding:6px;
+}
 .body{
      font-family:Calibri;
 }

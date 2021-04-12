@@ -24,6 +24,9 @@
                     <thead>
                     <tr>
                         <td class="text-center">
+                            Id
+                        </td>
+                        <td class="text-center">
                             Interface name
                         </td>
                         <td class="text-center">

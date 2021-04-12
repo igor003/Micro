@@ -22,6 +22,7 @@ date_default_timezone_set("Europe/Chisinau");
     <script src="{{ asset('js/custom.js') }}"></script>
    
     <script src="{{asset('js/jquery-ui-1.12.1.custom/jquery-ui.js')}}"></script>
+
     <!--Timepicker-->
     <script src="{{ asset('js/timepicker/jquery-ui-sliderAccess.js') }}"></script>
     <script src="{{ asset('js/timepicker/jquery-ui-timepicker-addon.js') }}"></script>
@@ -177,11 +178,11 @@ date_default_timezone_set("Europe/Chisinau");
                                             <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"> 
-                                            <li>
+                                          <!--   <li>
                                                 <a href="{{route('report_list_view')}}">
                                                     Reports
                                                 </a>
-                                            </li>
+                                            </li> -->
                                              <li>
                                                 <a href="{{route('raport_view')}}">
                                                     Daily Report Micro
@@ -202,21 +203,21 @@ date_default_timezone_set("Europe/Chisinau");
                                                     Execute Time Report Micro
                                                 </a>
                                             </li>
-                                            <li>
+                                            <!-- <li>
                                                 <a href="{{route('report_list_view')}}">
                                                     Report list
                                                 </a>
-                                            </li>
-                                            <li>
+                                            </li> -->
+                                       <!--      <li>
                                                 <a href="{{route('generate_raport_aggraf')}}">
                                                     Generate raport
                                                 </a>
-                                            </li>
-                                            <li>    
+                                            </li> -->
+                                           <!--  <li>    
                                                     <a href="{{'raport_view'}}">
                                                         raport view
                                                     </a>              
-                                            </li>           
+                                            </li>        -->    
                                         </ul>
                                     </div>
                                 </ul>

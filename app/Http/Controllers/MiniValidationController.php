@@ -26,11 +26,15 @@ class MiniValidationController extends Controller
         $validation->status = $request->status;
         $validation->date = $request->date;
         $validation->save();
-  	$miniaplicator = Miniaplicator::find($request->minaplicator_id);
+  	$miniaplicator = Miniaplicator::where('id','=',$request->minaplicator_id)->with('connector')->get();
+    
     $mailto = "igor.bodean@sammycablaggi.com";
-    $mailSub = "Validarea mini:".$miniaplicator->name."";
+    $mailSub = "Validarea mini:".$miniaplicator['0']->name."";
    
-    $mailMsg = "A fost efectuata schimbarea Kit!!<br> Data:" . $request->date."<br>Miniaplicator:" .$miniaplicator->name." <br>  Tipul interventiei:" .$request->type_valid."";
+    $mailMsg = "Buna ziua!<br> A fost efectuata schimbarea Kit!!<br> Data: ". $request->date.
+               "<br>Miniaplicator: ".$miniaplicator['0']->name.
+               "<br>Terminal: ".$miniaplicator['0']->connector->name.
+               "<br>Tipul interventiei: ".$request->type_valid."";
     
     $mail = new PHPMailer();
    
@@ -103,6 +107,39 @@ class MiniValidationController extends Controller
         $file_name = "storage/validations/".basename($filename);
 
         MiniValidation::where('id',$request->valid_id)->update(['path'=>$path,'status'=>'done']);
+        $storagePath  = Storage::disk('validations')->getDriver()->getAdapter()->getPathPrefix();
+   
+       
+        $mailSub = "Validarea mini:".$request->mini_name."";
+       
+        $mailMsg = "Buna ziua!<br> A fost efectuata validarea ".$request->valid_type." miniaplicatorului: ".$request->mini_name."!!<br>Bodean Igor<br>Qualita";
+                   
+       
+        $mail = new PHPMailer();
+       
+        $mail->IsSmtp();
+        $mail->SMTPDebug = 2;
+
+        $mail->SMTPAuth = true;
+        $mail->SMTPSecure = 'tls';
+        $mail->Host = "smtps.aruba.it";
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        
+        $mail->Port = 587; 
+
+        $mail->IsHTML(true);
+        $mail->Username = "igor.bodean@sammycablaggi.com";
+        $mail->Password = "mercedes190";
+        $mail->setFrom("igor.bodean@sammycablaggi.com");
+        $mail->Subject = $mailSub;
+        $mail->Body = $mailMsg;
+        $mail->addAttachment($storagePath.substr($path,12));
+        $mail->AddAddress("sergiu.massoreti@sammycablaggi.com");
+        $mail->AddAddress("marcel.manoli@sammycablaggi.com");
+        $mail->AddAddress("igor.bodean@sammycablaggi.com");
+        $mail->Send();
+
+
 
         return redirect(route('valid_list_view'));
 	}
