@@ -50,7 +50,7 @@ class MiniValidationController extends Controller
 
     $mail->IsHTML(true);
     $mail->Username = "igor.bodean@sammycablaggi.com";
-    $mail->Password = "mercedes190";
+    $mail->Password = env('MAIL_PASSWORD');
     $mail->setFrom("igor.bodean@sammycablaggi.com");
     $mail->Subject = $mailSub;
     $mail->Body = $mailMsg;
@@ -129,7 +129,7 @@ class MiniValidationController extends Controller
 
         $mail->IsHTML(true);
         $mail->Username = "igor.bodean@sammycablaggi.com";
-        $mail->Password = "mercedes190";
+        $mail->Password = env('MAIL_PASSWORD');
         $mail->setFrom("igor.bodean@sammycablaggi.com");
         $mail->Subject = $mailSub;
         $mail->Body = $mailMsg;
