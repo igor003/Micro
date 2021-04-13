@@ -43,7 +43,7 @@ class MiniValidationController extends Controller
 
     $mail->SMTPAuth = true;
     $mail->SMTPSecure = 'tls';
-    $mail->Host = "smtps.aruba.it";
+    $mail->Host = env('MAIL_HOST_2');
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     
     $mail->Port = 587; 
@@ -122,7 +122,7 @@ class MiniValidationController extends Controller
 
         $mail->SMTPAuth = true;
         $mail->SMTPSecure = 'tls';
-        $mail->Host = "smtps.aruba.it";
+        $mail->Host = env('MAIL_HOST_2');
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         
         $mail->Port = 587; 
