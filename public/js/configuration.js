@@ -24,6 +24,7 @@ function get_configuration_list(){
     var search;
     search = $('#search_configuration').val();
     var total_sez = $('#total_sez').val();
+    var dep = $('#department').val();
     var filter = [];
     $('input[id="projects"]:checked').each(function () {
         filter.push(this.value);
@@ -43,11 +44,12 @@ function get_configuration_list(){
             filter: filter,
             search:search,
             filter2:filter_connector,
-            total_sez:total_sez
+            total_sez:total_sez,
+            department:dep
         },
         dataType: 'json',
         success: function (data) {
-
+           
             var count_conf = data.conf.length;
             $('#table_configuration').empty();
             var i = 0;
@@ -68,6 +70,9 @@ $( document ).ready(function() {
         get_configuration_list();
     });
     $('#conf_connectors').on('change',function(){
+        get_configuration_list();
+    });
+    $('#department').on('change',function(){
         get_configuration_list();
     });
     $('#total_sez').on('change',function(){

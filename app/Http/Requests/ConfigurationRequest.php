@@ -24,6 +24,7 @@ class ConfigurationRequest extends FormRequest
     public function rules()
     {
         return [
+            'department'=>'required',
             'project_configuration'=>'required',
             'codice_configuration'=>'required',
             'components'=>'required',

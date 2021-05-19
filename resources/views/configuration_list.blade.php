@@ -82,8 +82,13 @@
                 </table>
             </div>
             <div class="col-lg-2">
-               
-                  
+              
+                <label for="project_conf">Department</label>
+                <select name="department" class="form-control" id="department">
+                    <option  value="" selected></option>
+                    <option value="P1">P1</option>
+                    <option value="P2">P2</option>
+                </select>
                 <label for="mini">Connectors</label>
                 <select name="connectors" class="form-control" id="conf_connectors">
                     <option  value="" selected></option>

@@ -17,6 +17,15 @@
             <form id='form_configuration' method="POST" action="{{route('insert_configuration')}}">
                 <div class="col-xs-3">
                 <div class="form-group">
+                    <label for="project_conf">Departament</label>
+                    <select name="department" class="form-control" id="dep">
+                            <option  value="" selected></option>
+                            <option value="P1">P1</option>
+                            <option value="P1">P2</option>
+                    </select>
+               
+                </div>
+                <div class="form-group">
                     <label for="project_conf">Project</label>
                     <select name="project_configuration" class="form-control" id="project_conf_add">
                         <option  value="" selected></option>

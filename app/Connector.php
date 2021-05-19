@@ -7,7 +7,7 @@ class Connector extends Model
 {
     protected $table = 'connectors';
     protected $fillable = [
-        'id', 'name'
+        'id', 'name', 'specification_path', 'photo_path'
     ];
     public $timestamps = false;
 

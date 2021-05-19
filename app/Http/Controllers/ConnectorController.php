@@ -16,9 +16,21 @@ class ConnectorController extends Controller
     }
 
  	public function create(Request $request){
-    	$project = new Connector;
-        $project->name = $request->connector;
-        $project->save();
+        if( $request->file('connector_img') != ''){
+            $filename = $request->file('connector_img')->getClientOriginalName();
+            $path = $request->file('connector_img')->storeAs('terminal_photo\\', $filename);
+        
+            $file_name = "storage/terminal_photo/".basename($filename);
+        }
+
+       
+    	$connector = new Connector;
+        $connector->name = $request->connector;
+        if( $request->file('connector_img') != ''){
+            $connector->photo_path = $file_name;
+        }
+       
+        $connector->save();
 
        	return redirect('/home');
     }
@@ -51,6 +63,19 @@ class ConnectorController extends Controller
         $connectors = Connector::all();
         return view('upload_specifications',['connectors'=>$connectors]);
     }
+    public function upload_connector_photo_view()
+    {
+        $connectors = Connector::all();
+        return view('upload_terminal_photo',['connectors'=>$connectors]);
+    }
+    public function upload_photos(Request $request){
+        $filename = $request->file('connector_img')->getClientOriginalName();
+        $path = $request->file('connector_img')->storeAs('terminal_photo\\', $filename);
+        $file_name = "storage/terminal_photo/".basename($filename);
+        Connector::where('id',$request->connector)->update(['photo_path'=>$file_name]);
+
+        return redirect('/home');
+    }
 
     public function upload_specifications (Request $request){
 
@@ -73,6 +98,11 @@ class ConnectorController extends Controller
         ];
 
         return response()->download($storagePath.basename($request->path), basename($request->path), $headers);
+    }
+
+    public function update_view($id){
+        $connector = Connector::find($id);
+
     }
   
 }

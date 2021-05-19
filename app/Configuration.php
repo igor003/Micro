@@ -8,7 +8,7 @@ class Configuration extends Model
 {
     protected $table = 'part_configuration';
     protected $fillable = [
-        'part_id','components','connector_id','sez_components','total_sez','nr_strand','height','width'
+        'part_id','department','components','connector_id','sez_components','total_sez','nr_strand','height','width'
     ];
     public $timestamps = false;
 
@@ -35,7 +35,10 @@ class Configuration extends Model
         return $query->where('total_sez','=',$section);
         
     }
-
+    public function scopeDepartment($query, $department){
+        return $query->where('department','=',$department);
+        
+    }
 
     public function scopeSearch($query,$req){
         return $query::with(['codice'=> function ($query) use($req) {

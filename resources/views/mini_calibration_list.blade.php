@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+ <script src="{{ asset('js/calibrations_list.js')}}"></script>
     <div class="container">
         <div class="row">
             <div class=" col-md-offset-4 col-md-4">

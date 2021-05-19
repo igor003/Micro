@@ -43,6 +43,7 @@ class ConfigurationController extends Controller
     public function insert(ConfigurationRequest $request){
         $configuration = new Configuration;
         $configuration->part_id = $request->codice_configuration;
+        $configuration->department = $request->department;
         $configuration->components=$request->components;
         $configuration->connector_id=$request->connector;
         $configuration->sez_components=$request->sez_components;
@@ -141,6 +142,10 @@ class ConfigurationController extends Controller
         if($request->filter2 != ''){
 
             $conf->connectors($request->filter2);
+        }
+        if($request->department != ''){
+
+            $conf->department($request->department);
         }
       
       $conf = $conf->with('codice.project')->with('connector')->get();
@@ -242,6 +247,7 @@ class ConfigurationController extends Controller
 
     public function update(Request $request){
         $config = Configuration::find($request->id);
+        $config->department = $request->department;
         $config->part_id = $request->codice_configuration;
         $config->components = $request->components;
         $config->connector_id = $request->connector;
@@ -285,18 +291,18 @@ class ConfigurationController extends Controller
 // Подписываем лист
         $sheet->setTitle('Configuration list');
 // Вставляем текст в ячейку A1
- $objDrawing = new PHPExcel_Worksheet_Drawing();
-$objDrawing->setName('test_img');
-$objDrawing->setDescription('test_img');
-$objDrawing->setPath('img/SAMMY_logo.jpg');
-$objDrawing->setCoordinates('A1');                      
-//setOffsetX works properly
-$objDrawing->setOffsetX(7); 
-$objDrawing->setOffsetY(7);                
-//set width, height
-// $objDrawing->setWidth(20); 
-$objDrawing->setHeight(40); 
-$objDrawing->setWorksheet($sheet);
+        $objDrawing = new PHPExcel_Worksheet_Drawing();
+        $objDrawing->setName('test_img');
+        $objDrawing->setDescription('test_img');
+        $objDrawing->setPath('img/SAMMY_logo.jpg');
+        $objDrawing->setCoordinates('A1');                      
+        //setOffsetX works properly
+        $objDrawing->setOffsetX(7); 
+        $objDrawing->setOffsetY(7);                
+        //set width, height
+        // $objDrawing->setWidth(20); 
+        $objDrawing->setHeight(40); 
+        $objDrawing->setWorksheet($sheet);
 
 
         $sheet->setCellValue("A1", 'TABELA AGRAFATURILOR CU MICROGRAFIE LA FIECARE LOT');

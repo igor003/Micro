@@ -76,6 +76,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/specification_view', 'ConnectorController@upload_specification_view')->name('specification_view');
     Route::post('/upload_specifications', 'ConnectorController@upload_specifications')->name('upload_specif');
     Route::post('/download_specification', 'ConnectorController@download_specification')->name('download_specif');
+    Route::get('/connector_list/update_view/{id}', 'ConnectorController@update_view')->name('connector_update_view');
+    Route::get('/connector_list/upload_photo_view','ConnectorController@upload_connector_photo_view')->name('connector_photo');
+    Route::post('/connector_list/upload_photos', 'ConnectorController@upload_photos')->name('upload_photo');
+   
 //Miniaplicators
     Route::get('/add_miniaplicator_view', 'MiniaplicatorController@index')->name('add_miniaplicator_view');
     Route::post('/add_miniaplicator', 'MiniaplicatorController@create')->name('add_miniaplicator');

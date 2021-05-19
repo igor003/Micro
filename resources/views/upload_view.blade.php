@@ -39,7 +39,12 @@
                     <b>Codice:</b>{{ $conf[0]->codice->name}}<br>
                     <b>Components:</b>{{ $conf[0]->components}}<br>
                     <b>Splice/Terminal:</b>{{$conf[0]->connector->name}}<br>
+
+                 @if($conf[0]->connector->photo_path != NULL)
+                     <img  height='150' width='150' src="{{asset($conf[0]->connector->photo_path)}}" alt="asdsad"> <br>
+                @endif
                     <b>Sez Components:</b> {{$conf[0]->sez_components}}<br>
+
                     <b>Number of Strands:</b> {{$conf[0]->nr_strand}}<br>
                     <b>Height:</b> {{$conf[0]->height}}<br>
                     <b>Width:</b> {{$conf[0]->width}}

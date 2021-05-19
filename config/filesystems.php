@@ -72,6 +72,12 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
+        'terminal_photo' => [
+            'driver' => 'local',
+            'root' => storage_path('app/terminal_photo'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+        ],
         'validations' => [
             'driver' => 'local',
             'root' => storage_path('app/validations'),

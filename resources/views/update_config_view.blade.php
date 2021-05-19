@@ -7,6 +7,15 @@
             <form id='form_configuration' method="POST" action="{{route('update_configuration')}}">
                 <div class="col-xs-3"></div>
                 <div class="col-xs-3">
+                            <div class="form-group">
+                    <label for="project_conf">Departament</label>
+                    <select name="department" class="form-control" id="dep">
+                           
+                            <option value="P1">P1 @if($config[0]->id == 'P1') selectted @endif</option>
+                            <option value="P1">P2 @if($config[0]->id == 'P2') selectted @endif</option>
+                    </select>
+               
+                </div>
                     <div class="form-group">
                         <label for="project_conf">Project</label>
                         <select name="project_configuration" class="form-control" id="project_conf">

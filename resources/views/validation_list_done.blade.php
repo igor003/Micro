@@ -2,6 +2,7 @@
 @extends('layouts.app')
 
 @section('content')
+ <script src="{{ asset('js/mini_validations_done_list.js')}}"></script>
     <div class="container">
         <div class="row">
             <div class="col-lg-offset-8 col-lg-4">

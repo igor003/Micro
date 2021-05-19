@@ -44,6 +44,10 @@
                  <div class="input-group mb-3">
                    <a href="{{route('specification_view')}}"> <button type="button" class="btn btn-primary">Add specifications</button></a>
                 </div>
+                  <div class="input-group mb-3">
+                   <a href="{{route('connector_photo')}}"> <button type="button" class="btn btn-primary">Add photos</button></a>
+                </div>
+                
             </div>
         </div>
     </div>
