@@ -42,10 +42,10 @@ return [
         'mysql' => [
             'driver' => 'mysql',
             'unix_socket' => '/Applications/MAMP/tmp/mysql/mysql.sock',
-            'host' => env('DB_HOST', '127.0.0.1'),
+            'host' => env('DB_HOST', '192.168.66.44'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
+            'database' => env('DB_DATABASE', 'micro'),
+            'username' => env('DB_USERNAME', 'root'),
             'password' => env('DB_PASSWORD', ''),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8',
@@ -54,14 +54,7 @@ return [
             'strict' => false,
             'engine' => null,
         ],
-        'mysql2' => [
-            'driver'    => env('DB_CONNECTION_SECOND'),
-            'host'      => env('DB_HOST_SECOND'),
-            'port'      => env('DB_PORT_SECOND'),
-            'database'  => env('DB_DATABASE_SECOND'),
-            'username'  => env('DB_USERNAME_SECOND'),
-            'password'  => env('DB_PASSWORD_SECOND'),
-        ],
+       
 
         'pgsql' => [
             'driver' => 'pgsql',

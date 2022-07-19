@@ -13,7 +13,7 @@ class Configuration extends Model
     public $timestamps = false;
 
     public function codice(){
-        return $this->belongsTo('App\Part','part_id');
+        return $this->belongsTo('App\Part','part_id','id');
     }
     public function connector(){
         return $this->belongsTo('App\Connector','connector_id');
@@ -51,6 +51,8 @@ class Configuration extends Model
         }]);
     }
     public function photos(){
-        return $this->belongsTo('App\Photo');
+       return $this->hasMany('App\Photo','id','configuration_id');
+        
     }
+
 }

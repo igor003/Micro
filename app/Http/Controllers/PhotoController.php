@@ -45,11 +45,13 @@ class PhotoController extends Controller
     }
 
     public function photo_list(Request $request){
+        $configurations = null;
+        $config_flag = 0;
+        $current_codice = null;
         $curent_page = $request->cur_page;
         $photos= Photo::select('*');
 
         $total_photo = count(Photo::select('*')->get());
-       
         if($request->date_from && $request->date_to){
             $photos->date($request->date_from, $request->date_to);
         }
@@ -58,6 +60,12 @@ class PhotoController extends Controller
         }
         if($request->codice != ''){
             $photos->codice($request->codice);
+            $configurations = Part::where('id','=',$request->codice)->with('configuration')->get();
+            $current_codice = $configurations[0]->name;
+        }
+        if($request->configuration){
+            $photos->config($request->configuration);
+            $config_flag = 1;
         }
         if($request->mini != ''){
             $photos->mini($request->mini);
@@ -71,12 +79,12 @@ class PhotoController extends Controller
         }
         
         $photos->with('configurations.codice.project')->with('configurations.connector')->with('minis')->with('machines');
-        // var_dump($photos->count());
+        
         $total_photo_with_filter =  $photos->with('configurations.codice.project')->count();
 
   
         $schip = ($request->cur_page - 1)*$request->per_page;
-        // var_dump($request->cur_page);
+        
 
         if($request->config_id){
           $photos = $photos->where('configuration_id',$requestconfig_id)->take($request->per_page)->orderBy('maked_at', 'desc')->skip($schip)->get();
@@ -88,7 +96,7 @@ class PhotoController extends Controller
         }else{
           $admin = false;
         }
-       return array("photos"=>$photos,"total_count"=>$total_photo,'total_photo_with_filter'=>$total_photo_with_filter,'admin'=>$admin);
+       return array("photos"=>$photos,"total_count"=>$total_photo,'total_photo_with_filter'=>$total_photo_with_filter,'admin'=>$admin,'configurations'=>$configurations,'config_flag'=>$config_flag, 'curent_codice'=>$current_codice );
     }
 
     public function download_photo( Request $request){
@@ -129,22 +137,22 @@ class PhotoController extends Controller
     }
 
     public function raport(Request $request){
-      $photoss = Photo::select('*');
-      if($request->date_from && $request->date_to){
-        $photoss->raport($request->date_from,$request->date_to);
-      }
-      if(!is_null($request->part)){
-        $photoss->configuration($request->part);
-      }
+        $photoss = Photo::select('*');
+        if($request->date_from && $request->date_to){
+            $photoss->raport($request->date_from,$request->date_to);
+        }
+        if(!is_null($request->part)){
+            $photoss->configuration($request->part);
+        }
         $raport = $photoss->get();     
       // Создаем объект класса PHPExcel
-      $xls = new PHPExcel();
+        $xls = new PHPExcel();
 // Устанавливаем индекс активного листа
-      $xls->setActiveSheetIndex(0);
+        $xls->setActiveSheetIndex(0);
 // Получаем активный лист
-      $sheet = $xls->getActiveSheet();
+        $sheet = $xls->getActiveSheet();
 // Подписываем лист
-      $sheet->setTitle('Таблица умножения');
+        $sheet->setTitle('Таблица умножения');
 // Вставляем текст в ячейку A1
       $sheet->setCellValue("A1", 'Raport Micrografia');
       $sheet->setCellValue("A2", 'Data');

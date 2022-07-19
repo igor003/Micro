@@ -150,6 +150,25 @@ class ConfigurationController extends Controller
       
       $conf = $conf->with('codice.project')->with('connector')->get();
         
+         foreach($conf as $configuration){
+           
+                 $nominal_val = floatval (substr( $configuration['height'], 0, 4));
+
+                 $tollerance = floatval(substr( $configuration['height'], 6, 5));
+  
+        
+                 $measurements =  $this->get_measurements_by_id($configuration['id']);
+                
+              
+        //         if(count($measurements)>2){
+        //             $results_capability = $this->capability($measurements,$nominal_val,$tollerance,true);
+        //               var_dump($results_capability);
+        //         }else{
+        //             $results_capability = 0;
+        //         }
+            
+      
+         }
         
       return array('conf'=>$conf,'admin'=>$admin);
     }
@@ -224,26 +243,84 @@ class ConfigurationController extends Controller
         return view('update_config_view',['connectors'=>$connectors,'config'=>$cur_config,'projects'=>$projects,'codice'=>$codice]);
     }
 
-    public function height_measurements_view ($id){
-          $cur_configuration = Configuration::where('id',$id)->with('codice')->get();
-          
-          
-          $cur_height = floatval (substr($cur_configuration[0]->height, 0, 4));
- 
-          $cur_tollerance = substr($cur_configuration[0]->height, 6, 5);
-          $measurements = Photo::whereNotNull('height')->where('configuration_id',$id)->get();
-          $chart_array = array();
-          $cnt = 1;
-         
-          foreach($measurements as $measurement ){
-
-             $chart_array[] =array($cnt,$measurement->height,$cur_height - $cur_tollerance,$cur_height + $cur_tollerance);
-             $cnt++;
-          }
-       
+    public function capability($array,$nomin_value,$tollerance, $params)
+    {
+        if(count($array) >2){
+            $media =  array_sum($array)/count($array);
+            $stand_dev = stats_standard_deviation($array,$params);
+            $lsl =  $nomin_value - $tollerance;
+            $uls =  $nomin_value + $tollerance;
+            $cpl = ($media - $lsl)/(3*$stand_dev);
+            $cpu = ($uls - $media)/(3*$stand_dev);
+            $cp = round(($uls-$lsl)/(6*$stand_dev),3);
+            $cpk = round(min($cpl,$cpu),3);
+            return(['cp'=>$cp,'cpk'=>$cpk]);
+        }
+        return(['cp'=>0,'cpk'=>0]);
         
-        return view('height_measurements_view',['measurements'=>$chart_array,'cur_config'=>$cur_configuration]);
     }
+    public function get_measurements_by_id ($id){
+        $measurements = Photo::whereNotNull('height')->where('configuration_id',$id)->get();
+        $heights_number = array();
+        foreach($measurements as $measurement){
+            $heights_number[] = $measurement->height;
+        }
+        return ($heights_number);
+    }
+
+    public function height_measurements_view ($id){
+        $cur_configuration = Configuration::where('id',$id)->with('codice')->get();
+        $cur_height = floatval (substr($cur_configuration[0]->height, 0, 4));
+        $measurements = Photo::whereNotNull('height')->where('configuration_id',$id)->get();
+
+        $heights_distinkt = DB::table('foto')
+                            ->whereNotNull('height')
+                            ->where('configuration_id','=',$id)
+                            ->select('height')
+                            ->orderBy('height', 'desc')
+                            ->distinct()
+                            ->get()
+                            ->toArray();
+        $photo_count = array();
+      
+        foreach($heights_distinkt as $height){
+            $photo_count[(string)$height->height] = Photo::where([['configuration_id','=',$id],['height','=',(string)$height->height]])->get()->count(); 
+        }
+        
+       $values = array();
+      array_unshift($values ,array("Inaltimea","Cantitatea1","Cantitatea2","{role: 'style'}"));
+        foreach($photo_count as $key=>$value){
+            if($key == $cur_height){
+                $values[] = array($key,$value,$value,'#03C836');
+            }else{
+                $values[] = array($key,$value,$value,'#FFEF00');
+            }
+            
+        }
+       
+       
+ 
+
+        $cur_tollerance = floatval(substr($cur_configuration[0]->height, 6, 5));
+        $chart_array = array();
+        $cnt = 1;
+        $heights = array();
+        $dates = array();
+        $heights_number = $this->get_measurements_by_id($id);
+       
+        foreach($measurements as $measurement ){
+            $heights[$cnt]['height'] = $measurement->height;
+            $dates[]= $measurement->maked_at;
+            $chart_array[] =array($cnt,$measurement->height,$cur_height - $cur_tollerance,$cur_height + $cur_tollerance);
+            $cnt++;
+        }
+       
+            $capability = $this->capability($heights_number,$cur_height,$cur_tollerance,true);
+       
+      
+        return view('height_measurements_view',['measurements'=>$chart_array,'cur_config'=>$cur_configuration,'heights' =>$heights,'dates'=>$dates,'capability'=>$capability,'values'=>$values]);
+    }
+
 
     public function update(Request $request){
         $config = Configuration::find($request->id);
@@ -277,10 +354,13 @@ class ConfigurationController extends Controller
             })->with('codice')->with('connector')->get();
 
         }else{
-           $conf = Configuration::with('codice')->with('connector')->get();
+           $conf = Configuration::with(['codice' => function ($q) {
+  $q->orderBy('name', 'DESC');
+}])->with('connector')->get();
         }
         
         $xls = new PHPExcel();
+       
 // Устанавливаем индекс активного листа
         try {
             $xls->setActiveSheetIndex(0);
@@ -288,6 +368,19 @@ class ConfigurationController extends Controller
         }
 // Получаем активный лист
         $sheet = $xls->getActiveSheet();
+//добавляем нижний колонтитул ??страница из ??
+            $sheet->getHeaderFooter()->setDifferentOddEven(false);
+            $sheet->getHeaderFooter()->setOddFooter(' Page &P / &N');
+//добавляем сквозные строки при печати
+            $sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1,2);
+//Зум печатной формы
+        
+
+//Поля
+            $sheet->getPageMargins()->setTop(0.1);
+            $sheet->getPageMargins()->setRight(0);
+            $sheet->getPageMargins()->setLeft(0);
+            $sheet->getPageMargins()->setBottom(0.5);
 // Подписываем лист
         $sheet->setTitle('Configuration list');
 // Вставляем текст в ячейку A1
@@ -295,39 +388,51 @@ class ConfigurationController extends Controller
         $objDrawing->setName('test_img');
         $objDrawing->setDescription('test_img');
         $objDrawing->setPath('img/SAMMY_logo.jpg');
-        $objDrawing->setCoordinates('A1');                      
-        //setOffsetX works properly
-        $objDrawing->setOffsetX(7); 
+        $objDrawing->setCoordinates('A1');
+        $objDrawing->setResizeProportional(false);
+        $objDrawing->setWidthAndHeight(85,44);
+        $objDrawing->setOffsetX(4); 
         $objDrawing->setOffsetY(7);                
-        //set width, height
-        // $objDrawing->setWidth(20); 
-        $objDrawing->setHeight(40); 
         $objDrawing->setWorksheet($sheet);
 
 
         $sheet->setCellValue("A1", 'TABELA AGRAFATURILOR CU MICROGRAFIE LA FIECARE LOT');
         $sheet->setCellValue("A2", 'Codice');
         $sheet->setCellValue("B2", 'Grup agrafat');
-        $sheet->setCellValue("C2", 'Splice/Terminal');
+        $sheet->setCellValue("C2", 'Splice / Terminal');
         $sheet->setCellValue("D2", 'Sectiune');
-        $sheet->setCellValue("E2", 'Inaltimea agrafaturii');
-        $sheet->setCellValue("F2", 'Latimea agrafaturii');
-        $sheet->setCellValue("G2", 'Nr lite');
-        $sheet->getColumnDimension('A')->setAutoSize(true);
+        $sheet->setCellValue("E2", 'Sectiune totala');
+        $sheet->setCellValue("F2", 'Inaltimea agrafaturii');
+        $sheet->setCellValue("G2", 'Latimea agrafaturii');
+        // $sheet->setCellValue("H2", 'Nr lite');
+
+        $sheet->getColumnDimension('A')->setWidth(11);
         $sheet->getColumnDimension('B')->setAutoSize(true);
-        $sheet->getColumnDimension('C')->setAutoSize(true);
-        $sheet->getColumnDimension('D')->setAutoSize(true);
-        $sheet->getColumnDimension('E')->setAutoSize(true);
-        $sheet->getColumnDimension('F')->setAutoSize(true);
-        $sheet->getColumnDimension('G')->setAutoSize(true);
-        $sheet->getStyle('A1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+        $sheet->getColumnDimension('C')->setWidth(9.3);
+        $sheet->getColumnDimension('D')->setWidth(34);
+        $sheet->getColumnDimension('E')->setWidth(9);
+        $sheet->getColumnDimension('F')->setWidth(10);
+        $sheet->getColumnDimension('G')->setWidth(10);
+        // $sheet->getColumnDimension('H')->setWidth(5);
+
+
+      
+        $sheet->getStyle('A1:G2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+        $sheet->getStyle('A1:G2')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+        $sheet->getStyle('A1')->getFont()->setSize(14);
+        $sheet->getStyle('A2:G2')->getFont()->setSize(11);
+        $sheet->getStyle('A1')->getFont()->setBold(true);
+        $sheet->getStyle('F1')->getFont()->setBold(true);
+        $sheet->getStyle('A2:G2')->getFont()->setBold(true);
+        
+    
         $sheet->getStyle('A1')->getFill()->getStartColor()->setRGB('EEEEEE');
-        $sheet->getStyle('A2')->getFill()->getStartColor()->setRGB('84, 157, 1');
-        $sheet->getStyle('B2')->getFill()->getStartColor()->setRGB('84, 157, 1');
-        $sheet->getStyle('C2')->getFill()->getStartColor()->setRGB('84, 157, 1');
-        $sheet->getStyle('D2')->getFill()->getStartColor()->setRGB('84, 157, 1');
+        // $sheet->getStyle('A2')->getFill()->getStartColor()->setRGB('84, 157, 1');
+        // $sheet->getStyle('B2')->getFill()->getStartColor()->setRGB('84, 157, 1');
+        // $sheet->getStyle('C2')->getFill()->getStartColor()->setRGB('84, 157, 1');
+        // $sheet->getStyle('D2')->getFill()->getStartColor()->setRGB('84, 157, 1');
         $sheet->getRowDimension(1)->setRowHeight(42);
-        $sheet->getRowDimension(2)->setRowHeight(25);
+        $sheet->getRowDimension(2)->setRowHeight(40);
         $rows = 3;
         $cnt = 0;
         $count_conf = count($conf);
@@ -336,38 +441,67 @@ class ConfigurationController extends Controller
             $sheet->setCellValue("B".$rows, $conf[$cnt]->components);
             $sheet->setCellValue("C".$rows, $conf[$cnt]->connector->name);
             $sheet->setCellValue("D".$rows, $conf[$cnt]->sez_components);
-            $sheet->setCellValue("E".$rows, $conf[$cnt]->height);
-            $sheet->setCellValue("F".$rows, $conf[$cnt]->width);
-            $sheet->setCellValue("G".$rows, $conf[$cnt]->nr_strand);
-            $sheet->getRowDimension($rows)->setRowHeight(25);
+            $sheet->setCellValue("E".$rows, $conf[$cnt]->total_sez);
+            $sheet->setCellValue("F".$rows, $conf[$cnt]->height);
+            $sheet->setCellValue("G".$rows, $conf[$cnt]->width);
+            // $sheet->setCellValue("H".$rows, $conf[$cnt]->nr_strand);
+            $sheet->getRowDimension($rows)->setRowHeight(20);
            
             $sheet->getStyle('A'.$rows)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('A'.$rows)->getFont()->setBold(true);
+            $sheet->getStyle('F'.$rows)->getFont()->setBold(true);
+            $sheet->getStyle('G'.$rows)->getFont()->setBold(true);
+            $sheet->getStyle('G'.$rows)->getFont()->setSize(10);
+            $sheet->getStyle('F'.$rows)->getFont()->setSize(10);
+            $sheet->getStyle('F'.$rows)->getFont()->setSize(10);
+            $sheet->getStyle('B'.$rows.':E'.$rows)->getFont()->setSize(9);
+            $sheet->getStyle('A'.$rows.':G'.$rows)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
             $sheet->getStyle('B'.$rows)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             $sheet->getStyle('C'.$rows)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             $sheet->getStyle('D'.$rows)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             $sheet->getStyle('E'.$rows)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             $sheet->getStyle('F'.$rows)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             $sheet->getStyle('G'.$rows)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            // $sheet->getStyle('H'.$rows)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             $rows++;
             $cnt++;
         }
+   $highestColumn =  $sheet->getHighestDataColumn();
+          $borderStyle = array(
+            'borders' => array(
+                'allborders' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN
+                )
+            )
+        );
+          $cnt = $cnt+2;
+        $sheet->getStyle('A1:'. $highestColumn . $cnt)->applyFromArray($borderStyle);
 // Объединяем ячейки
         $sheet->mergeCells('A1:G1');
 // Выравнивание текста
+// 
         $sheet->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A2:H2')->getAlignment()->setWrapText(true);
         $sheet->getStyle('B2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle('C2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle('D2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle('E2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle('F2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $sheet->getStyle('G2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        // $sheet->getStyle('H2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 
-        $xls->getActiveSheet()->getStyle(
-            'A2:' .
-            $xls->getActiveSheet()->getHighestColumn() .
-            $xls->getActiveSheet()->getHighestRow()
-        )->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        // $xls->getActiveSheet()->getStyle(
+        //     'A1:' .
+        //     $xls->getActiveSheet()->getHighestColumn() .
+        //     $xls->getActiveSheet()->getHighestRow()
+        // )->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        
+    
+      
+//         $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+// $objPHPExcel = $objReader->load($inputFileName);
+        
 
 
 // заголовки

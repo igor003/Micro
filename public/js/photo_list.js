@@ -2,27 +2,23 @@ function get_photo_list(cur_page){
     var date_from;
     var date_to;
     var project = [];
-    var codice = [];
+    var codice;
     var per_page = 15;
     var show_pages = 9;
     var finish_page = Number(cur_page)+4;
     var start_page = Number(cur_page)-4;
 
-    
+    codice = $('#codice').val();
     date_from = $('#datepicker_photo_from').val();
     date_to = $('#datepicker_photo_to').val();
     mini = $('#mini').val();
     machine = $('#machine').val();
+    configuration = $('#configurations').val();
     var work_order = $('#work_ord').val();
     $('#projects>input[type="checkbox"]:checked').each(function () {
        
         project.push(this.value);
     });
-    $('#codice>input[type="checkbox"]:checked').each(function () {
-        
-        codice.push(this.value);
-    });
-   
     $.ajax({
         url: '/photo_list',
         type: 'POST',
@@ -36,11 +32,26 @@ function get_photo_list(cur_page){
             per_page:per_page,
             mini:mini,
             machine:machine,
-            work_order:work_order
+            work_order:work_order,
+            configuration:configuration
 
         },
         success: function (data) {
-                        console.log(data);
+      
+
+            if(data.configurations != null && data.config_flag == 0){
+                      $('#configurations').empty();
+                 $('#configurations').removeAttr('disabled');
+                    $configur_html = '<option  value=""></option>';
+                    var i = 0;
+                    while(i< data.configurations[0].configuration.length){
+                         $configur_html+='<option value="'+data.configurations[0].configuration[i].id+'">'+data.configurations[0].configuration[i].components+'</option>';
+                         i++;
+                    }
+                    console.log($configur_html);
+                    $('#configurations').append($configur_html);
+            }
+                        
             $('#table_photo').empty();
             var i = 0;
             while(i< data.photos.length){
@@ -54,7 +65,7 @@ function get_photo_list(cur_page){
             }
             var pages = Math.ceil(data.total_count/per_page);
             $('#pagin').empty();
-            if(codice.length == 0 && project.length == 0 && date_to === '' && date_from === '' && mini === '' && machine === '' && work_order === ''){// если нет фильтра по codice и project
+            if(codice.length == 0 && project.length == 0 && date_to === '' && date_from === '' && mini === '' && machine === '' && work_order === '' && configuration === ''){// если нет фильтра по codice и project
 
                 // if(){// если нет фильтра по date
                     $('#pagin').append('<li class="page-item1 prev"><a href="#" class="page-link" >Previous</a></li>');
@@ -260,7 +271,11 @@ $(function(){
     $('#projects>input[type="checkbox"]').on('click',function(){
         get_photo_list();
     });
-    $('#codice>input[type="checkbox"]').on('click',function(){
+    $('#codice').on('change', function(){
         get_photo_list();
+
     });
+    $('#configurations').on('change',function(){
+        get_photo_list();
+    })
 });

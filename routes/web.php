@@ -81,6 +81,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/connector_list/upload_photos', 'ConnectorController@upload_photos')->name('upload_photo');
    
 //Miniaplicators
+    // Route::get('/add_miniaplicator_db_view','MiniaplicatorController@add_db_view')->name('add_miniaplicator_db_view');
     Route::get('/add_miniaplicator_view', 'MiniaplicatorController@index')->name('add_miniaplicator_view');
     Route::post('/add_miniaplicator', 'MiniaplicatorController@create')->name('add_miniaplicator');
     Route::get('/miniaplicator_list_view', 'MiniaplicatorController@miniaplicators_list_view')->name('mini_list_view');
@@ -129,3 +130,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/add_report','RaportController@create_report')->name('create_report');
     Route::post('/all_reports', 'RaportController@get_all')->name('get_all_reports');
     Route::post('/data_exec_time', 'RaportController@get_data_exec_time')->name('exec_time');
+
+    Route::get('/add_odl_view','RaportController@add_odl_view')->name('add_odl_view');
+    Route::post('/add_odl','RaportController@add_odl')->name('add_odl');
+    Route::get('/odl_report','RaportController@odl_report')->name('odl_report_view');

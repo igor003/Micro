@@ -8,10 +8,13 @@ class Photo extends Model
 {
     protected $table = 'foto';
     protected $fillable = ['configuration_id','foto1','foto2','foto3','miniaplicator_id','machine_id','start_time','maked_at','created_at','height','work_order'];
-
+    public function configurations2(){
+        return $this->belongsTo('App\Configuration','configuration_id');
+    }
     public function configurations(){
         return $this->hasMany('App\Configuration','id','configuration_id');
     }
+   
     public function machines(){
         return $this->belongsTo('App\Machine','machine_id');
     }
@@ -33,6 +36,10 @@ class Photo extends Model
             $query->where('id',$mini);
         });
     }
+    public function scopeConfig($query, $config){
+       return $query->where('configuration_id',$config);
+      
+    }
     public function scopeMachine($query, $machine){
         return $query->whereHas('machines', function ($query) use($machine) {
             $query->where('id',$machine);
@@ -40,7 +47,7 @@ class Photo extends Model
     }
     public function scopeCodice($query, $codice){
         return $query->whereHas('configurations', function ($query) use($codice) {
-            $query->whereIn('part_id',$codice);
+            $query->where('part_id',$codice);
         });
     }
     public function scopeRaport($query, $date_from, $date_to){

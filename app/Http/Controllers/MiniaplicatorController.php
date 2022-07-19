@@ -58,6 +58,7 @@ class MiniaplicatorController extends Controller
         return view('miniaplicators_list',['connectors'=>$connectors]);
     }
 
+
     public function miniaplicator_list(Request $request)
     {
         $mini = Miniaplicator::select('*');
@@ -155,6 +156,7 @@ class MiniaplicatorController extends Controller
     public function get_minis_by_terminal(Request $request){
        
         $minis =  Miniaplicator::where('connector_id','=',$request->connector)->get();
+       
       
         return utf8_encode(json_encode($minis));
     }

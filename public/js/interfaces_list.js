@@ -1,3 +1,4 @@
+
 function get_interfaces_list(){
     var name = $('#name_interface').val();
     var code = $('#code_interface').val();
@@ -66,6 +67,8 @@ console.log('mouseenter');
         }
     })
 }
+
+
 function generate_html_interface(data, cnt){
     var result = '<tr>' +
         '<td class="text-center">' + data.id + '</td>' +
@@ -105,3 +108,15 @@ function generate_html_interface(data, cnt){
         result +='</tr>';
     return result;
 }
+document.addEventListener('DOMContentLoaded', function(){
+     $('#name_interface').on('change', function(){
+        get_interfaces_list();
+    });
+    $('#code_interface').on('change', function(){
+        get_interfaces_list();
+    });
+    $('#blocket_interface').on('change', function(){
+        get_interfaces_list();
+    });
+    get_interfaces_list();
+});

@@ -17,6 +17,9 @@ date_default_timezone_set("Europe/Chisinau");
 
     <link rel="stylesheet" href="{{asset('js/jquery-ui-1.12.1.custom/jquery-ui.css')}}">
     <link rel="stylesheet" href="{{asset('js/jquery-ui-1.12.1.custom/jquery-ui.theme.css')}}">
+
+    <!-- Sweet Alert    -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <!--Datapicker-->
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/custom.js') }}"></script>
@@ -35,6 +38,7 @@ date_default_timezone_set("Europe/Chisinau");
     
     
     </script>
+    
 </head>
 <script>
 
@@ -153,6 +157,7 @@ date_default_timezone_set("Europe/Chisinau");
                                                     Add miniaplicator
                                                 </a>
                                             </li>
+                                        
                                             <li>
                                                 <a href="{{route('add_machine_view')}}">
                                                     Add machine
@@ -183,6 +188,15 @@ date_default_timezone_set("Europe/Chisinau");
                                                     Reports
                                                 </a>
                                             </li> -->
+                                            <li>
+                                                <a href="{{route('add_odl_view')}}">
+                                                    Add ODL
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{route('odl_report_view')}}">
+                                                  ODL report
+                                           
                                              <li>
                                                 <a href="{{route('raport_view')}}">
                                                     Daily Report Micro

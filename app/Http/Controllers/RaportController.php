@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use PHPExcel;
 use PHPExcel_IOFactory;
 use App\Photo;
+use App\Odl;
 use App\Raport;
 use Illuminate\Support\Facades\DB;
 class RaportController extends Controller
@@ -27,14 +28,14 @@ class RaportController extends Controller
 	   return $result;
 	}
 	public  function get_data_exec_time(Request $request){
-		
+
 		$date = $request->date;
     	
 		if($date){
-		    $dates = $this->dates_of_micross($date,1);
+		    $dates = $this->dates_of_micross($date,1)['data'];
 		    	
 		}else{
-			$dates = $this->dates_of_micross(date("Y-m-d"),1);
+			$dates = $this->dates_of_micross(date("Y-m-d"),1)['data'];
 			$date = date("Y-m-d");
 		}	
 
@@ -42,7 +43,7 @@ class RaportController extends Controller
 		$cnt = 1;
 		$summ_difer = 0;
 		foreach ($dates as $key=>$date1) {
-
+			
 			$time_start = new \DateTime($date1[0]);
 			$time_done = new \DateTime($date1[1]);
 			$summ_difer +=abs(strtotime($date1[0]) - strtotime($date1[1]));
@@ -51,16 +52,17 @@ class RaportController extends Controller
 		  	$diff_sec = abs(strtotime($date1[0]) - strtotime($date1[1]))-($diff_min*60);
 
 		  	$result[0][] = [$cnt,round($diff_min,1,PHP_ROUND_HALF_UP),$this->generate_custome_html_tooltyp(
-		  		'',
+		  																								$date1[3],
 		  																								$date1[2],
 		  																								$time_done->format('H:i:s'),
 		  																								$time_start->format('H:i:s'),
-		  																								$diff_min.'min '.$diff_sec.'sec')]; 
+		  																								$diff_min.'min '.$diff_sec.'sec'
+		  																							)]; 
 			$cnt++;
 			
 		}
-		// var_dump(((14*60)-($summ_difer/60))/60);
-			 	$result[1] =  round($summ_difer / count($dates)/60,1,PHP_ROUND_HALF_UP);
+		$result[1] =  round($summ_difer / count($dates)/60,1,PHP_ROUND_HALF_UP);
+
 		return $result;
 	}
 	// public  function get_data_exec_time($date){
@@ -111,15 +113,32 @@ class RaportController extends Controller
   		}	
   		$cnt = 1;
   		$count_month = array();
+  		$summ_micros = 0;
+		$total_diff_sec = 1;
+		$average_time = 0;
+		$cur_string_data = Photo::select('maked_at','start_time')->whereYear('maked_at', $year)->get();
+		foreach($cur_string_data as $string){
+			if($string['start_time'] !== NULL && $string['start_time'] !== NULL ){
+				$total_diff_sec += strtotime($string['maked_at']) - strtotime($string['start_time']);
+			}else{
+				continue;
+			}
+		}
+		$average_time = ($total_diff_sec/count($cur_string_data))/60;
   		for ($cnt = 1; $cnt <= 12; $cnt++) {
   			$cur_string = Photo::whereMonth('maked_at', '=', str_pad($cnt, 2, '0', STR_PAD_LEFT))->whereYear('maked_at', $year)->count();
+  			
+  			
+  			
   			$count_month[$cnt][] =  $months[$cnt-1];
 			$count_month[$cnt][] = strval($cur_string);
+			$summ_micros += (int)strval($cur_string);
+
     		$count_month[$cnt][] = $cur_string;
 		}
   			
-  			 // array_unshift($count_month,array("date","number of micrography"));
-		return view('yearly_raport_view',['years'=>$years,'cur_year'=>$year,'fotos'=>$count_month]);
+  			 array_unshift($count_month,array("date","number of micrography",'{ role: "style" }'));
+		return view('yearly_raport_view',['years'=>$years,'cur_year'=>$year,'fotos'=>$count_month,'summ_micros'=>$summ_micros,'average_time'=>round($average_time, 1) ]);
 	}
 	public function monthly_report() {
 	 	$months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -149,9 +168,9 @@ class RaportController extends Controller
     	foreach ($fotos_dates as $foto_date) {
     	
     		$caunt = Photo::where('maked_at','LIKE',''.$foto_date['date'].'%')->count();
-			$foto_caunt[] = [$foto_date['date'],$caunt];
+			$foto_caunt[] = [$foto_date['date'],$caunt,"gold"];
     	}
-	    array_unshift($foto_caunt,array("date","number of micrography"));
+	    array_unshift($foto_caunt,array("date","number of micrography", '{ role: "style" }' ));
 		return view('monthly_raport_view',['years'=>$years,'months'=>$months,'fotos'=>$foto_caunt,'cur_month'=>$months[$month-1], 'cur_year'=>$year]);
 	}
 	
@@ -187,18 +206,21 @@ class RaportController extends Controller
 		
 		if($date){
 			  $year = date("Y", strtotime($date));
+			$operators = Photo::whereDate('maked_at','=',$date)->whereYear('maked_at',$year )->distinct()->get(['operator']);
 			$fotos = Photo::whereDate('maked_at','=',$date)
 				->whereYear('maked_at',$year )
 				->with('configurations.codice')
 			    ->orderBy('maked_at', 'asc')
 				->get();
 		}else{
+			$operators = Photo::whereDate('maked_at','=',date("Y-m-d"))->whereYear('maked_at',Date('Y'))->distinct()->get(['operator']);
 			$fotos = Photo::whereDate('maked_at','=',date("Y-m-d"))
 				->whereYear('maked_at', Date('Y'))
 				->with('configurations.codice')
 			    ->orderBy('maked_at', 'asc')
 				->get();
 		}
+       
           
 		$dates = array();
 		$dates_codice= array();
@@ -226,16 +248,18 @@ class RaportController extends Controller
 		$jsArray1 = array();
 		$cnt=1;
 		$summ_diff = 0;
+		$total_diff_sec = 0;
+		$diff_summ_oper = array();
 		foreach($dates_codice as $array) {
 
 			if($flag == 0){
 				$time_start = new \DateTime($array['start']);
 				$time_done = new \DateTime($array['date']);
+				$total_diff_sec = strtotime($array['date']) - strtotime($array['start']);
 			  	$diff_min = intdiv(abs(strtotime($array['date']) - strtotime($array['start'])),60);
 			  	$diff_sec = abs(strtotime($array['date']) - strtotime($array['start']))-($diff_min*60);
 			  	$summ_diff += abs(strtotime($array['date']) - strtotime($array['start']));
 		  		$jsArray1[] = array((string)$array['operator'],
-
 		  							(string)$array['start'],
 	  								(string)$array['date'],
 		  							$this->generate_custome_html_tooltyp($array['codice'],
@@ -246,14 +270,27 @@ class RaportController extends Controller
 		  							); 
 		  		
 			}else if($flag == 1){
-				$jsArray1[] = array((string)$array['date'],(string)$array['start'],(string)$array['operator']); 
+				$jsArray1[] = array((string)$array['date'],(string)$array['start'],(string)$array['operator'],(string)$array['codice']); 
 			}
 		    $cnt++;
+		   	for($cnt1 = 0; $cnt1 < count($operators); $cnt1++){
+
+		   		// var_dump($diff_summ_oper[$operators[$cnt1]['operator']]);
+		    		if(array_key_exists($operators[$cnt1]['operator'],$diff_summ_oper) == false){
+
+					 $diff_summ_oper[$operators[$cnt1]['operator']] = 0;
+		    		}
+			 	if($operators[$cnt1]['operator'] == $array['operator']){
+					$diff_summ_oper[$operators[$cnt1]['operator']] = $diff_summ_oper[$operators[$cnt1]['operator']] + $total_diff_sec ;
+			 	}
+			}
 		   
 		}
-
-	
-		return $jsArray1;
+		if($summ_diff){
+			$average = $summ_diff/($cnt-1)/60;
+		}
+		$average = false;
+		return array('data'=>$jsArray1,'average'=>$average,'count'=>$cnt-1,'time_summ'=>$summ_diff,'time_part'=>$diff_summ_oper);
 	}
 	public function get_compare_view(){
 		$route = \Route::current();
@@ -266,7 +303,7 @@ class RaportController extends Controller
 			
 		}
 		
-        return view('raport_view',['jsArray1'=>$date]);
+        return view('raport_view',['jsArray1'=>$date['data'],'average'=>$date['average'],'count'=>$date['count'],'time_summ'=>$date['time_summ']/60,'time_part'=>$date['time_part'],'chart'=>['time_spend'=>$date['time_summ']/60,'total_time'=>1440 - $date['time_summ']/60]]);
     }
 
     public function generate_raport(Request $request){
@@ -368,5 +405,49 @@ class RaportController extends Controller
     public function report_list_view(){
     	$reports = Raport::all();
  		return view('raport_list_view',['reports'=>$reports]);
+    }
+
+    public function add_odl_view(){
+    	return view ('add_odl');
+    }
+
+    public function add_odl(Request $request){
+
+    	$odl = new Odl();
+ 		$odl->odl_number = $request->odl_number;
+    	$odl->save();
+
+
+    	return redirect('/add_odl_view');
+    }
+    public function odl_report(Request $request){
+    
+
+    	$date = '2022-04-28';
+    	$odls = ODL::where('created_at','LIKE',$date.'%')->get();
+    	$res = array();
+    	$cnt = 0;
+    
+    	foreach($odls as $odl ){
+    				
+    		$photos = Photo::where('work_order','=',$odl['odl_number'])->with('configurations.codice')->get()->toArray();
+
+    		if(empty($photos)){
+    			continue;
+    		}else{	
+    			
+    			$total_diff_sec = strtotime($photos[0]['start_time']) - strtotime($odl['created_at']);
+
+    			$diff_min = round($total_diff_sec/60,2);
+				$execution_time = strtotime($photos[0]['maked_at']) - strtotime($photos[0]['start_time']);
+				$diff_exec = round($execution_time/60,2);
+    			$res[$cnt] = array('exec'=>$diff_exec,'maked_at'=>$photos[0]['maked_at'],'components'=>$photos[0]['configurations'][0]['components'],'codice'=>$photos[0]['configurations'][0]['codice']['name'],'operator'=>$photos[0]['operator'],'order_number'=>$odl->odl_number,'recive_date'=>$odl['created_at'],'start_date'=>$photos[0]['start_time'],'diff_min'=>$diff_min); 
+    			
+    			$cnt++;
+    		}
+    		
+    	}
+		
+    	return view('odl_report',['data'=>$res]);
     }
 }

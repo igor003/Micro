@@ -1,7 +1,8 @@
+ <script src="{{ asset('js/interfaces_list.js')}}"></script>
 @extends('layouts.app')
 
 @section('content')
- <script src="{{ asset('js/interfaces_list.js')}}"></script>
+
     <div class="container">
         <div class="row">
             <div id='preview' style="height:100px; with:200px; position:absolute; z-index:5;">

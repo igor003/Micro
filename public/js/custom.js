@@ -129,7 +129,7 @@ function generate_html(data,entity,admin){
                 '<a href="'+entity+'_list/update_view/'+data.id+'"> <div><img height="40px" width = "40px" src="/img/update.png" alt=""></div></a>'+
                 '</td>' +
                 '<td class="text-center">' +
-                '<a href="'+entity+'_list/delete/'+data.id+'"> <div><img height="40px" width = "40px" src="/img/delete.png" alt=""></div ></a>'+
+                '<a style="display:block" class="delete" href="'+entity+'_list/delete/'+data.id+'"> <img height="40px" width = "40px" src="/img/delete.png" alt=""></a>'+
                 '</td>' 
             // }
         result += '</tr>';
@@ -243,7 +243,31 @@ function generate_html_reports(data){
         return result;
 }
 
+ 
+
 $( document ).ready(function() {
+        $('.delete').click(function(event){
+            event.preventDefault();
+            swal({
+                title: "Tu esti uverenii?",
+                text: "tu udalesti navsegda",
+                icon: "warning",
+                buttons: ["Ne udaliati!","Udaliti"],
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    swal("Tu ai udalit navsegda", {
+                      icon: "success",
+
+                    });
+                    document.location = $(this).attr('href');
+                } else {
+                    swal("Tu n-ai udalit nica!");
+                }
+            });
+        });
+    
  
     $('#sez_comp').on('keyup',function(){
         var str = $(this).val().split('+');
@@ -307,15 +331,7 @@ $( document ).ready(function() {
     $('#search_machine').on('keyup',function(){
         get_machines_list();
     });
-   $('#name_interface').on('change', function(){
-        get_interfaces_list();
-    });
-   $('#code_interface').on('change', function(){
-        get_interfaces_list();
-    });
-   $('#blocket_interface').on('change', function(){
-        get_interfaces_list();
-    });
+
     get_codice_list();
     get_project_list();
     get_codice_by_project_conf_update();
@@ -326,7 +342,7 @@ $( document ).ready(function() {
     get_reports_list();
     get_validation_list();
     // get_validation_done_list();
-    get_interfaces_list();
+   
 
 });
 
@@ -431,7 +447,7 @@ function get_minis_by_terminal(){
         },
         dataType: 'json',
         success: function (data) {
-           
+           console.log(data);
             var i = 0;
             while(i< data.length){
                 $('#minis').append(generate_html_select_mini(data[i]));
@@ -628,16 +644,36 @@ function get_ajax_exec_time_data(handleData){
        
         dataType:'json',
         success:function(data){
+            console.log(data)
             $('#media').html('<h3>Executing average time: ' +data[1]+'min.</h3>');
           
 
             handleData(data[0]); 
         },
-        error:function(error){
-            handleData(0); 
-            $('#media').html('');
-            console.log('error' + eval(error));
-        }
+        // error:function(error){
+        //     handleData(0); 
+        //     $('#media').html('');
+        //     console.log('error' + eval(error));
+        // }
+         error: function (jqXHR, exception) {
+                            var msg = '';
+                            if (jqXHR.status === 0) {
+                                msg = 'Not connect.\n Verify Network.';
+                            } else if (jqXHR.status == 404) {
+                                msg = 'Requested page not found. [404]';
+                            } else if (jqXHR.status == 500) {
+                                msg = 'Internal Server Error [500].';
+                            } else if (exception === 'parsererror') {
+                                msg = 'Requested JSON parse failed.';
+                            } else if (exception === 'timeout') {
+                                msg = 'Time out error.';
+                            } else if (exception === 'abort') {
+                                msg = 'Ajax request aborted.';
+                            } else {
+                                msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                            }
+                            console.log(msg);
+                        },
     })
 }
 

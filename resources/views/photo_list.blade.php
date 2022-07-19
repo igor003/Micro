@@ -93,7 +93,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card">
+             <!--        <div class="card">
                         <div class="card-header" id="headingThree">
                             <h5 class="mb-0">
                                 <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
@@ -117,7 +117,24 @@
                                 @endforeach
                             </div>
                         </div>
-                    </div>
+                    </div> -->
+                </div>
+                <div class="form-group">
+                    <label for="mini">Codice</label>
+                    <select name="codice" class="form-control" id="codice">
+                        <option  value="" selected></option>
+                         @foreach($codicies as $codice)
+                            <option value="{{$codice->id}}">
+                                {{$codice->name}}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                  <div class="form-group">
+                    <label for="mini">Grup agrafat</label>
+                    <select disabled name="grup_agrafat" class="form-control" id="configurations">
+                        <option  value="" selected></option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="mini">Miniaplicator</label>

@@ -80,7 +80,7 @@
             <div class="content">
                 
                 <div class="text-center">
-                    <img  class='sammy' src="/img/SAMMY_logo.jpg" alt="">
+                    <img  class='sammy' src="/img/KabLem_logo.png" alt="" width="700" height="200">
 
                   <!--   <video poster='/img/SAMMY_logo.jpg' id="videoPlayer" width="600" height="400">
                         <source src="http://techslides.com/demos/sample-videos/small.mp4" type="video/mp4">

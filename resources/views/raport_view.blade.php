@@ -137,6 +137,27 @@ else {
       
 
 </script>
+   
+    <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          ['Time spend',     <?php print_r($chart['time_spend']) ?>],
+          ['Downtime',     <?php print_r($chart['total_time']) ?> ],
+         
+        ]);
+
+        var options = {
+          title: 'Machine utilization',
+          is3D: true,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+        chart.draw(data, options);
+      }
+    </script>
  <div class="container">
     <div class="row">
         <div class="col-xs-12 text-center">
@@ -144,12 +165,13 @@ else {
 
         </div>
     </div>
+   
         <div class="row">
 
-            <div class="col-xs-10">
+            <div class="col-xs-9">
                 <div id="curve_chart"></div>
             </div>
-            <div class="col-xs-2">
+            <div class="col-xs-3">
                
                 <div class="form-group">
                     <label class=" project_label form-check-label" for="datepicker_photo_from">
@@ -157,12 +179,29 @@ else {
                     </label>
                     <input id="datepicker_photo" type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter date from">
                 </div>
-                 <div class="form-group">
+                <div class="form-group">
                     <button type="submit"  class="btn btn-primary"><a  href="/raport_view" style="text-decoration:none;color:white" id='date_micro'>submit</a></button>
-                 </div>
+                </div>
+                
+                    <h4><b>Total efectuated:</b>{{$count}} micrography</h4>
+     
+                    <h4><b>Average time:</b>{{number_format((float)$average, 1, '.', '')}} min. </h4> 
+                       
+                    <h4><b>Total time spend:</b>{{number_format((float)$time_summ, 1, '.', '')}} min.</h4>
+
+                    @foreach($time_part as $key=>$value)
+                        <h5>{{$key}}:{{number_format((float)$value/60, 1, '.', '')}} min.</h5>
+                    @endforeach
+                    <div id='piechart_3d'>
+                        
+                    </div>
+        
+              
+                 
                
             </div>
             <div class=" col-xs-4 ">
+
           <!--       <form action="{{route('generate_raport_aggraf')}}" method="POST" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     
@@ -183,6 +222,10 @@ else {
                 </form> -->
             </div>
         </div>
+         <div class="row">     
+        
+        <br>    
+    </div>
     </div>
 @endsection
 

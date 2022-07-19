@@ -21,7 +21,7 @@
                     <select name="department" class="form-control" id="dep">
                             <option  value="" selected></option>
                             <option value="P1">P1</option>
-                            <option value="P1">P2</option>
+                            <option value="P2">P2</option>
                     </select>
                
                 </div>

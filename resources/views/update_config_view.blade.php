@@ -12,7 +12,7 @@
                     <select name="department" class="form-control" id="dep">
                            
                             <option value="P1">P1 @if($config[0]->id == 'P1') selectted @endif</option>
-                            <option value="P1">P2 @if($config[0]->id == 'P2') selectted @endif</option>
+                            <option value="P2">P2 @if($config[0]->id == 'P2') selectted @endif</option>
                     </select>
                
                 </div>

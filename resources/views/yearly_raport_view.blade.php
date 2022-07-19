@@ -60,9 +60,16 @@
                     duration: 10000,
                     easing: 'out',
                 },
+                 vAxis: {  
+                    viewWindow: { max: 1800, min:0 },
+                     gridlines: {
+                        count: 500,
+                    }
+                  
+                }  ,
                 hAxis: {
                     gridlines: {
-                        count: 10,
+                        count: 500,
                     }
                 },
             }
@@ -79,7 +86,10 @@
     <div class="row">
         <div class="col-xs-10 text-center">
             
-            <h1>{{$cur_year}} </h1>
+            <h1>{{$cur_year}} </h1> 
+            <h3>Efectuated:{{$summ_micros}} micros</h3>
+            <h3>Average time:{{$average_time}}</h3>
+          
         </div>
     </div>
         <div class="row">
